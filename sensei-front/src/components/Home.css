@@ -13,10 +13,20 @@
     --bold: 500;
     --extra-bold: 600;
     --gradient: linear-gradient(45deg, #00a0ff, #00ffa0);
+    --block-color: rgb(20, 30, 50);
+    --hover-block-color: rgb(20, 40, 60);
+    --header-footer-color: rgb(0, 0, 10);
 }
 
 hr {
     width: 80%;
+}
+
+p {
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: var(--light);
+    font-size: 1.5vw;
+    line-height: 1.5;
 }
 
 .section1 {
@@ -28,6 +38,7 @@ hr {
     font-size: 11vw;
     font-family: 'Ubuntu Condensed', sans-serif;
     align-items: center;
+    margin: 0;
 }
 
 .sensei {
@@ -80,26 +91,26 @@ hr {
     font-size: 1.75vw;
 }
 
-.how0 {
+.why0 {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
 }
 
-.how1 {
-    background: rgb(20, 30, 50);
+.why1 {
+    background: var(--block-color);
     width: 100vw;
     margin: 1vw 1vw;
     border-radius: 1vw;
     transition: 0.5s;
 }
 
-.how1:hover {
-    background: rgb(20, 40, 60)
+.why1:hover {
+    background: var(--hover-block-color);
 }
 
-.how2 {
+.why2 {
     display: flex;
     background: transparent;
     justify-content: space-between;
@@ -121,13 +132,71 @@ hr {
 }
 
 .section3 {
-    width: 95%;
+    width: 95vw;
 }
 
 .section3 p {
-    font-size: 1.4vw;
+    font-size: 1.5vw;
     line-height: 1.5;
     margin-right: 1vw;
+}
+
+.section4 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12vh;
+}
+
+.s4-caption {
     font-weight: var(--light);
-    margin: 5%;
+    width: 80vw;
+}
+
+.how {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 80vw;
+    background-color: var(--block-color);
+    padding: 2vw;
+    height: 10vw;
+    border-radius: 2vw;
+    transition: 0.5s;
+    margin: 1vw 0;
+}
+
+.how:hover {
+    background-color: var(--hover-block-color);
+}
+
+.section4 h1 {
+    margin-top: 5vw;
+}
+
+.section4 h2 {
+    font-size: 2vw;
+    font-weight: var(--extra-bold);
+}
+
+.section4 .bullet {
+    width: 9vw;
+    height: 9vw;
+    border-radius: 50%;
+    background: var(--gradient);
+    font-weight: var(--extra-bold);
+    align-content: center;
+    font-size: 6vw;
+    flex: none;
+}
+
+.section4 .description {
+    text-align: left;
+    margin-left: 3vw;
+}
+
+.about {
+    width: 71vw;
+    margin: 5vh 0;
 }

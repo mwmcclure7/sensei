@@ -1,7 +1,7 @@
 .header {
     display: flex;
     justify-content: space-between;
-    background: black;
+    background: var(--header-footer-color);
     color: white;
     padding: 5px 20px;
     align-items: center;
@@ -27,14 +27,12 @@
 }
 
 .header .logo {
-    width: 50px;
     height: 50px;
 }
 
 .header .logo-word {
     font-size: 20px;
-    font-weight: bold;
-    margin-left: 10px;
+    font-weight: var(--bold);
     transition: 0.2s;
     background: transparent;
 }
@@ -47,13 +45,11 @@
 
 .header a {
     color: white;
-    margin: 0 10px;
-    padding: 5px;
+    padding: 1vw;
     text-decoration: none;
-    font-weight: lighter;
+    font-weight: var(--light);
     transition: 0.2s;
     font-size: 15px;
-    border-radius: 5px;
 }
 
 .header a:hover {
