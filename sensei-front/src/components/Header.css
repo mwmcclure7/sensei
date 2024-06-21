@@ -1,0 +1,80 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    background: black;
+    color: white;
+    padding: 5px 20px;
+    align-items: center;
+    position: relative;
+}
+
+.header .left {
+    display: flex;
+    align-items: center;
+}
+
+.header .middle {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.header .right {
+    display: flex;
+    align-items: center;
+}
+
+.header .logo {
+    width: 50px;
+    height: 50px;
+}
+
+.header .logo-word {
+    font-size: 20px;
+    font-weight: bold;
+    margin-left: 10px;
+    transition: 0.2s;
+    background: transparent;
+}
+
+.header .logo-word:hover {
+    background: transparent;
+    color: cyan;
+    font-size: 21px;
+}
+
+.header a {
+    color: white;
+    margin: 0 10px;
+    padding: 5px;
+    text-decoration: none;
+    font-weight: lighter;
+    transition: 0.2s;
+    font-size: 15px;
+    border-radius: 5px;
+}
+
+.header a:hover {
+    font-size: 17px;
+    color: cyan;
+}
+
+.header button {
+    background-color: transparent;
+    color: white;
+    padding: 5px 10px;
+    border: solid 2px white;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: 0.2s;
+    font-size: 13px;
+}
+
+.header button:hover {
+    background: var(--gradient);
+    color: white;
+    font-size: 15px;
+}
+

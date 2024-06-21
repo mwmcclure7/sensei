@@ -1,0 +1,25 @@
+{
+  "short_name": "SENSEI",
+  "name": "Create React App Sample",
+  "icons": [
+    {
+      "src": "sensei-logo-64.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "sensei-logo-250-t.png",
+      "type": "image/png",
+      "sizes": "250x250"
+    },
+    {
+      "src": "sensei-logo-500-t.png",
+      "type": "image/png",
+      "sizes": "500x500"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
