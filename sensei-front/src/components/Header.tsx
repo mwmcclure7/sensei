@@ -7,12 +7,12 @@ const Header = () => {
         <header className='header'>
             <div className='left'>
                 <img src={logo} alt='logo' className='logo' />
-                <a href='' className='logo-word'>SoftwareSensei.ai</a>
+                <p>SoftwareSensei.ai</p>
             </div>
             <nav className='middle'>
-                <a href=''>Home</a>
-                <a href='#sensei'>Sensei</a>
-                <a href='#tokens'>Tokens</a>
+                <a href='/'>Home</a>
+                <a href='sensei'>Sensei</a>
+                <a href='tokens'>Tokens</a>
             </nav>
             <div className='right'>
                 <button>Sign In</button>

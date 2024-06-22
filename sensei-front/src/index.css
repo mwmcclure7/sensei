@@ -5,8 +5,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: rgb(20, 20, 30);
   cursor: default;
-}
-
-code {
-  font-family: 'Ubuntu Mono', monospace;
+  text-align: center;
+  color: white;
 }

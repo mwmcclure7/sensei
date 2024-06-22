@@ -1,14 +1,22 @@
 import React from 'react';
-import './App.css';
 import Header from './components/Header';
 import Home from './components/Home';
 import Footer from './components/Footer';
+import Sensei from './components/Sensei';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 function App() {
   return (
-    <div className="App">
+    <div>
       <Header />
-      <Home />
+
+        <Router>
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/sensei' element={<Sensei />} />
+          </Routes>
+        </Router>
+
       <Footer />
     </div>
   );

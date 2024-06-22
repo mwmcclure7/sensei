@@ -8,6 +8,17 @@
     position: relative;
 }
 
+.header p {
+    font-size: 20px;
+    font-weight: var(--bold);
+    margin: 0;
+    transition: 0.5s;
+}
+
+.header p:hover {
+    letter-spacing: 2px;
+}
+
 .header .left {
     display: flex;
     align-items: center;
