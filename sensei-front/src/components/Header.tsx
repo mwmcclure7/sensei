@@ -15,7 +15,7 @@ const Header = () => {
                 <a href='tokens'>Tokens</a>
             </nav>
             <div className='right'>
-                <button>Sign In</button>
+                <button onClick={() => window.location.href = '/signin'}>Sign In</button>
             </div>
         </header>
     );
