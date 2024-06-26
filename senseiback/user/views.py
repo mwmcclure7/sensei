@@ -9,10 +9,11 @@ from user.tokens import account_activation_token
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.core.mail import send_mail
-from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
 from django.http import HttpResponse
+from senseiback import settings
+from django.contrib.auth.models import User
 
 
 class SignInView(APIView):
@@ -37,17 +38,18 @@ class SignUpView(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.save()
+            user = serializer.save()
+            send_activation_email(user, request)
             return Response({'status': 'success'})
         return Response(serializer.errors, status=400)
     
 def send_activation_email(user, request):
     token = account_activation_token.make_token(user)
     uid = urlsafe_base64_encode(force_bytes(user.pk))
-    link = request.build_absolute_uri(reverse('activate', kwargs={'uidb64': uid, 'token': token}))
+    link = f'http://{request.get_host()}/api/activate/{uid}/{token}'
     subject = 'Activate Your Sensei Account'
     message = f'Hi {user.first_name},\n\nPlease click on the link below to activate your account:\n{link}'
-    send_mail(subject, message, 'from@example.com', [user.email])    
+    send_mail(subject, message, 'mwmcclure7@gmail.com', [user.email], fail_silently=False)
 
 def activate(request, uidb64, token):
     try:
@@ -59,7 +61,7 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.userprofile.is_activated = True
         user.save()
-        return redirect('/signin')
+        return redirect(f'http://{request.get_host().split(':')[0]}:3000/signin')
     else:
         return HttpResponse('Activation link is invalid.')
 
