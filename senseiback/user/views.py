@@ -2,7 +2,7 @@ from django.contrib.auth import authenticate
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
-from .serializers import UserSerializer, UserLoginSerializer
+from .serializers import *
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from user.tokens import account_activation_token
@@ -12,9 +12,9 @@ from django.core.mail import send_mail
 from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
 from django.http import HttpResponse
-from senseiback import settings
-from django.contrib.auth.models import User
+from django.contrib.auth.tokens import default_token_generator
 
+User = get_user_model()
 
 class SignInView(APIView):
     permission_classes = [AllowAny]
@@ -22,10 +22,10 @@ class SignInView(APIView):
     def post(self, request):
         serializer = UserLoginSerializer(data=request.data)
         if serializer.is_valid():
-            username = serializer.validated_data['username']
+            email = serializer.validated_data['email']
             password = serializer.validated_data['password']
-            user = authenticate(request, username=username, password=password)
-            if user is not None and user.userprofile.is_activated:
+            user = authenticate(request, email=email, password=password)
+            if user is not None and user.is_activated:
                 return Response({'status': 'success'})
             else:
                 return Response({'status': 'fail', 'error': 'Invalid credentials.'}, status=400)
@@ -48,18 +48,18 @@ def send_activation_email(user, request):
     uid = urlsafe_base64_encode(force_bytes(user.pk))
     link = f'http://{request.get_host()}/api/activate/{uid}/{token}'
     subject = 'Activate Your Sensei Account'
-    message = f'Hi {user.first_name},\n\nPlease click on the link below to activate your account:\n{link}'
+    message = f'Welcome to SoftwareSensei!\n\nPlease click on the link below to activate your account:\n{link}'
     send_mail(subject, message, 'mwmcclure7@gmail.com', [user.email], fail_silently=False)
 
 def activate(request, uidb64, token):
     try:
         uid = urlsafe_base64_decode(uidb64).decode()
-        user = get_user_model().objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, get_user_model().DoesNotExist):
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
     
     if user is not None and account_activation_token.check_token(user, token):
-        user.userprofile.is_activated = True
+        user.is_active = True
         user.save()
         return redirect(f'http://{request.get_host().split(':')[0]}:3000/signin')
     else:
@@ -80,8 +80,57 @@ class DeactivateAccountView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        user_profile = request.user.userprofile
-        user_profile.is_activated = False
-        user_profile.save()
+        user = request.user
+        user.is_active = False
+        user.save()
         return Response({"status": "success", "message": "Your account has been deactivated."}, status=200)
-    
+
+
+class ResetPasswordView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        serializer = ResetPasswordSerializer(data=request.data)
+        if serializer.is_valid():
+            user = request.user
+            user.set_password(serializer.validated_data['new_password'])
+            user.save()
+            return Response({'status': 'success', 'message': 'Your password has been changed.'})
+        return Response(serializer.errors, status=400)
+
+
+class RequestPasswordResetEmail(APIView):
+    def post(self, request):
+        email = request.data.get('email')
+        user = User.objects.filter(email=email).first
+        if user:
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            link = f'http://{request.get_host()}/api/activate/{uid}/{token}'
+            send_mail(
+                'Password reset Request',
+                f'Click on the link below to reset your password:\n{link}',
+                'mwmcclure7@gmail.com',
+                [email],
+                fail_silently=False
+            )
+            return Response({'status': 'success', 'message': 'If an account with that email exists, we have sent an email with further instructions.'})
+        return Response({'status': 'fail', 'error': 'No account with that email exists.'}, status=400)
+
+
+class PasswordResetConfirmView(APIView):
+    def post(self, request, uidb64, token):
+        try:
+            uid = urlsafe_base64_decode(uidb64).decode()
+            user = User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+
+        if user is not None and default_token_generator.check_token(user, token):
+            serializer = ResetPasswordSerializer(data=request.data)
+            if serializer.is_valid():
+                user.set_password(serializer.validated_data['new_password'])
+                user.save()
+                return Response({'status': 'success', 'message': 'Your password has been reset.'})
+            return Response(serializer.errors, status=400)
+        return Response({'status': 'error', 'message': 'Invalid token or user ID'}, status=400)

@@ -82,6 +82,9 @@ WSGI_APPLICATION = 'senseiback.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+AUTH_USER_MODEL = 'user.CustomUser'
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
