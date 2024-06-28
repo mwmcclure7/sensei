@@ -1,10 +1,9 @@
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login, logout
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
 from .serializers import *
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import TokenAuthentication
 from user.tokens import account_activation_token
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -13,7 +12,6 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.contrib.auth.tokens import default_token_generator
-from django.contrib.auth import logout
 
 User = get_user_model()
 
@@ -27,6 +25,7 @@ class SignInView(APIView):
             password = serializer.validated_data['password']
             user = authenticate(request, email=email, password=password)
             if user is not None:
+                login(request, user)
                 return Response({'status': 'success'})
             else:
                 return Response({'status': 'fail', 'error': 'Invalid credentials.'}, status=400)
@@ -74,13 +73,23 @@ class SignOutView(APIView):
 
 
 class DeactivateAccountView(APIView):
-    authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
         user = request.user
         user.is_active = False
+        # This loop renames the user's email to a unique "deactivated"
+        # email so a new account with that same email can be created
+        i = 1
+        while True:
+            email = f'(deactivated_{i}){user.email}'
+            if User.objects.filter(email=email).exists():
+                i += 1
+            else:
+                user.email = email
+                break
         user.save()
+        logout(request)
         return Response({"status": "success", "message": "Your account has been deactivated."}, status=200)
 
 
