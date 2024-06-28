@@ -13,6 +13,7 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth import logout
 
 User = get_user_model()
 
@@ -25,7 +26,7 @@ class SignInView(APIView):
             email = serializer.validated_data['email']
             password = serializer.validated_data['password']
             user = authenticate(request, email=email, password=password)
-            if user is not None and user.is_activated:
+            if user is not None:
                 return Response({'status': 'success'})
             else:
                 return Response({'status': 'fail', 'error': 'Invalid credentials.'}, status=400)
@@ -39,17 +40,15 @@ class SignUpView(APIView):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
-            send_activation_email(user, request)
+            token = account_activation_token.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            link = f'http://{request.get_host()}/api/activate/{uid}/{token}'
+            subject = 'Activate Your Sensei Account'
+            message = f'Welcome to SoftwareSensei!\n\nPlease click on the link below to activate your account:\n{link}'
+            send_mail(subject, message, 'mwmcclure7@gmail.com', [user.email], fail_silently=False)
             return Response({'status': 'success'})
         return Response(serializer.errors, status=400)
-    
-def send_activation_email(user, request):
-    token = account_activation_token.make_token(user)
-    uid = urlsafe_base64_encode(force_bytes(user.pk))
-    link = f'http://{request.get_host()}/api/activate/{uid}/{token}'
-    subject = 'Activate Your Sensei Account'
-    message = f'Welcome to SoftwareSensei!\n\nPlease click on the link below to activate your account:\n{link}'
-    send_mail(subject, message, 'mwmcclure7@gmail.com', [user.email], fail_silently=False)
+        
 
 def activate(request, uidb64, token):
     try:
@@ -67,11 +66,10 @@ def activate(request, uidb64, token):
 
 
 class SignOutView(APIView):
-    authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        request.user.auth_token.delete()
+        logout(request)
         return Response({'status': 'success', 'message': 'You have been signed out.'})
 
 
@@ -86,27 +84,14 @@ class DeactivateAccountView(APIView):
         return Response({"status": "success", "message": "Your account has been deactivated."}, status=200)
 
 
-class ResetPasswordView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request, *args, **kwargs):
-        serializer = ResetPasswordSerializer(data=request.data)
-        if serializer.is_valid():
-            user = request.user
-            user.set_password(serializer.validated_data['new_password'])
-            user.save()
-            return Response({'status': 'success', 'message': 'Your password has been changed.'})
-        return Response(serializer.errors, status=400)
-
-
 class RequestPasswordResetEmail(APIView):
     def post(self, request):
         email = request.data.get('email')
-        user = User.objects.filter(email=email).first
+        user = User.objects.filter(email=email).first()
         if user:
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            link = f'http://{request.get_host()}/api/activate/{uid}/{token}'
+            link = f'http://{request.get_host()}/api/reset-password/{uid}/{token}'
             send_mail(
                 'Password reset Request',
                 f'Click on the link below to reset your password:\n{link}',
@@ -118,7 +103,7 @@ class RequestPasswordResetEmail(APIView):
         return Response({'status': 'fail', 'error': 'No account with that email exists.'}, status=400)
 
 
-class PasswordResetConfirmView(APIView):
+class ResetPasswordView(APIView):
     def post(self, request, uidb64, token):
         try:
             uid = urlsafe_base64_decode(uidb64).decode()

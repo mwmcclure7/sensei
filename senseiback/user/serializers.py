@@ -27,3 +27,4 @@ class ResetPasswordSerializer(serializers.Serializer):
     def validate_new_passoword(self, value):
         validate_password(value)
         return value
+    
