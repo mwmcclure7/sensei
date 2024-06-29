@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import { Link, redirect } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 const Signin = () => {
     const [email, setEmail] = useState('');
@@ -13,21 +13,21 @@ const Signin = () => {
         setErrorMessage('');
 
         try {
-            const response = await axios.post('/api/signin', {
+            const response = await axios.post('http://localhost:8000/api/signin/', {
                 email: email,
                 password: password,
             });
 
             localStorage.setItem('token', response.data.token);
-            redirect('/');
+            window.location.href = '/sensei';;
 
         } catch (error: any) {
             if (error.response) {
                 setErrorMessage('Email or password is invalid');
             } else if (error.request) {
-                setErrorMessage('The server did not respond. Please try again later.')
+                setErrorMessage('The server did not respond. Please try again later.');
             } else {
-                setErrorMessage('An error occurred. Please try again.')
+                setErrorMessage('An error occurred. Please try again.');
             }
         }
     };

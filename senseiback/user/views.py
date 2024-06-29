@@ -12,6 +12,7 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.contrib.auth.tokens import default_token_generator
+from rest_framework_simplejwt.tokens import RefreshToken
 
 User = get_user_model()
 
@@ -25,8 +26,8 @@ class SignInView(APIView):
             password = serializer.validated_data['password']
             user = authenticate(request, email=email, password=password)
             if user is not None:
-                login(request, user)
-                return Response({'status': 'success'})
+                refresh = RefreshToken.for_user(user)
+                return Response({'token': str(refresh.access_token)}, status=200)
             else:
                 return Response({'status': 'fail', 'error': 'Invalid credentials.'}, status=400)
         return Response(serializer.errors, status=400)
@@ -45,6 +46,7 @@ class SignUpView(APIView):
             subject = 'Activate Your Sensei Account'
             message = f'Welcome to SoftwareSensei!\n\nPlease click on the link below to activate your account:\n{link}'
             send_mail(subject, message, 'mwmcclure7@gmail.com', [user.email], fail_silently=False)
+            redirect(f'http://localhost:3000/signin')
             return Response({'status': 'success'})
         return Response(serializer.errors, status=400)
         
@@ -59,7 +61,8 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        return redirect(f'http://{request.get_host().split(':')[0]}:3000/signin')
+        login(user)
+        return redirect(f'http://localhost:3000/account-created')
     else:
         return HttpResponse('Activation link is invalid.')
 

@@ -6,6 +6,8 @@ import Sensei from './components/Sensei';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Signin from './components/Signin';
 import Signup from './components/Signup';
+import AccountCreated from './components/AccountCreated';
+import Settings from './components/Settings';
 
 function App() {
   return (
@@ -18,9 +20,11 @@ function App() {
             <Route path='/sensei' element={<Sensei />} />
             <Route path='/signin' element={<Signin />} />
             <Route path='/signup' element={<Signup />} />
+            <Route path='/account-created' element={<AccountCreated />} />
+            <Route path='/settings' element={<Settings />} />
           </Routes>
         </Router>
-
+        
       <Footer />
     </div>
   );

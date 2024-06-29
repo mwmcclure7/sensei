@@ -68,7 +68,7 @@
     color: cyan;
 }
 
-.header button {
+.header .sign-in-button {
     background-color: transparent;
     color: white;
     padding: 5px 10px;
@@ -79,9 +79,25 @@
     font-size: 13px;
 }
 
-.header button:hover {
+.header .sign-in-button:hover {
     background: var(--gradient);
     color: white;
     font-size: 15px;
 }
 
+.header .profile-picture {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    margin-left: 10px;
+    background-image: url('../icons/profileiconwhite.png');
+    background-size: cover;
+    background-color: transparent;
+    border: none;
+    transition: 0.2s;
+    cursor: pointer;
+}
+
+.header .profile-picture:hover {
+    background-image: url('../icons/profileiconcolor.png');
+}
