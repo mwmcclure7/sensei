@@ -22,7 +22,7 @@ const Home = () => {
                 <h1>Why Learn with AI?</h1>
                 <div className='why0'>
                     <div className='why1'>
-                        <h2>Personalized Learning</h2>
+                        <h2>Personalized Courses</h2>
                         <div className='why2'>
                             <img src={learning} alt='icon' className='icon'/>
                             <p>With one-on-one AI tutoring, Sensei adapts to your unique learning style, optimizing lessons for enhanced effectiveness.</p>
@@ -45,10 +45,10 @@ const Home = () => {
                         </div>
                     </div>
                     <div className='why1'>
-                        <h2>Interactive Lessons</h2>
+                        <h2>Project-Based Learning</h2>
                         <div className='why2'>
                             <img src={interactive} alt='icon' className='icon'/>
-                            <p>Talking through lessons with Sensei is more effective than passively reading or watching videos, as it encourages questions and active engagement with the course content.</p>
+                            <p>Sensei teaches you to code through projects that you have a personal interest in. You will not only gain essential programming knowledge, but also know how to apply this knowledge to real world scenarios.</p>
                         </div>
                     </div>
                 </div>
@@ -60,29 +60,29 @@ const Home = () => {
                 <div className='how'>
                     <p className='bullet'>1</p>
                     <div className='description'>
-                        <h2>Define Your Learning Path</h2>
-                        <p>Ask Sensei about the right learning path to achieve your goals as a developer. Sensei will assess your current level and recommend a personalized roadmap.</p>
+                        <h2>Specify your Focus</h2>
+                        <p>Request to learn a particular language or framework. Unsure of where to start? Talk to Sensei about different learning paths to achieve your goals as a developer.</p>
                     </div>
                 </div>
                 <div className='how'>
                     <p className='bullet'>2</p>
                     <div className='description'>
-                        <h2>Specify Your Focus</h2>
-                        <p>Request to learn a particular language or framework, allowing Sensei to structure a tailored course for you. This ensures your learning is relevant and aligned with your objectives.</p>
+                        <h2>Identify a Project</h2>
+                        <p>Identify a long-term project that you would like to work on as you gain the skills you selected in the previous step. Sensei will teach you these skills while guiding you through your project.</p>
                     </div>
                 </div>
                 <div className='how'>
                     <p className='bullet'>3</p>
                     <div className='description'>
-                        <h2>Receive Lectures and Guidance</h2>
-                        <p>For each unit, Sensei provides comprehensive lectures and guidance to build a strong foundation. You'll gain a clear understanding of core concepts before moving on.</p>
+                        <h2>Receive Lecture</h2>
+                        <p>For each step in your project, Sensei provides comprehensive lectures to build a fundamental understanding of a concept before applying it to your project.</p>
                     </div>
                 </div>
                 <div className='how'>
                     <p className='bullet'>4</p>
                     <div className='description'>
-                        <h2>Engage in Project-Based Learning</h2>
-                        <p>Work on meaningful projects that align with your interests, applying what you've learned in a practical context. Project-based learning ensures you gain hands-on experience.</p>
+                        <h2>Apply What You Learned</h2>
+                        <p>Sensei will guide you through applying what you learned to your project. You will be prompted to add certain functionality to your project and Sensei will provide assistance when necessary.</p>
                     </div>
                 </div>
                 <div className='how'>

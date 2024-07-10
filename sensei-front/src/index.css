@@ -8,3 +8,22 @@ body {
   text-align: center;
   color: white;
 }
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 0.5vw;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 50vmin;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, #00FFA0, #00A0FF);
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}

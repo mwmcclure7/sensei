@@ -79,21 +79,30 @@ class DeactivateAccountView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        user = request.user
-        user.is_active = False
-        # This loop renames the user's email to a unique "deactivated"
-        # email so a new account with that same email can be created
-        i = 1
-        while True:
-            email = f'(deactivated_{i}){user.email}'
-            if User.objects.filter(email=email).exists():
-                i += 1
+        serializer = UserLoginSerializer(data=request.data)
+        if serializer.is_valid():
+            email = serializer.validated_data['email']
+            password = serializer.validated_data['password']
+            user_entered = authenticate(request, email=email, password=password)
+            user = request.user
+            if user == user_entered and user is not None:  
+                user.is_active = False
+                # This loop renames the user's email to a unique "deactivated"
+                # email so a new account with that same email can be created
+                i = 1
+                while True:
+                    email = f'(deactivated_{i}){user.email}'
+                    if User.objects.filter(email=email).exists():
+                        i += 1
+                    else:
+                        user.email = email
+                        break
+                user.save()
+                logout(request)
+                return Response({"status": "success", "message": "Your account has been deactivated."}, status=200)
             else:
-                user.email = email
-                break
-        user.save()
-        logout(request)
-        return Response({"status": "success", "message": "Your account has been deactivated."}, status=200)
+                return Response({"status": "fail", "error": "Improper credentials or not signed in."}, status=400)
+        return Response(serializer.errors, status=400)
 
 
 class RequestPasswordResetEmail(APIView):

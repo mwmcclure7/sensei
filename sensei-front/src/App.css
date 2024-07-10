@@ -2,3 +2,40 @@
   text-align: center;
 }
 
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  width: 30vw;
+  background: rgb(20, 40, 60);
+  padding: 20px;
+  border-radius: 20px;
+  border: 1px solid white;
+}
+
+button {
+  background-color: transparent;
+  color: white;
+  padding: 1.25vh 3vw;
+  border: solid 2px white;
+  cursor: pointer;
+  border-radius: 1vw;
+  transition: 0.5s;
+  font-size: 1.5vw;
+}
+
+button:hover {
+  background: var(--gradient);
+  border: solid 2px rgb(0, 255, 255);
+  box-shadow: 0 0 2vw 0 rgb(0, 255, 255);
+}
