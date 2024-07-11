@@ -35,7 +35,7 @@ const Settings = () => {
                 email: email,
                 password: password,
             });
-
+            
             signOut();
             window.location.href = '/sensei';;
 
@@ -57,7 +57,7 @@ const Settings = () => {
             <button onClick={toggleModal} className='delete-account-button'>Delete Account</button>
             {isModalOpen && (
                 <Modal onClose={toggleModal}>
-                    <form>
+                    <form onSubmit={handleSubmit}>
                         <h1>Delete Account</h1>
                         <p>If you delete your account, you will lose ALL account information. This includes all chats with Sensei and any subscriptions currently active on the account. Only delete your account if you are absolutely certain that you will no longer need it.</p>
                         <p>Retype your email and password to confirm your account deletion.</p>

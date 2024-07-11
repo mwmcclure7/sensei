@@ -1,9 +1,9 @@
 from django.contrib.auth import authenticate, login, logout
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework import status
 from .serializers import *
-from rest_framework.permissions import IsAuthenticated
 from user.tokens import account_activation_token
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
@@ -13,31 +13,42 @@ from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.contrib.auth.tokens import default_token_generator
 from rest_framework_simplejwt.tokens import RefreshToken
+from validations import custom_validation
 
 User = get_user_model()
 
 class SignInView(APIView):
     permission_classes = [AllowAny]
-
+    
     def post(self, request):
-        serializer = UserLoginSerializer(data=request.data)
-        if serializer.is_valid():
-            email = serializer.validated_data['email']
-            password = serializer.validated_data['password']
-            user = authenticate(request, email=email, password=password)
-            if user is not None:
-                refresh = RefreshToken.for_user(user)
-                return Response({'token': str(refresh.access_token)}, status=200)
-            else:
+        validated_data = custom_validation(request.data)
+        serializer = UserRegisterSerializer(data=validated_data)
+        if serializer.is_valid(raise_exception=True):
+            user = serializer.create(validated_data)
+            if user:
                 return Response({'status': 'fail', 'error': 'Invalid credentials.'}, status=400)
         return Response(serializer.errors, status=400)
+
+    # def post(self, request):
+    #     serializer = UserLoginSerializer(data=request.data)
+    #     if serializer.is_valid():
+    #         email = serializer.validated_data['email']
+    #         password = serializer.validated_data['password']
+    #         user = authenticate(request, email=email, password=password)
+    #         if user is not None:
+    #             refresh = RefreshToken.for_user(user)
+    #             login(request, user)
+    #             return Response({'token': str(refresh.access_token)}, status=200)
+    #         else:
+    #             return Response({'status': 'fail', 'error': 'Invalid credentials.'}, status=400)
+    #     return Response(serializer.errors, status=400)
     
 
 class SignUpView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        serializer = UserSerializer(data=request.data)
+        serializer = UserRegisterSerializer(data=request.data)
         if serializer.is_valid():
             user = serializer.save()
             token = account_activation_token.make_token(user)
@@ -61,7 +72,7 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        login(user)
+        login(request, user)
         return redirect(f'http://localhost:3000/account-created')
     else:
         return HttpResponse('Activation link is invalid.')
@@ -83,9 +94,8 @@ class DeactivateAccountView(APIView):
         if serializer.is_valid():
             email = serializer.validated_data['email']
             password = serializer.validated_data['password']
-            user_entered = authenticate(request, email=email, password=password)
-            user = request.user
-            if user == user_entered and user is not None:  
+            user = authenticate(request, email=email, password=password)
+            if user is not None and user == request.user:
                 user.is_active = False
                 # This loop renames the user's email to a unique "deactivated"
                 # email so a new account with that same email can be created

@@ -102,6 +102,6 @@ const Home = () => {
             </section>
         </body>
     );
-};
+}
 
 export default Home;

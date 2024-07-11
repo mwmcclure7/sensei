@@ -1,24 +1,29 @@
+from django.forms import ValidationError
 from rest_framework import serializers
 from django.contrib.auth.password_validation import validate_password
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
 
 
 User = get_user_model()
 
-class UserSerializer(serializers.ModelSerializer):
+class UserRegisterSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['email', 'password']
-        extra_kwargs = {'password': {'write_only': True}}
-
+        fields = '__all__'
     def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
+        user = User.objects.create_user(email=validated_data['email'], password=validated_data['password'])
+        user.save()
         return user
-    
 
 class UserLoginSerializer(serializers.Serializer):
-    email = serializers.CharField()
+    email = serializers.EmailField()
     password = serializers.CharField()
+
+    def check_user(self, validated_data):
+        user = authenticate(email=validated_data['email'], password=validated_data['password'])
+        if not user:
+            raise ValidationError('Invalid credentials.')
+        return user
 
 
 class ResetPasswordSerializer(serializers.Serializer):
@@ -27,4 +32,9 @@ class ResetPasswordSerializer(serializers.Serializer):
     def validate_new_passoword(self, value):
         validate_password(value)
         return value
-    
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('email', 'password')
+        

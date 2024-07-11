@@ -17,7 +17,7 @@ function Signup() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const response = await axios.post('/api/signup', {
+            const response = await axios.post('/api/signup/', {
                 email: formData.email,
                 password: formData.password,
             });
