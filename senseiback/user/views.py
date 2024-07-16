@@ -13,54 +13,48 @@ from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.contrib.auth.tokens import default_token_generator
 from rest_framework_simplejwt.tokens import RefreshToken
-from validations import custom_validation
+
+# Tutorial imports start here
+from django.shortcuts import render
+from rest_framework import generics
+from .serializers import UserSerializer
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from django.core.mail import send_mail
 
 User = get_user_model()
 
-class SignInView(APIView):
+
+class CreateUserView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
     permission_classes = [AllowAny]
-    
-    def post(self, request):
-        validated_data = custom_validation(request.data)
-        serializer = UserRegisterSerializer(data=validated_data)
-        if serializer.is_valid(raise_exception=True):
-            user = serializer.create(validated_data)
-            if user:
-                return Response({'status': 'fail', 'error': 'Invalid credentials.'}, status=400)
-        return Response(serializer.errors, status=400)
 
-    # def post(self, request):
-    #     serializer = UserLoginSerializer(data=request.data)
-    #     if serializer.is_valid():
-    #         email = serializer.validated_data['email']
-    #         password = serializer.validated_data['password']
-    #         user = authenticate(request, email=email, password=password)
-    #         if user is not None:
-    #             refresh = RefreshToken.for_user(user)
-    #             login(request, user)
-    #             return Response({'token': str(refresh.access_token)}, status=200)
-    #         else:
-    #             return Response({'status': 'fail', 'error': 'Invalid credentials.'}, status=400)
-    #     return Response(serializer.errors, status=400)
-    
+    def perform_create(self, serializer):
+        user = serializer.save()
+        token = account_activation_token.make_token(user)
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        link = f'http://localhost:8000/api/activate/{uid}/{token}'
+        subject = 'Activate Your Sensei Account'
+        message = f'Welcome to SoftwareSensei!\n\nPlease click on the link below to activate your account:\n{link}'
+        send_mail(subject, message, 'mwmcclure7@gmail.com', [user.email], fail_silently=False)
 
-class SignUpView(APIView):
+
+class SendActivationEmailView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
-        serializer = UserRegisterSerializer(data=request.data)
-        if serializer.is_valid():
-            user = serializer.save()
+        email = request.data.get('email')
+        user = User.objects.filter(email=email).first()
+        if user:
             token = account_activation_token.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            link = f'http://{request.get_host()}/api/activate/{uid}/{token}'
+            link = f'http://localhost:8000/api/activate/{uid}/{token}'
             subject = 'Activate Your Sensei Account'
             message = f'Welcome to SoftwareSensei!\n\nPlease click on the link below to activate your account:\n{link}'
-            send_mail(subject, message, 'mwmcclure7@gmail.com', [user.email], fail_silently=False)
-            redirect(f'http://localhost:3000/signin')
-            return Response({'status': 'success'})
-        return Response(serializer.errors, status=400)
-        
+            send_mail(subject, message, 'mwmcclure7@gmail.com', [email], fail_silently=False)
+            return Response({'status': 'success', 'message': 'Activation email has been sent.'})
+        return Response({'status': 'fail', 'error': 'No account with that email exists.'}, status=400)
+    
 
 def activate(request, uidb64, token):
     try:
@@ -72,57 +66,39 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        login(request, user)
-        return redirect(f'http://localhost:3000/account-created')
+        return redirect('http://localhost:5173/login')
     else:
-        return HttpResponse('Activation link is invalid.')
-
-
-class SignOutView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        logout(request)
-        return Response({'status': 'success', 'message': 'You have been signed out.'})
+        return redirect('http://localhost:5173/invalid-activation')
 
 
 class DeactivateAccountView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        serializer = UserLoginSerializer(data=request.data)
-        if serializer.is_valid():
-            email = serializer.validated_data['email']
-            password = serializer.validated_data['password']
-            user = authenticate(request, email=email, password=password)
-            if user is not None and user == request.user:
-                user.is_active = False
-                # This loop renames the user's email to a unique "deactivated"
-                # email so a new account with that same email can be created
-                i = 1
-                while True:
-                    email = f'(deactivated_{i}){user.email}'
-                    if User.objects.filter(email=email).exists():
-                        i += 1
-                    else:
-                        user.email = email
-                        break
-                user.save()
-                logout(request)
-                return Response({"status": "success", "message": "Your account has been deactivated."}, status=200)
+        user = request.user
+        user.is_active = False
+        i = 1
+        while True:
+            email = f'(deactivated_{i}){user.email}'
+            if User.objects.filter(email=email).exists():
+                i += 1
             else:
-                return Response({"status": "fail", "error": "Improper credentials or not signed in."}, status=400)
-        return Response(serializer.errors, status=400)
+                user.email = email
+                break
+        user.save()
+        return Response({'status': 'success', 'message': 'Your account has been deactivated.'})
 
 
 class RequestPasswordResetEmail(APIView):
+    permission_classes = [AllowAny]
+
     def post(self, request):
         email = request.data.get('email')
         user = User.objects.filter(email=email).first()
         if user:
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            link = f'http://{request.get_host()}/api/reset-password/{uid}/{token}'
+            link = f'http://localhost:5173/api/reset-password/{uid}/{token}'
             send_mail(
                 'Password reset Request',
                 f'Click on the link below to reset your password:\n{link}',

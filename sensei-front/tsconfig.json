@@ -18,10 +18,12 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "preserve"
+    "jsx": "preserve",
+    "types": ["vite/client"]
   },
   "include": [
     "src",
-    "src/components"
+    "src/components",
+    "custom.d.ts"
   ]
 }

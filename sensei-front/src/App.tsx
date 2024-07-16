@@ -1,33 +1,42 @@
-import React from 'react';
-import Header from './components/Header';
-import Home from './components/Home';
-import Footer from './components/Footer';
-import Sensei from './components/Sensei';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import Signin from './components/Signin';
-import Signup from './components/Signup';
-import AccountCreated from './components/AccountCreated';
-import Settings from './components/Settings';
+import React from "react";
+import Header from "./pages/Header";
+import Home from "./pages/Home";
+import Footer from "./pages/Footer";
+import Sensei from "./pages/Sensei";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Settings from "./pages/Settings";
+import NotFound from "./pages/NotFound";
+import ProtectedRoute from "./components/ProtectedRoute";
+import InvalidActivation from "./pages/InvalidActivation";
+import './App.css';
+
+function Logout() {
+    localStorage.clear();
+    return <Navigate to="/" />;
+}
+
+function RegisterAndLogout() {
+    localStorage.clear();
+    return <Register />;
+}
 
 function App() {
-  return (
-    <div>
-      <Header />
-
-        <Router>
-          <Routes>
-            <Route path='/' element={<Home />} />
-            <Route path='/sensei' element={<Sensei />} />
-            <Route path='/signin' element={<Signin />} />
-            <Route path='/signup' element={<Signup />} />
-            <Route path='/account-created' element={<AccountCreated />} />
-            <Route path='/settings' element={<Settings />} />
-          </Routes>
-        </Router>
-        
-      <Footer />
-    </div>
-  );
+    return (
+        <BrowserRouter>
+            <Header />
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/logout" element={<Logout />} />
+                <Route path="/register" element={<RegisterAndLogout />} />
+                <Route path="/invalid-activation" element={<InvalidActivation />} />
+                <Route path="*" element={<NotFound />} />
+            </Routes>
+            <Footer />
+        </BrowserRouter>
+    );
 }
 
 export default App;
