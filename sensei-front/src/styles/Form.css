@@ -1,0 +1,71 @@
+.auth-container h1 {
+    font-size: 2vw;
+}
+
+.auth-container p {
+    font-size: 1.2vw;
+}
+
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 2vw auto;
+    padding: 6vw;
+    background: var(--block-color);
+    width: 30vw;
+    border-radius: 10vmin;
+    transition: 0.5s;
+}
+
+.auth-input {
+    width: 80%;
+    height: 2vw;
+    margin: 1vw;
+    padding: 0.5vw;
+    background-color: transparent;
+    border: 2px solid white;
+    border-radius: 2vmin;
+    &::placeholder {
+        color: rgb(255, 255, 255, 0.5);
+    }
+    font-size:1.2vw;
+    color: white;
+    transition: 0.5s;
+}
+
+.auth-input:hover {
+    background: var(--hover-block-color);
+}
+
+.auth-input:focus {
+    border: 2px solid #00FFFF;
+    outline: none;
+    background: var(--hover-block-color);
+    box-shadow: 0 0 1vw #00FFFF;
+}
+
+.auth-button:disabled {
+    border: 2px solid #FFFFFF50;
+    color: #FFFFFF50;
+    cursor: default;
+    box-shadow: none;
+    background: transparent;
+}
+
+.auth-container a {
+    color: white;
+    text-decoration: underline;
+    transition: 0.3s;
+    font-weight: var(--normal);
+    font-size: 1.2vw;
+}
+
+.auth-container a:hover {
+    color: #00FFFF;
+}
+
+.auth-container button {
+    margin-bottom: 2vw;
+}

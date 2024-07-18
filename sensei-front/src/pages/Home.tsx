@@ -7,7 +7,7 @@ import tutor from "../assets/tutor.svg";
 
 function Home() {
     return (
-        <body className="home">
+        <div className="home">
             <section className="section1">
                 <p className="title">
                     Introducing <span className="sensei">sensei</span>
@@ -176,7 +176,7 @@ function Home() {
                     gains.
                 </p>
             </section>
-        </body>
+        </div>
     );
 };
 

@@ -2,11 +2,13 @@ import { useState } from "react";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
+import "../styles/Form.css";
 
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -17,9 +19,14 @@ function Login() {
             const res = await api.post("/api/token/", { email, password });
             localStorage.setItem(ACCESS_TOKEN, res.data.access);
             localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
+            window.dispatchEvent(new CustomEvent("login"));
             navigate("/chat");
         } catch (error) {
-            alert(error);
+            if (error.response && error.response.status === 401) {
+                setErrorMessage("Invalid email or password.");
+            } else {
+                alert(error);
+            }
         } finally {
             setLoading(false);
         }
@@ -42,6 +49,7 @@ function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
             />
+            <p>{errorMessage}</p>
             <button
                 className="auth-button"
                 type="submit"
@@ -49,6 +57,7 @@ function Login() {
             >
                 Sign In
             </button>
+            <a href="/request-password-reset">Forgot password</a>
             <p>
                 Don't have an account? <a href="/register">Sign up here</a>!
             </p>

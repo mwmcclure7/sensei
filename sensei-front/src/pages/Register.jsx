@@ -1,7 +1,7 @@
 import { useState } from "react";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
-import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
+import "../styles/Form.css";
 
 function Register() {
     const [email, setEmail] = useState("");
@@ -14,10 +14,16 @@ function Register() {
     const handleSubmit = async (e) => {
         setLoading(true);
         e.preventDefault();
+        setErrorMessage("");
 
         try {
-            const res = await api.post("/api/register/", { email, password });
-            navigate("/login");
+            if (password !== passwordConfirm) {
+                setErrorMessage("Passwords do not match.");
+            } else if (password.length < 8) {
+                setErrorMessage("Password must be at least 8 characters.");
+            } else {
+                await api.post("/api/register/", { email, password });
+            }
         } catch (error) {
             if (error.response && error.response.status === 400) {
                 setErrorMessage("An account with this email already exists.");
@@ -26,6 +32,7 @@ function Register() {
             }
         } finally {
             setLoading(false);
+            navigate("/activate-email-sent");
         }
     };
 
@@ -50,24 +57,18 @@ function Register() {
                 className="auth-input"
                 type="password"
                 value={passwordConfirm}
-                onChange={(e) => {
-                    setPasswordConfirm(e.target.value);
-                    if (e.target.value === password) {
-                        setErrorMessage("");
-                    } else {
-                        setErrorMessage("Passwords do not match.");
-                    }
-                }}
+                onChange={(e) => setPasswordConfirm(e.target.value)}
                 placeholder="Confirm Password"
             />
             <p>{errorMessage}</p>
             <button
                 className="auth-button"
                 type="submit"
-                disabled={!email || !password || !passwordConfirm || password !== passwordConfirm}
+                disabled={!email || !password || !passwordConfirm}
             >
                 Create Account
             </button>
+            <p>Already have an account? <a href="/login">Sign in here</a>!</p>
         </form>
     );
 }

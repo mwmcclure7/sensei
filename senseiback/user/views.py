@@ -98,9 +98,9 @@ class RequestPasswordResetEmail(APIView):
         if user:
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            link = f'http://localhost:5173/api/reset-password/{uid}/{token}'
+            link = f'http://localhost:5173/reset-password/{uid}/{token}/'
             send_mail(
-                'Password reset Request',
+                'Password Reset Request',
                 f'Click on the link below to reset your password:\n{link}',
                 'mwmcclure7@gmail.com',
                 [email],
@@ -111,6 +111,8 @@ class RequestPasswordResetEmail(APIView):
 
 
 class ResetPasswordView(APIView):
+    permission_classes = [AllowAny]
+
     def post(self, request, uidb64, token):
         try:
             uid = urlsafe_base64_decode(uidb64).decode()
@@ -119,10 +121,7 @@ class ResetPasswordView(APIView):
             user = None
 
         if user is not None and default_token_generator.check_token(user, token):
-            serializer = ResetPasswordSerializer(data=request.data)
-            if serializer.is_valid():
-                user.set_password(serializer.validated_data['new_password'])
-                user.save()
-                return Response({'status': 'success', 'message': 'Your password has been reset.'})
-            return Response(serializer.errors, status=400)
+            user.set_password(request.data.get('password'))
+            user.save()
+            return Response({'status': 'success', 'message': 'Your password has been reset.'})
         return Response({'status': 'error', 'message': 'Invalid token or user ID'}, status=400)
