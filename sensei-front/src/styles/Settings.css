@@ -1,0 +1,65 @@
+.delete-modal .modal-content {
+    border: 2px solid #ff0000;
+    box-shadow: 0 0 3vw #ff0000;
+}
+
+.delete-modal h1 {
+    font-size: 2vw;
+}
+
+.exit-modal-button {
+    float: right;
+    margin-top: -1.5vw;
+    cursor: pointer;
+    font-size: 2vw
+}
+
+.delete-modal p {
+    font-size: 1.5vw;
+    text-align: left;
+}
+
+.delete-modal input {
+    width: 80%;
+    height: 2vw;
+    margin: 1vw;
+    padding: 0.5vw;
+    background-color: transparent;
+    border: 2px solid white;
+    border-radius: 2vmin;
+    &::placeholder {
+        color: rgb(255, 255, 255, 0.5);
+    }
+    font-size:1.2vw;
+    color: white;
+    transition: 0.5s;
+}
+
+.delete-modal input:hover {
+    background: var(--hover-block-color);
+}
+
+.delete-modal input:focus {
+    border: 2px solid red;
+    outline: none;
+    background: var(--hover-block-color);
+    box-shadow: 0 0 1vw red;
+}
+
+.delete-modal button {
+    margin: 1vw;
+}
+
+.delete-modal button:hover {
+    background: red;
+    border: 2px solid red;
+    box-shadow: 0 0 3vw red;
+}
+
+.delete-modal button:disabled {
+    border: 2px solid #FFFFFF50;
+    color: #FFFFFF50;
+    cursor: default;
+    box-shadow: none;
+    background: transparent;
+}

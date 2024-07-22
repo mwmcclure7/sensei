@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
+from django.forms import ValidationError
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -125,3 +126,34 @@ class ResetPasswordView(APIView):
             user.save()
             return Response({'status': 'success', 'message': 'Your password has been reset.'})
         return Response({'status': 'error', 'message': 'Invalid token or user ID'}, status=400)
+
+
+class UpdateProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        data = request.data
+        
+        user.first_name = data.get('first_name', user.first_name)
+        user.last_name = data.get('last_name', user.last_name)
+        try:
+            user.date_of_birth = data.get('date_of_birth', user.date_of_birth)
+        except ValidationError:
+            user.date_of_birth = None
+        user.info = data.get('info', user.info)
+        user.save()
+        return Response({'status': 'success', 'message': 'Profile updated.'})
+
+
+class GetProfileView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        return Response({
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'date_of_birth': user.date_of_birth,
+            'info': user.info
+        })

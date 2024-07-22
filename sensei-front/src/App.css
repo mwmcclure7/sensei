@@ -17,7 +17,7 @@
 
 .modal-content {
   width: 30vw;
-  background: rgb(20, 40, 60);
+  background: var(--block-color);
   padding: 20px;
   border-radius: 20px;
   border: 1px solid white;
@@ -37,7 +37,7 @@ button {
 button:hover {
   background: var(--gradient);
   border: solid 2px rgb(0, 255, 255);
-  box-shadow: 0 0 2vw 0 rgb(0, 255, 255);
+  box-shadow: 0 0 1.5vw 0 rgb(0, 255, 255);
 }
 
 button:active {

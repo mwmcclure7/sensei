@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from "react";
 import "../App.css";
 import "../styles/Settings.css";
 import { useNavigate } from "react-router-dom";
@@ -22,23 +21,24 @@ function Modal({
 }
 
 const Settings = () => {
+    const [loading, setLoading] = useState(false);
+    // Delete account functionality
     const [isModalOpen, setModalOpen] = useState(false);
     const [confirm, setConfirm] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
+    const [deleteErrorMessage, setDeleteErrorMessage] = useState("");
 
     const navigate = useNavigate();
 
     const toggleModal = () => setModalOpen(!isModalOpen);
 
-    const handleSubmit = async (e: any) => {
+    const handleDeleteSubmit = async (e: any) => {
         e.preventDefault();
-
-        setErrorMessage("");
+        setDeleteErrorMessage("");
 
         try {
             await api.post("/api/deactivate-account/");
         } catch (error) {
-            setErrorMessage("An error occurred. Please try again.");
+            setDeleteErrorMessage("An error occurred. Please try again.");
         } finally {
             localStorage.clear();
             window.dispatchEvent(new CustomEvent("login"));
@@ -46,48 +46,136 @@ const Settings = () => {
         }
     };
 
+    // Update account functionality
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [dateOfBirth, setDateOfBirth] = useState("");
+    const [info, setInfo] = useState("");
+
+    const fetchUserData = async () => {
+        try {
+            const response = await api.get("/api/get-profile/");
+            setFirstName(response.data.first_name);
+            setLastName(response.data.last_name);
+            setDateOfBirth(response.data.date_of_birth);
+            setInfo(response.data.info);
+        } catch (error) {
+            alert(error);
+        }
+    };
+
+    useEffect(() => {
+        fetchUserData();
+    }, []);
+
+    const handleProfileSubmit = async (e: any) => {
+        e.preventDefault();
+        setLoading(true);
+
+        try {
+            await api.post("/api/update-profile/", {
+                first_name: firstName,
+                last_name: lastName,
+                date_of_birth: dateOfBirth,
+                info: info,
+            });
+        } catch (error) {
+            alert(error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
-        <div className='settings'>
+        <div className="settings">
             <h1>Settings</h1>
-            <button onClick={() => navigate("/logout")} className="sign-out-button">
+            <form className="profile-settings" onSubmit={handleProfileSubmit}>
+                <label htmlFor="firstName">First Name</label>
+                <input
+                    type="text"
+                    id="firstName"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                />
+                <label htmlFor="lastName">Last Name</label>
+                <input
+                    type="text"
+                    id="lastName"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                />
+                <label htmlFor="dateOfBirth">Date of Birth</label>
+                <input
+                    type="date"
+                    id="dateOfBirth"
+                    value={dateOfBirth}
+                    onChange={(e) => setDateOfBirth(e.target.value)}
+                />
+                <label htmlFor="info">Additional Information</label>
+                <textarea
+                    id="info"
+                    value={info}
+                    onChange={(e) => setInfo(e.target.value)}
+                />
+                <button type="submit">Update Account</button>
+            </form>
+
+            <button
+                onClick={() => navigate("/logout")}
+                className="sign-out-button"
+            >
                 Sign Out
             </button>
             <button onClick={toggleModal} className="delete-account-button">
                 Delete Account
             </button>
-            {isModalOpen && (
-                <Modal onClose={toggleModal}>
-                    <form onSubmit={handleSubmit}>
-                        <h1>Delete Account</h1>
-                        <p>
-                            If you delete your account, you will lose ALL
-                            account information. This includes all chats with
-                            Sensei and any subscriptions currently active on the
-                            account. Only delete your account if you are
-                            absolutely certain that you will no longer need it.
-                        </p>
-                        <p>
-                            Please type "delete my account" to confirm your
-                            account deletion.
-                        </p>
-                        <div>
-                            <input
-                                type="text"
-                                id="confirm"
-                                placeholder="delete my account"
-                                value={confirm}
-                                onChange={(e) => setConfirm(e.target.value)}
-                            />
-                        </div>
-                        <button type="submit" disabled={confirm !== "delete my account"}>
-                            DELETE ACCOUNT
-                        </button>
-                        {errorMessage && (
-                            <p style={{ color: "red" }}>{errorMessage}</p>
-                        )}
-                    </form>
-                </Modal>
-            )}
+            <div className="delete-modal">
+                {isModalOpen && (
+                    <Modal onClose={toggleModal}>
+                        <form onSubmit={handleDeleteSubmit}>
+                            <a
+                                onClick={toggleModal}
+                                className="exit-modal-button"
+                            >
+                                X
+                            </a>
+                            <h1>Delete Account</h1>
+                            <p>
+                                If you delete your account, you will lose ALL
+                                account information. This includes all chats
+                                with Sensei and any subscriptions currently
+                                active on the account. Only delete your account
+                                if you are absolutely certain that you will no
+                                longer need it.
+                            </p>
+                            <p>
+                                Please type "delete my account" to confirm your
+                                account deletion.
+                            </p>
+                            <div>
+                                <input
+                                    type="text"
+                                    id="confirm"
+                                    placeholder="delete my account"
+                                    value={confirm}
+                                    onChange={(e) => setConfirm(e.target.value)}
+                                />
+                            </div>
+                            <button
+                                type="submit"
+                                disabled={confirm !== "delete my account"}
+                            >
+                                DELETE ACCOUNT
+                            </button>
+                            {deleteErrorMessage && (
+                                <p style={{ color: "red" }}>
+                                    {deleteErrorMessage}
+                                </p>
+                            )}
+                        </form>
+                    </Modal>
+                )}
+            </div>
         </div>
     );
 };

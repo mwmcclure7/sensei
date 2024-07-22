@@ -139,6 +139,7 @@ p {
 .s4-caption {
     font-weight: var(--light);
     width: 80vw;
+    text-align: justify;
 }
 
 .how {
@@ -186,4 +187,8 @@ p {
 .about {
     width: 71vw;
     margin: 5vh 0;
+}
+
+.about .description {
+    text-align: justify;
 }
