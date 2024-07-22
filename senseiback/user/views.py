@@ -137,10 +137,7 @@ class UpdateProfileView(APIView):
         
         user.first_name = data.get('first_name', user.first_name)
         user.last_name = data.get('last_name', user.last_name)
-        try:
-            user.date_of_birth = data.get('date_of_birth', user.date_of_birth)
-        except ValidationError:
-            user.date_of_birth = None
+        user.date_of_birth = data.get('date_of_birth', user.date_of_birth)
         user.info = data.get('info', user.info)
         user.save()
         return Response({'status': 'success', 'message': 'Profile updated.'})

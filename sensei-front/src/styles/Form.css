@@ -19,7 +19,7 @@
     transition: 0.5s;
 }
 
-.auth-input {
+input {
     width: 80%;
     height: 2vw;
     margin: 1vw;
@@ -33,20 +33,22 @@
     font-size:1.2vw;
     color: white;
     transition: 0.5s;
+    font-family: 'Ubuntu', sans-serif;
+    font-weight: var(--light);
 }
 
-.auth-input:hover {
+input:hover {
     background: var(--hover-block-color);
 }
 
-.auth-input:focus {
+input:focus {
     border: 2px solid #00FFFF;
     outline: none;
     background: var(--hover-block-color);
     box-shadow: 0 0 1vw #00FFFF;
 }
 
-.auth-button:disabled {
+button:disabled {
     border: 2px solid #FFFFFF50;
     color: #FFFFFF50;
     cursor: default;

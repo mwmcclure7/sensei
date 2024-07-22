@@ -27,3 +27,7 @@ body {
 ::-webkit-scrollbar-track {
   background-color: transparent;
 }
+
+::selection {
+  background: #00A0FFA0;
+}

@@ -88,36 +88,45 @@ const Settings = () => {
 
     return (
         <div className="settings">
-            <h1>Settings</h1>
             <form className="profile-settings" onSubmit={handleProfileSubmit}>
-                <label htmlFor="firstName">First Name</label>
-                <input
-                    type="text"
-                    id="firstName"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                />
-                <label htmlFor="lastName">Last Name</label>
-                <input
-                    type="text"
-                    id="lastName"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                />
-                <label htmlFor="dateOfBirth">Date of Birth</label>
-                <input
-                    type="date"
-                    id="dateOfBirth"
-                    value={dateOfBirth}
-                    onChange={(e) => setDateOfBirth(e.target.value)}
-                />
-                <label htmlFor="info">Additional Information</label>
-                <textarea
-                    id="info"
-                    value={info}
-                    onChange={(e) => setInfo(e.target.value)}
-                />
-                <button type="submit">Update Account</button>
+                <h1>Profile</h1>
+                <div>
+                    <label htmlFor="firstName">First Name</label>
+                    <input
+                        type="text"
+                        id="firstName"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="lastName">Last Name</label>
+                    <input
+                        type="text"
+                        id="lastName"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                    />
+                </div>
+                <div>
+                    <label htmlFor="dateOfBirth">Date of Birth</label>
+                    <input
+                        type="date"
+                        id="dateOfBirth"
+                        value={dateOfBirth}
+                        onChange={(e) => setDateOfBirth(e.target.value)}
+                    />
+                </div>
+                <div className="info-div">
+                    <label htmlFor="info" className="info-label">Enter additional information you want Sensei to know for further personalization, such as skills or prior experience.</label>
+                    <textarea
+                        id="info"
+                        value={info}
+                        onChange={(e) => setInfo(e.target.value)}
+                        maxLength={500}
+                    />
+                </div>
+                <button type="submit" className="update-profile-submit">Update Profile</button>
             </form>
 
             <button
