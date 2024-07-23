@@ -20,7 +20,7 @@ function Home() {
                     Personalized, project-based tutoring so you can learn
                     programming effectively.
                 </p>
-                <button>Get Started</button>
+                <button onClick={() => {window.location.href = "/register"}}>Get Started</button>
             </section>
             <hr />
             <section className="section3">
@@ -151,7 +151,7 @@ function Home() {
                     </div>
                 </div>
                 <h1>Ready to Get Started?</h1>
-                <button>Sign Up Now</button>
+                <button onClick={() => {window.location.href = "/register"}}>Sign Up Now</button>
             </section>
             <hr />
             <section className="about">
