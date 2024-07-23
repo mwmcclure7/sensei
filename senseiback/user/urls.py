@@ -15,4 +15,5 @@ urlpatterns = [
     path('update-profile/', UpdateProfileView.as_view(), name='update-profile'),
     path('update-email-request/', RequestEmailResetEmail.as_view(), name='request-email-reset'),
     path('reset-email/<uidb64>/<token>/', update_email, name='reset-email'),
+    path('update-password/', UpdatePasswordView.as_view(), name='update-password'),
 ]

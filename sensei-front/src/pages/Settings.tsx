@@ -51,7 +51,7 @@ const Settings = () => {
     const [lastName, setLastName] = useState("");
     const [dateOfBirth, setDateOfBirth] = useState("");
     const [info, setInfo] = useState("");
-    const [profileMessage, setMessage] = useState("");
+    const [profileMessage, setProfileMessage] = useState("");
 
     const fetchUserData = async () => {
         try {
@@ -73,7 +73,7 @@ const Settings = () => {
     const handleProfileSubmit = async (e: any) => {
         e.preventDefault();
         setLoading(true);
-        setMessage("");
+        setProfileMessage("");
 
         try {
             await api.post("/api/update-profile/", {
@@ -82,7 +82,7 @@ const Settings = () => {
                 date_of_birth: dateOfBirth,
                 info: info,
             });
-            setMessage("Profile updated successfully.");
+            setProfileMessage("Profile updated successfully.");
         } catch (error) {
             alert(error);
         } finally {
@@ -105,14 +105,16 @@ const Settings = () => {
         } catch (error) {
             alert(error);
         } finally {
-            setEmailMessage("An email has been sent to this address for confirmation.");
+            setEmailMessage(
+                "An email has been sent to this address for confirmation."
+            );
             setLoading(false);
         }
     };
 
     // Change password functionality
     const [password, setPassword] = useState("");
-    const [passwordConfirm, setPasswordConfirm] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
     const [passwordMessage, setPasswordMessage] = useState("");
 
     const handlePasswordSubmit = async (e: any) => {
@@ -120,13 +122,21 @@ const Settings = () => {
         setLoading(true);
         setPasswordMessage("");
         try {
-            await api.post("/api/update-password/", {
-                password: password,
-            });
+            if (password !== confirmPassword) {
+                setPasswordMessage("Passwords do not match.");
+            } else if (password.length < 8) {
+                setPasswordMessage("Password must be at least 8 characters long.");
+            } else {
+                await api.post("/api/update-password/", {
+                    password: password,
+                });
+                setPassword("");
+                setConfirmPassword("");
+                setPasswordMessage("Your password has been updated.");
+            }
         } catch (error) {
             alert(error);
         } finally {
-            setPasswordMessage("Password updated successfully.");
             setLoading(false);
         }
     };
@@ -165,7 +175,11 @@ const Settings = () => {
                     />
                 </div>
                 <div className="info-div">
-                    <label htmlFor="info" className="info-label">Enter additional information you want Sensei to know for further personalization, such as skills or prior experience.</label>
+                    <label htmlFor="info" className="info-label">
+                        Enter additional information you want Sensei to know for
+                        further personalization, such as skills or prior
+                        experience.
+                    </label>
                     <textarea
                         id="info"
                         value={info}
@@ -173,10 +187,15 @@ const Settings = () => {
                         maxLength={500}
                     />
                 </div>
-                <button type="submit" className={loading ? 'loading' : 'update-profile-submit'}>Update Profile</button>
+                <button
+                    type="submit"
+                    className={loading ? "loading" : "update-profile-submit"}
+                >
+                    Update Profile
+                </button>
                 {profileMessage && <p>{profileMessage}</p>}
             </form>
-                
+
             <div className="account-update">
                 <form onSubmit={handleEmailSubmit}>
                     <h1>Email</h1>
@@ -186,10 +205,36 @@ const Settings = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
-                    <button type="submit" className={loading ? 'loading' : 'update-email-submit'}>Update Email</button>
+                    <button
+                        type="submit"
+                        className={loading ? "loading" : "update-email-submit"}
+                    >
+                        Update Email
+                    </button>
                     {emailMessage && <p>{emailMessage}</p>}
                 </form>
-                <form ></form>
+                <form onSubmit={handlePasswordSubmit}>
+                    <h1>Password</h1>
+                    <input
+                        type="password"
+                        id="password"
+                        placeholder="New Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        placeholder="Confirm Password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                    />
+                    <button
+                        type="submit"
+                        className={loading ? "loading" : "update-email-submit"}
+                    >Update Password</button>
+                    {passwordMessage && <p>{passwordMessage}</p>}
+                </form>
             </div>
 
             <button

@@ -192,3 +192,13 @@ def update_email(request, uidb64, token):
         return redirect('http://localhost:5173/email-updated')
     else:
         return redirect('http://localhost:5173/invalid-link')
+
+class UpdatePasswordView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        user.set_password(request.data.get('password'))
+        user.save()
+        return Response({'status': 'success', 'message': 'Password updated.'})
+    
