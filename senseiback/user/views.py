@@ -14,13 +14,12 @@ from django.shortcuts import redirect
 from django.http import HttpResponse
 from django.contrib.auth.tokens import default_token_generator
 from rest_framework_simplejwt.tokens import RefreshToken
-
-# Tutorial imports start here
 from django.shortcuts import render
 from rest_framework import generics
 from .serializers import UserSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.core.mail import send_mail
+from django.core import signing
 
 User = get_user_model()
 
@@ -69,7 +68,7 @@ def activate(request, uidb64, token):
         user.save()
         return redirect('http://localhost:5173/login')
     else:
-        return redirect('http://localhost:5173/invalid-activation')
+        return redirect('http://localhost:5173/invalid-link')
 
 
 class DeactivateAccountView(APIView):
@@ -152,5 +151,44 @@ class GetProfileView(APIView):
             'first_name': user.first_name,
             'last_name': user.last_name,
             'date_of_birth': user.date_of_birth,
-            'info': user.info
+            'info': user.info,
+            'email': user.email
         })
+
+class RequestEmailResetEmail(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        new_email = request.data.get('email')
+        user = request.user
+        token = default_token_generator.make_token(user)
+        uid = urlsafe_base64_encode(force_bytes(user.pk))
+        signed_email = signing.dumps(new_email)
+        link = f'http://localhost:8000/api/reset-email/{uid}/{token}/?email={signed_email}'
+        send_mail(
+            'Email Update Request',
+            f'Click on the link below to update your email:\n{link}',
+            'mwmcclure7@gmail.com',
+            [new_email],
+            fail_silently=False
+        )
+        return Response({'status': 'success', 'message': 'If an account with that email exists, we have sent an email with further instructions.'})
+
+def update_email(request, uidb64, token):
+    try:
+        uid = urlsafe_base64_decode(uidb64).decode()
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+    
+    if user is not None and default_token_generator.check_token(user, token):
+        signed_email = request.GET.get('email')
+        try:
+            new_email = signing.loads(signed_email)
+        except signing.BadSignature:
+            return redirect('http://localhost:5173/invalid-link')
+        user.email = new_email
+        user.save()
+        return redirect('http://localhost:5173/email-updated')
+    else:
+        return redirect('http://localhost:5173/invalid-link')

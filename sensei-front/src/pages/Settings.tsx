@@ -51,6 +51,7 @@ const Settings = () => {
     const [lastName, setLastName] = useState("");
     const [dateOfBirth, setDateOfBirth] = useState("");
     const [info, setInfo] = useState("");
+    const [profileMessage, setMessage] = useState("");
 
     const fetchUserData = async () => {
         try {
@@ -59,6 +60,7 @@ const Settings = () => {
             setLastName(response.data.last_name);
             setDateOfBirth(response.data.date_of_birth);
             setInfo(response.data.info);
+            setEmail(response.data.email);
         } catch (error) {
             alert(error);
         }
@@ -71,6 +73,7 @@ const Settings = () => {
     const handleProfileSubmit = async (e: any) => {
         e.preventDefault();
         setLoading(true);
+        setMessage("");
 
         try {
             await api.post("/api/update-profile/", {
@@ -79,9 +82,51 @@ const Settings = () => {
                 date_of_birth: dateOfBirth,
                 info: info,
             });
+            setMessage("Profile updated successfully.");
         } catch (error) {
             alert(error);
         } finally {
+            setLoading(false);
+        }
+    };
+
+    // Change email functionality
+    const [email, setEmail] = useState("");
+    const [emailMessage, setEmailMessage] = useState("");
+
+    const handleEmailSubmit = async (e: any) => {
+        e.preventDefault();
+        setLoading(true);
+        setEmailMessage("");
+        try {
+            await api.post("/api/update-email-request/", {
+                email: email,
+            });
+        } catch (error) {
+            alert(error);
+        } finally {
+            setEmailMessage("An email has been sent to this address for confirmation.");
+            setLoading(false);
+        }
+    };
+
+    // Change password functionality
+    const [password, setPassword] = useState("");
+    const [passwordConfirm, setPasswordConfirm] = useState("");
+    const [passwordMessage, setPasswordMessage] = useState("");
+
+    const handlePasswordSubmit = async (e: any) => {
+        e.preventDefault();
+        setLoading(true);
+        setPasswordMessage("");
+        try {
+            await api.post("/api/update-password/", {
+                password: password,
+            });
+        } catch (error) {
+            alert(error);
+        } finally {
+            setPasswordMessage("Password updated successfully.");
             setLoading(false);
         }
     };
@@ -97,6 +142,7 @@ const Settings = () => {
                         id="firstName"
                         value={firstName}
                         onChange={(e) => setFirstName(e.target.value)}
+                        maxLength={30}
                     />
                 </div>
                 <div>
@@ -106,6 +152,7 @@ const Settings = () => {
                         id="lastName"
                         value={lastName}
                         onChange={(e) => setLastName(e.target.value)}
+                        maxLength={30}
                     />
                 </div>
                 <div>
@@ -126,8 +173,24 @@ const Settings = () => {
                         maxLength={500}
                     />
                 </div>
-                <button type="submit" className="update-profile-submit">Update Profile</button>
+                <button type="submit" className={loading ? 'loading' : 'update-profile-submit'}>Update Profile</button>
+                {profileMessage && <p>{profileMessage}</p>}
             </form>
+                
+            <div className="account-update">
+                <form onSubmit={handleEmailSubmit}>
+                    <h1>Email</h1>
+                    <input
+                        type="email"
+                        id="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                    <button type="submit" className={loading ? 'loading' : 'update-email-submit'}>Update Email</button>
+                    {emailMessage && <p>{emailMessage}</p>}
+                </form>
+                <form ></form>
+            </div>
 
             <button
                 onClick={() => navigate("/logout")}

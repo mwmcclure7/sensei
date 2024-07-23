@@ -11,7 +11,15 @@
     float: right;
     margin-top: -1.5vw;
     cursor: pointer;
-    font-size: 2vw
+    font-size: 2vw;
+    text-decoration: none;
+    transition: 0.1s;
+    font-weight: var(--light);
+}
+
+.exit-modal-button:hover {
+    color: red;
+    transform: scale(1.3);
 }
 
 .delete-modal p {
@@ -70,7 +78,7 @@
     align-items: center;
     flex-direction: column;
     margin: 2vw auto;
-    padding: 6vw;
+    padding: 4vw;
     background: var(--block-color);
     width: 40vw;
     border-radius: 10vmin;
@@ -90,6 +98,7 @@ div .info-div {
     justify-content: space-evenly;
     align-items: center;
     flex-direction: column;
+    margin-bottom: 2vw;
 }
 
 label {
@@ -139,10 +148,30 @@ input[type="date"]::-webkit-calendar-picker-indicator {
     filter: invert(100%);
 }
 
-.update-profile-submit {
-    margin-top: 2vw;
-}
-
 input[type="date"] {
     cursor: text;
+}
+
+.account-update {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+}
+
+.account-update form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin: 2vw auto;
+    padding: 4vw;
+    background: var(--block-color);
+    width: 30vw;
+    border-radius: 10vmin;
+    transition: 0.5s;
+}
+
+.account-update input {
+    margin-bottom: 2vw;
 }

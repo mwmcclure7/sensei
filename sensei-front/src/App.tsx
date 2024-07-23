@@ -8,11 +8,11 @@ import Register from "./pages/Register";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/ProtectedRoute";
-import InvalidActivation from "./pages/InvalidActivation";
-import ActivateEmailSent from "./pages/ActivateEmailSent";
 import RequestPasswordReset from "./pages/RequestPasswordReset";
 import ResetPassword from "./pages/ResetPassword";
+import InvalidLink from "./pages/InvalidLink";
 import "./App.css";
+import EmailUpdated from "./pages/EmailUpdated";
 
 function Logout() {
     localStorage.clear();
@@ -36,8 +36,8 @@ function App() {
                 <Route path="/logout" element={<Logout />} />
                 <Route path="/register" element={<RegisterAndLogout />} />
                 <Route
-                    path="/invalid-activation"
-                    element={<InvalidActivation />}
+                    path="/invalid-link"
+                    element={<InvalidLink />}
                 />
                 <Route
                     path="/settings"
@@ -48,13 +48,10 @@ function App() {
                     }
                 />
                 <Route
-                    path="/activate-email-sent"
-                    element={<ActivateEmailSent />}
-                />
-                <Route
                     path="/request-password-reset"
                     element={<RequestPasswordReset />}
                 />
+                <Route path="/email-updated" element={<EmailUpdated />} />
                 <Route path="/reset-password/:uid/:token*" element={<ResetPassword />} />
                 <Route path="*" element={<NotFound />} />
             </Routes>

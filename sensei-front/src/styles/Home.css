@@ -44,7 +44,9 @@ p {
 .sensei {
     font-family: 'Ubuntu', sans-serif;
     font-weight: var(--extra-bold);
-    background: var(--gradient);
+    background: linear-gradient(90deg, #00a0ff, #00ffa0, #00a0ff);
+    animation: gradientAnimation 10s infinite linear;
+    background-size: 300% 100%;
     padding: 1vw;
     border-radius: 2vw;
     transition: 0.5s;
@@ -172,7 +174,9 @@ p {
     width: 9vw;
     height: 9vw;
     border-radius: 50%;
-    background: var(--gradient);
+    background: linear-gradient(90deg, #00a0ff, #00ffa0, #00a0ff);
+    animation: gradientAnimation 10s infinite linear;
+    background-size: 300% 100%;
     font-weight: var(--extra-bold);
     align-content: center;
     font-size: 6vw;

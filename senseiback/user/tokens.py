@@ -1,7 +1,7 @@
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 
-class TokenGenerator(PasswordResetTokenGenerator):
+class PasswordTokenGenerator(PasswordResetTokenGenerator):
     def _make_hash_value(self, user, timestamp):
         return (
             str(user.pk) + str(timestamp)  +
@@ -9,4 +9,4 @@ class TokenGenerator(PasswordResetTokenGenerator):
         )
 
 
-account_activation_token = TokenGenerator()
+account_activation_token = PasswordTokenGenerator()

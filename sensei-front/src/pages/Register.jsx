@@ -62,7 +62,7 @@ function Register() {
             />
             <p>{errorMessage}</p>
             <button
-                className="auth-button"
+                className={loading ? 'loading' : 'auth-button'}
                 type="submit"
                 disabled={!email || !password || !passwordConfirm}
             >

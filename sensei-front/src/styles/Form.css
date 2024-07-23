@@ -56,16 +56,12 @@ button:disabled {
     background: transparent;
 }
 
-.auth-container a {
-    color: white;
-    text-decoration: underline;
-    transition: 0.3s;
-    font-weight: var(--normal);
-    font-size: 1.2vw;
-}
-
-.auth-container a:hover {
-    color: #00FFFF;
+button:disabled:hover {
+    border: 2px solid #FFFFFF50;
+    color: #FFFFFF50;
+    cursor: default;
+    box-shadow: none;
+    background: transparent;
 }
 
 .auth-container button {
