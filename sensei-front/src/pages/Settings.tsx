@@ -237,15 +237,17 @@ const Settings = () => {
                 </form>
             </div>
 
-            <button
-                onClick={() => navigate("/logout")}
-                className="sign-out-button"
-            >
-                Sign Out
-            </button>
-            <button onClick={toggleModal} className="delete-account-button">
-                Delete Account
-            </button>
+            <div className="exit">
+                <button
+                    onClick={() => navigate("/logout")}
+                    className="sign-out-button"
+                >
+                    Sign Out
+                </button>
+                <button onClick={toggleModal} className="delete-account-button">
+                    Delete Account
+                </button>
+            </div>
             <div className="delete-modal">
                 {isModalOpen && (
                     <Modal onClose={toggleModal}>

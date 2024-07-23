@@ -176,3 +176,25 @@ input[type="date"] {
 .account-update button {
     margin-top: 2vw;
 }
+
+.exit {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    background: var(--block-color);
+    padding: 3vw;
+    margin: 2vw 20vw;
+    border-radius: 3vw;
+}
+
+.exit button {
+    margin: 0 3vw;
+    width: 20vw;
+}
+
+.delete-account-button:hover {
+    background: red;
+    border: 2px solid red;
+    box-shadow: 0 0 3vw red;
+}
