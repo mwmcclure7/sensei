@@ -1,5 +1,6 @@
 import React from "react";
 import "../styles/Home.css";
+import Footer from "./Footer";
 import interactive from "../assets/interactive.svg";
 import learning from "../assets/learning.svg";
 import time from "../assets/time.svg";
@@ -176,6 +177,7 @@ function Home() {
                     gains.
                 </p>
             </section>
+            <Footer />
         </div>
     );
 };

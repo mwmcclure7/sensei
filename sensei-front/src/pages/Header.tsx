@@ -36,7 +36,7 @@ const Header = () => {
             </div>
             <nav className="middle">
                 <a href="/">Home</a>
-                <a href="sensei">Sensei</a>
+                <a href="chat">Sensei</a>
                 <a href="tokens">Tokens</a>
             </nav>
             <div className="right">

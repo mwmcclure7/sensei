@@ -1,0 +1,106 @@
+.chat-window {
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    margin: 0 25vw;
+    text-align: left;
+}
+
+.message-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    word-break: break-word;
+}
+
+.chat-window p {
+    font-size: 1.2em;
+}
+
+.user-history {
+    background: #00FFA030;
+    width: fit-content;
+    max-width: 75%;
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin-left: auto;
+    margin-bottom: 0;
+}
+
+.bot-history {
+    background: #00A0FF30;
+    width: fit-content;
+    border-radius: 10px;
+    padding: 10px 20px;
+    margin-right: auto;
+    margin-bottom: 0;
+}
+
+.loading-response {
+    background: linear-gradient(90deg, #00a0ff, #00ffa0, #00a0ff);
+    animation: gradientAnimation 2s infinite linear;
+    background-size: 300% 100%;
+    cursor: default;
+    border: 2px solid cyan;
+    box-shadow: none;
+    width: fit-content;
+    border-radius: 10px;
+    padding: 10px 20px;
+    border: none;
+}
+
+.chat-form {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    width: 50vw;
+}
+
+.chat-form textarea {
+    box-sizing: content-box;
+    margin-left: 0;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    max-height: 300px;
+    height: auto;
+    padding: 0 10px;
+    font-size: 1.2em;
+    align-content: center;
+    border-radius: 10px;
+    line-height: 1.2em;
+    background: var(--block-color);
+}
+
+.chat-form button {
+    background-image: url('../assets/up-arrow.svg');
+    background-size: 50px;
+    background-position: center;
+    height: 50px;
+    width: 50px;
+    margin: 10px 0;
+    padding: 0;
+    animation: none;
+    border-radius: 50vmin;
+    flex-shrink: 0;
+    background-color: var(--block-color);
+}
+
+.chat-form button:hover {
+    background-color: cyan;
+}
+
+.chat-form button:disabled {
+    background-image: url('../assets/up-arrow.svg');
+    background-size: 50px;
+    opacity: 0.3;
+    background-position: center;
+}
+
+.chat-form button:disabled:hover {
+    background-color: transparent;
+}

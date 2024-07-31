@@ -1,7 +1,6 @@
 import React from "react";
 import Header from "./pages/Header";
 import Home from "./pages/Home";
-import Footer from "./pages/Footer";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -13,6 +12,7 @@ import ResetPassword from "./pages/ResetPassword";
 import InvalidLink from "./pages/InvalidLink";
 import "./App.css";
 import EmailUpdated from "./pages/EmailUpdated";
+import Chat from "./pages/Chat";
 
 function Logout() {
     localStorage.clear();
@@ -52,10 +52,18 @@ function App() {
                     element={<RequestPasswordReset />}
                 />
                 <Route path="/email-updated" element={<EmailUpdated />} />
-                <Route path="/reset-password/:uid/:token*" element={<ResetPassword />} />
+                <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
+                <Route
+                    path="/chat"
+                    element={
+                        <ProtectedRoute>
+                            <Chat />
+                        </ProtectedRoute>
+                    }
+                />
                 <Route path="*" element={<NotFound />} />
+                
             </Routes>
-            <Footer />
         </BrowserRouter>
     );
 }
