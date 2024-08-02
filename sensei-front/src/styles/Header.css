@@ -1,22 +1,23 @@
 .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
     display: flex;
     justify-content: space-between;
     background: var(--header-footer-color);
     color: white;
-    padding: 5px 20px;
+    padding: 0 1.5vw;
     align-items: center;
-    position: relative;
+    box-sizing: border-box;
+    height: 8vh;
+    z-index: 1000;
 }
 
 .header p {
-    font-size: 20px;
+    font-size: 2.5vh;
     font-weight: var(--bold);
     margin: 0;
-    transition: 0.5s;
-}
-
-.header p:hover {
-    letter-spacing: 2px;
 }
 
 .header .left {
@@ -38,54 +39,43 @@
 }
 
 .header .logo {
-    height: 50px;
-}
-
-.header .logo-word {
-    font-size: 20px;
-    font-weight: var(--bold);
-    transition: 0.2s;
-    background: transparent;
-}
-
-.header .logo-word:hover {
-    background: transparent;
-    color: cyan;
-    font-size: 21px;
+    height: 6vh;
 }
 
 .header a {
     color: white;
-    padding: 1vw;
+    padding: 0 1vw;
     text-decoration: none;
     font-weight: var(--light);
     transition: 0.2s;
-    font-size: 15px;
+    font-size: 2vh;
 }
 
 .header a:hover {
-    font-size: 17px;
+    font-size: 2.2vh;
     color: cyan;
 }
 
 .header .sign-in-button {
-    padding: 8px 10px;
-    border-radius: 10px;
-    font-size: 13px;
+    padding: 1.3vh;
+    border-radius: 50vmin;
+    font-size: 1.6vh;
+    border: 0.3vh solid white;
 }
 
 .header .sign-in-button:hover {
-    box-shadow: 0 0 20px 0 rgb(0, 255, 255);
+    border: 0.3vh solid transparent;
+    box-shadow: 0 0 2vh 0 cyan;
 }
 
 .header .profile-picture {
     padding: 0;
-    height: 40px;
-    width: 40px;
+    height: 5vh;
+    width: 5vh;
     border-radius: 50%;
-    margin-left: 10px;
     background-image: url('../assets/profileiconwhite.svg');
     background-size: cover;
+    background-position: 0;
     background-color: transparent;
     border: none;
     transition: 0.2s;
@@ -94,4 +84,8 @@
 
 .header .profile-picture:hover {
     background-image: url('../assets/profileiconcolor.svg');
+    background-size: cover;
+    background-position: 0;
+    box-shadow: 0 0 2vh 0 cyan;
+    animation: none;
 }

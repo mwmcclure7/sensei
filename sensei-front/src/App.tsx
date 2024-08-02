@@ -30,40 +30,42 @@ function App() {
     return (
         <BrowserRouter>
             <Header />
-            <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/logout" element={<Logout />} />
-                <Route path="/register" element={<RegisterAndLogout />} />
-                <Route
-                    path="/invalid-link"
-                    element={<InvalidLink />}
-                />
-                <Route
-                    path="/settings"
-                    element={
-                        <ProtectedRoute>
-                            <Settings />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="/request-password-reset"
-                    element={<RequestPasswordReset />}
-                />
-                <Route path="/email-updated" element={<EmailUpdated />} />
-                <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
-                <Route
-                    path="/chat"
-                    element={
-                        <ProtectedRoute>
-                            <Chat />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route path="*" element={<NotFound />} />
-                
-            </Routes>
+                <div className="main-container">
+                    <Routes >
+                        <Route path="/" element={<Home />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/logout" element={<Logout />} />
+                        <Route path="/register" element={<RegisterAndLogout />} />
+                        <Route
+                            path="/invalid-link"
+                            element={<InvalidLink />}
+                        />
+                        <Route
+                            path="/settings"
+                            element={
+                                <ProtectedRoute>
+                                    <Settings />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/request-password-reset"
+                            element={<RequestPasswordReset />}
+                        />
+                        <Route path="/email-updated" element={<EmailUpdated />} />
+                        <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
+                        <Route
+                            path="/chat"
+                            element={
+                                <ProtectedRoute>
+                                    <Chat />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route path="*" element={<NotFound />} />
+                        
+                    </Routes>
+                </div>
         </BrowserRouter>
     );
 }
