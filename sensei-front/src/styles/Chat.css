@@ -1,8 +1,14 @@
+.chatbot-page {
+    display: flex;
+    flex-direction: row;
+}
+
 .chat-window {
+    margin-left: 30vw;
+    margin-right: 15vw;
+    width: 55vw;
     display: flex;
     flex-direction: column;
-    border-radius: 10px;
-    margin: 0 25vw;
     text-align: left;
 }
 
@@ -52,12 +58,11 @@
 .chat-form {
     position: fixed;
     bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 30vw;
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    width: 50vw;
+    width: 55vw;
 }
 
 .chat-form textarea {
@@ -73,6 +78,17 @@
     align-content: center;
     border-radius: 10px;
     line-height: 1.2em;
+    background: rgb(20, 20, 30);
+    border: 1px solid white;
+}
+
+.chat-form textarea:hover {
+    background: var(--block-color);
+}
+
+.chat-form textarea:focus {
+    outline: none;
+    border: 1px solid cyan;
     background: var(--block-color);
 }
 
@@ -87,7 +103,7 @@
     animation: none;
     border-radius: 50vmin;
     flex-shrink: 0;
-    background-color: var(--block-color);
+    background-color: rgb(20, 20, 30);
 }
 
 .chat-form button:hover {
@@ -103,4 +119,159 @@
 
 .chat-form button:disabled:hover {
     background-color: transparent;
+}
+
+.sidebar {
+    position: fixed;
+    box-sizing: border-box;
+    height: 100%;
+    width: 15vw;
+    background: rgb(10, 10, 20);
+    padding: 0 0.5vw;
+    justify-content: top;
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.create-chat-form {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 3vh 0;
+}
+
+.sidebar input {
+    font-size: 1em;
+    height: auto;
+    margin: 0;
+    margin-right: 0.5vw;
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    background: var(--block-color);
+}
+
+.sidebar input:hover {
+    background: var(--hover-block-color);
+}
+
+.sidebar input:focus {
+    border: none;
+    background: var(--hover-block-color);
+}
+
+.create-button {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 2em;
+    text-align: center;
+    border-radius: 50%;
+    border: 2px solid white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.create-button:hover {
+    background: #00ffa0;
+    animation: none;
+    box-shadow: #00ffa0 0 0 10px;
+}
+
+.create-button:disabled {
+    opacity: 0.3;
+}
+
+.create-button-loading {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    margin: 0;
+    padding: 0;
+    font-size: 2em;
+    text-align: center;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(90deg, #00a0ff, #00ffa0, #00a0ff);
+    animation: gradientAnimation 2s infinite linear;
+    border: none;
+}
+
+.sidebar hr {
+    display: flex;
+    width: 80%;
+    margin-bottom: 3vh;
+    border: 1px solid #ffffff60;
+}
+
+.chat-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 5px 0;
+    background: var(--block-color);
+    width: 100%;
+    border-radius: 10px;
+    transition: 0.2s;
+}
+
+.chat-item:hover {
+    background: var(--hover-block-color);
+}
+
+.chat-label {
+    font-size: 1em;
+    height: auto;
+    width: 100%;
+    margin: 0;
+    padding: 10px;
+    border-radius: 10px;
+    border: none;
+    text-align: left;
+}
+
+.chat-label:hover {
+    background: transparent;
+    animation: none;
+    padding: 10px;
+    margin: 0;
+    border-radius: 10px;
+    height: auto;
+    width: 100%;
+    box-shadow: none;
+    font-size: 1em;
+    animation: none;
+    border: none;
+}
+
+.delete-button {
+    width: 30px;
+    height: 100%;
+    flex-shrink: 0;
+    margin: 0;
+    padding: 0;
+    border-radius: 10px;
+    background-image: url('../assets/trash.svg');
+    background-size: 30px;
+    background-position: center;
+    border: none;
+    opacity: 0.5;
+}
+
+.delete-button:hover {
+    background-image: url('../assets/trash.svg');
+    background-size: 35px;
+    background-position: center;
+    animation: none;
+    box-shadow: none;
+    border: none;
+    opacity: 1;
 }

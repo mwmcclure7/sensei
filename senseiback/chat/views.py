@@ -15,11 +15,11 @@ class ChatListCreate(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Chat.objects.filter(author=self.request.user, is_active=True)
+        return Chat.objects.filter(author=self.request.user, is_active=True).order_by('-created_at')
 
     def perform_create(self, serializer):
         if serializer.is_valid():
-            serializer.save(author=self.request.user)
+            serializer.save(author=self.request.user, title=self.request.data.get('title'))
         else:
             print(serializer.errors)
 
@@ -59,3 +59,9 @@ class CreateMessageView(APIView):
         # )
         # return Response({'status': 'success', 'message': completion.choices[0].message.content})
         return Response({'status': 'success', 'message': response})
+
+class Test(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        return Response({'message': 'This is a test response. Here is some more test text. This is a test response. Here is some more test text. This is a test response. Here is some more test text. This is a test response. Here is some more test text. This is a test response. Here is some more test text.'})

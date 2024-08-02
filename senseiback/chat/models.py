@@ -5,7 +5,7 @@ User = get_user_model()
 
 class Chat(models.Model):
     title = models.CharField(max_length=100)
-    memory = models.TextField()
+    memory = models.TextField(default='')
     created_at = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='chats')
     is_active = models.BooleanField(default=True)

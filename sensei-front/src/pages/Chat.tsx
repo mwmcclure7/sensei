@@ -16,30 +16,68 @@ function adjustHeight() {
 }
 
 function Chat() {
+    // Chats
+    const [chats, setChats] = useState([]);
+    const [title, setTitle] = useState("");
+    const [createLoading, setCreateLoading] = useState(false);
+
+    useEffect(() => {
+        getChats();
+    }, []);
+
+    const getChats = () => {
+        api.get("/api/chats/")
+            .then((res) => res.data)
+            .then((data) => setChats(data))
+            .catch((err) => alert(err));
+    };
+
+    const disableChat = (id: any) => {
+        api.post("/api/disable-chat/", { id }).catch((err) => alert(err));
+        getChats();
+    };
+
+    const createChat = (e: any) => {
+        e.preventDefault();
+        if (!title) return;
+        setCreateLoading(true);
+        const tempTitle = title;
+        setTitle("");
+        api.post("/api/chats/", { title: tempTitle })
+            .catch((err) => alert(err));
+        getChats();
+        setCreateLoading(false);
+    };
+
+    // Messages
+    const [currentChat, setCurrentChat] = useState(0);
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
-    var tempInput = "";
+    const [currentInputDisplay, setCurrentInputDisplay] = useState("");
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
-        setLoading(true);
         e.preventDefault();
+        setLoading(true);
 
         try {
-            tempInput = input;
+            if (!input) return;
+            setCurrentInputDisplay(input);
+            const currentInput = input;
             if (textareaRef.current) textareaRef.current.style.height = "auto";
             setInput("");
-            const response = await api.post("/api/chat/", {
-                message: tempInput,
+            const response = await api.post("/api/test/", {
+                message: currentInput,
             });
             setMessages([
                 ...messages,
-                { user: tempInput, bot: response.data.message },
+                { user: currentInput, bot: response.data.message },
             ]);
             console.log(response.data);
         } catch (error) {
-            alert(error);
+            if ((error as any).status === 401) window.location.reload(); // TODO: maybe this works?
+            else alert(error);
         } finally {
             setLoading(false);
         }
@@ -48,9 +86,13 @@ function Chat() {
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === "Enter" && !e.shiftKey) {
             e.preventDefault();
-            sendMessage(new Event("submit") as unknown as React.FormEvent<HTMLFormElement>);
+            sendMessage(
+                new Event(
+                    "submit"
+                ) as unknown as React.FormEvent<HTMLFormElement>
+            );
         }
-    }
+    };
 
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -65,37 +107,83 @@ function Chat() {
     };
 
     return (
-        <div className="chat-window">
-            <div className="messages" style={{ marginBottom: `${(textareaRef.current?.clientHeight ?? 0) + 50}px` }}>
-                {messages.map((msg, index) => (
-                    <div key={index} className="message-container">
-                        <p className="user-history">{msg.user}</p>
-                        <p className="bot-history">{msg.bot}</p>
+        <div className="chatbot-page">
+            <div className="sidebar">
+                <form className="create-chat-form" onSubmit={createChat}>
+                    <input
+                        type="text"
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
+                        placeholder="Enter new chat title"
+                    />
+                    <button
+                        className={
+                            createLoading
+                                ? "create-button-loading"
+                                : "create-button"
+                        }
+                        onClick={createChat}
+                        disabled={!title}
+                    >
+                        +
+                    </button>
+                </form>
+                <hr />
+                {chats.map((chat: any) => (
+                    <div key={chat.id} className="chat-item">
+                        <button
+                            className="chat-label"
+                            onClick={() => setCurrentChat(chat.id)}
+                        >
+                            {chat.title}
+                        </button>
+                        <button
+                            className="delete-button"
+                            onClick={() => disableChat(chat.id)}
+                        />
                     </div>
                 ))}
-                {loading && (
-                    <div className="message-container">
-                        <p className="user-history">{tempInput}</p>
-                        <img src="" alt="" />
-                        <p className="loading-response">Hmmm . . .</p>
-                    </div>
-                )}
-                <div ref={messagesEndRef} />
             </div>
-            <form className="chat-form" onSubmit={sendMessage}>
-                <textarea
-                    ref={textareaRef}
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    onInput={adjustHeight}
-                    onKeyDown={handleKeyDown}
-                />
-                <button
-                    className={loading ? "loading" : ""}
-                    type="submit"
-                    disabled={loading || !input}
-                />
-            </form>
+            <div className="chat-window">
+                <div
+                    className="messages"
+                    style={{
+                        marginBottom: `${
+                            (textareaRef.current?.clientHeight ?? 0) + 50
+                        }px`,
+                    }}
+                >
+                    {messages.map((msg, index) => (
+                        <div key={index} className="message-container">
+                            <p className="user-history">{msg.user}</p>
+                            <p className="bot-history">{msg.bot}</p>
+                        </div>
+                    ))}
+                    {loading && (
+                        <div className="message-container">
+                            <p className="user-history">
+                                {currentInputDisplay}
+                            </p>
+                            <p className="loading-response">Hmmm . . .</p>
+                        </div>
+                    )}
+                    <div ref={messagesEndRef} />
+                </div>
+                <form className="chat-form" onSubmit={sendMessage}>
+                    <textarea
+                        ref={textareaRef}
+                        value={input}
+                        onChange={(e) => setInput(e.target.value)}
+                        onInput={adjustHeight}
+                        onKeyDown={handleKeyDown}
+                    />
+                    <button
+                        className={loading ? "loading" : ""}
+                        type="submit"
+                        disabled={loading || !input}
+                    />
+                </form>
+            </div>
         </div>
     );
 }
