@@ -20,16 +20,14 @@ class ChatListCreate(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         if serializer.is_valid():
             serializer.save(author=self.request.user, title=self.request.data.get('title'))
+            return Response({'id': serializer.data.get('id')})
         else:
             print(serializer.errors)
 
 
-class ChatDisable(generics.UpdateAPIView):
+class ChatDisable(APIView):
     serializer_class = ChatSerializer
     permission_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        return Chat.objects.filter(author=self.request.user, is_active=True)
 
     def post(self, request):
         chat = Chat.objects.get(id=request.data.get('id'))
@@ -38,15 +36,25 @@ class ChatDisable(generics.UpdateAPIView):
         return Response({'status': 'success'})
 
 
-class CreateMessageView(APIView):
-    permission_classes = [AllowAny]
+class MessageListCreate(generics.ListCreateAPIView):
+    serializer_class = MessageSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        chat_id = self.request.query_params.get('chat_id')
+        return Message.objects.filter(chat_id=chat_id, chat__is_active=True, chat__author=self.request.user).order_by('created_at')
 
     def post(self, request):
-        chat = Chat.objects.get(id=request.data.get('id'))
+        chat = Chat.objects.get(id=request.data.get('chat_id'))
+        if (chat.is_active == False):
+            return Response({'status': 'error', 'message': 'This chat has been disabled.'})
+        user = request.user
+        if (chat.author != user):
+            return Response({'status': 'error', 'message': 'You are not authorized to send messages to this chat.'})
         user_content = request.data.get('message')
         response = "This is a test response."
         Message.objects.create(chat=chat, user_content=user_content, bot_content=response)
-
+        return Response({'status': 'success', 'message': response})
 
         # message = request.data.get('message')
         # openai = OpenAI(api_key='sk-proj-IZvL2kVdds65RCNyw1zAT3BlbkFJTHIwhbGKyCpkQ8WrRNtQ')
@@ -58,7 +66,6 @@ class CreateMessageView(APIView):
         #     ]
         # )
         # return Response({'status': 'success', 'message': completion.choices[0].message.content})
-        return Response({'status': 'success', 'message': response})
 
 class Test(APIView):
     permission_classes = [IsAuthenticated]

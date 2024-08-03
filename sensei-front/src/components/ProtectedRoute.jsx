@@ -9,6 +9,9 @@ function ProtectedRoute({ children }) {
 
     useEffect(() => {
         auth().catch(() => setIsAuthorized(false));
+
+        window.addEventListener("auth", auth);
+
     }, []);
 
     const refreshToken = async () => {

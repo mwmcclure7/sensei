@@ -96,6 +96,7 @@
     background-image: url('../assets/up-arrow.svg');
     background-size: 50px;
     background-position: center;
+    background-repeat: no-repeat;
     height: 50px;
     width: 50px;
     margin: 10px 0;
@@ -113,6 +114,7 @@
 .chat-form button:disabled {
     background-image: url('../assets/up-arrow.svg');
     background-size: 50px;
+    background-repeat: no-repeat;
     opacity: 0.3;
     background-position: center;
 }
@@ -160,6 +162,7 @@
 .sidebar input:focus {
     border: none;
     background: var(--hover-block-color);
+    box-shadow: #00ffff 0 0 10px;
 }
 
 .create-button {
@@ -227,6 +230,24 @@
     background: var(--hover-block-color);
 }
 
+.chat-item-active {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    align-items: center;
+    margin: 10px 0;
+    background: var(--block-color);
+    width: 100%;
+    border-radius: 10px;
+    transition: 0.2s;
+    box-shadow: #00ffff 0 0 10px;
+}
+
+.chat-item-active:hover {
+    background: var(--hover-block-color);
+}
+
+
 .chat-label {
     font-size: 1em;
     height: auto;
@@ -262,6 +283,7 @@
     background-image: url('../assets/trash.svg');
     background-size: 30px;
     background-position: center;
+    background-repeat: no-repeat;
     border: none;
     opacity: 0.5;
 }
@@ -270,8 +292,42 @@
     background-image: url('../assets/trash.svg');
     background-size: 35px;
     background-position: center;
+    background-repeat: no-repeat;
     animation: none;
     box-shadow: none;
     border: none;
     opacity: 1;
+}
+
+.no-chat-selected {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+    width: 85vw;
+    margin-left: 15vw;
+    position: relative;
+}
+
+.no-chat-selected::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('../assets/sensei-logo-t.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 60%;
+    opacity: 0.1;
+    z-index: 1;
+}
+
+.no-chat-selected p {
+    font-size: 2em;
+    color: white;
+    position: relative;
+    z-index: 2;
+    font-weight: var(--bold)
 }

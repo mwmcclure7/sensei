@@ -3,8 +3,8 @@ import api from "../api";
 import "../styles/Chat.css";
 
 interface Message {
-    user: string;
-    bot: string;
+    user_message: string;
+    bot_message: string;
 }
 
 function adjustHeight() {
@@ -20,6 +20,7 @@ function Chat() {
     const [chats, setChats] = useState([]);
     const [title, setTitle] = useState("");
     const [createLoading, setCreateLoading] = useState(false);
+    const [currentChat, setCurrentChat] = useState(0);
 
     useEffect(() => {
         getChats();
@@ -32,9 +33,11 @@ function Chat() {
             .catch((err) => alert(err));
     };
 
-    const disableChat = (id: any) => {
-        api.post("/api/disable-chat/", { id }).catch((err) => alert(err));
+    const disableChat = async(id: any) => {
+        if (id === currentChat) setCurrentChat(0);
+        await api.post("/api/disable-chat/", { id }).catch((err) => alert(err));
         getChats();
+        getMessages();
     };
 
     const createChat = (e: any) => {
@@ -43,14 +46,21 @@ function Chat() {
         setCreateLoading(true);
         const tempTitle = title;
         setTitle("");
-        api.post("/api/chats/", { title: tempTitle })
-            .catch((err) => alert(err));
+        api.post("/api/chats/", { title: tempTitle }).catch((err) =>
+            alert(err)
+        ).then((res) => {
+            if (res && res.data) {
+                setCurrentChat(res.data.id);
+            }
+        })
+        .catch((err) => {
+            alert(err);
+        });
         getChats();
         setCreateLoading(false);
     };
 
     // Messages
-    const [currentChat, setCurrentChat] = useState(0);
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState("");
     const [loading, setLoading] = useState(false);
@@ -61,26 +71,28 @@ function Chat() {
         e.preventDefault();
         setLoading(true);
 
-        try {
-            if (!input) return;
-            setCurrentInputDisplay(input);
-            const currentInput = input;
-            if (textareaRef.current) textareaRef.current.style.height = "auto";
-            setInput("");
-            const response = await api.post("/api/test/", {
-                message: currentInput,
+        if (!input || currentChat === 0) return;
+        setCurrentInputDisplay(input);
+        const currentInput = input;
+        if (textareaRef.current) textareaRef.current.style.height = "auto";
+        setInput("");
+        api.post("/api/messages/", {
+            chat_id: currentChat,
+            message: currentInput,
+        })
+            .then((res) => {
+                setMessages([
+                    ...messages,
+                    {
+                        user_message: currentInput,
+                        bot_message: res.data.message,
+                    },
+                ]);
+            })
+            .catch((err) => {
+                alert("An error occurred. Please try refreshing your page.\n\nIf the problem persists, contact support@softwaresensei.ai.\n\nError details: " + err);
             });
-            setMessages([
-                ...messages,
-                { user: currentInput, bot: response.data.message },
-            ]);
-            console.log(response.data);
-        } catch (error) {
-            if ((error as any).status === 401) window.location.reload(); // TODO: maybe this works?
-            else alert(error);
-        } finally {
-            setLoading(false);
-        }
+        setLoading(false);
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -106,6 +118,24 @@ function Chat() {
         }
     };
 
+    const getMessages = () => {
+        api.get("/api/messages/", { params: { chat_id: currentChat } })
+            .then((res) => {
+                const updatedMessages = res.data.map((msg: any) => ({
+                    user_message: msg.user_content,
+                    bot_message: msg.bot_content,
+                }));
+                setMessages(updatedMessages);
+            })
+            .catch((err) => {
+                if (err.status !== 404) alert(err);
+            });
+    };
+
+    useEffect(() => {
+        getMessages();
+    }, [currentChat]);
+
     return (
         <div className="chatbot-page">
             <div className="sidebar">
@@ -130,7 +160,12 @@ function Chat() {
                 </form>
                 <hr />
                 {chats.map((chat: any) => (
-                    <div key={chat.id} className="chat-item">
+                    <div
+                        key={chat.id}
+                        className={`chat-item${
+                            chat.id === currentChat ? "-active" : ""
+                        }`}
+                    >
                         <button
                             className="chat-label"
                             onClick={() => setCurrentChat(chat.id)}
@@ -144,46 +179,54 @@ function Chat() {
                     </div>
                 ))}
             </div>
-            <div className="chat-window">
-                <div
-                    className="messages"
-                    style={{
-                        marginBottom: `${
-                            (textareaRef.current?.clientHeight ?? 0) + 50
-                        }px`,
-                    }}
-                >
-                    {messages.map((msg, index) => (
-                        <div key={index} className="message-container">
-                            <p className="user-history">{msg.user}</p>
-                            <p className="bot-history">{msg.bot}</p>
-                        </div>
-                    ))}
-                    {loading && (
-                        <div className="message-container">
-                            <p className="user-history">
-                                {currentInputDisplay}
-                            </p>
-                            <p className="loading-response">Hmmm . . .</p>
-                        </div>
-                    )}
-                    <div ref={messagesEndRef} />
+            {!currentChat ? (
+                <div className="no-chat-selected">
+                    <p>Select a chat or create a new one.</p>
                 </div>
-                <form className="chat-form" onSubmit={sendMessage}>
-                    <textarea
-                        ref={textareaRef}
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        onInput={adjustHeight}
-                        onKeyDown={handleKeyDown}
-                    />
-                    <button
-                        className={loading ? "loading" : ""}
-                        type="submit"
-                        disabled={loading || !input}
-                    />
-                </form>
-            </div>
+            ) : (
+                <div className="chat-window">
+                    <div
+                        className="messages"
+                        style={{
+                            marginBottom: `${
+                                (textareaRef.current?.clientHeight ?? 0) + 50
+                            }px`,
+                        }}
+                    >
+                        {messages.map((msg, index) => (
+                            <div key={index} className="message-container">
+                                <p className="user-history">
+                                    {msg.user_message}
+                                </p>
+                                <p className="bot-history">{msg.bot_message}</p>
+                            </div>
+                        ))}
+                        {loading && (
+                            <div className="message-container">
+                                <p className="user-history">
+                                    {currentInputDisplay}
+                                </p>
+                                <p className="loading-response">Hmmm . . .</p>
+                            </div>
+                        )}
+                        <div ref={messagesEndRef} />
+                    </div>
+                    <form className="chat-form" onSubmit={sendMessage}>
+                        <textarea
+                            ref={textareaRef}
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            onInput={adjustHeight}
+                            onKeyDown={handleKeyDown}
+                        />
+                        <button
+                            className={loading ? "loading" : ""}
+                            type="submit"
+                            disabled={loading || !input}
+                        />
+                    </form>
+                </div>
+            )}
         </div>
     );
 }
