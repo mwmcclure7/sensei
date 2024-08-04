@@ -66,7 +66,7 @@ button:active {
 }
 
 a {
-  color: white;
+  color: #00a0ff;;
   text-decoration: underline;
   transition: 0.3s;
   font-weight: var(--normal);
@@ -74,7 +74,7 @@ a {
 }
 
 a:hover {
-  color: #00FFFF;
+  color: #00ffa0;
 }
 
 .message {

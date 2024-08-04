@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import api from "../api";
 import "../styles/Chat.css";
+import { marked } from "marked";
 
 interface Message {
     user_message: string;
@@ -68,8 +69,8 @@ function Chat() {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
         setLoading(true);
+        e.preventDefault();
 
         if (!input || currentChat === 0) return;
         setCurrentInputDisplay(input);
@@ -80,19 +81,14 @@ function Chat() {
             chat_id: currentChat,
             message: currentInput,
         })
-            .then((res) => {
-                setMessages([
-                    ...messages,
-                    {
-                        user_message: currentInput,
-                        bot_message: res.data.message,
-                    },
-                ]);
+            .then(() => {
+                getMessages();
+                setLoading(false);
             })
             .catch((err) => {
                 alert("An error occurred. Please try refreshing your page.\n\nIf the problem persists, contact support@softwaresensei.ai.\n\nError details: " + err);
+                setLoading(false);
             });
-        setLoading(false);
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -118,19 +114,22 @@ function Chat() {
         }
     };
 
-    const getMessages = () => {
-        api.get("/api/messages/", { params: { chat_id: currentChat } })
-            .then((res) => {
-                const updatedMessages = res.data.map((msg: any) => ({
-                    user_message: msg.user_content,
-                    bot_message: msg.bot_content,
+    const getMessages = async () => {
+        if (!currentChat) return;
+            try {
+                const res = await api.get("/api/messages/", { params: { chat_id: currentChat } });
+                const updatedMessages = await Promise.all(res.data.map(async (msg: any) => {
+                    const botMessage = await marked(msg.bot_content);
+                    return {
+                        user_message: msg.user_content,
+                        bot_message: botMessage.trim(),
+                    };
                 }));
                 setMessages(updatedMessages);
-            })
-            .catch((err) => {
-                if (err.status !== 404) alert(err);
-            });
-    };
+            } catch (err) {
+                if ((err as any).status !== 404) alert(err);
+            }
+        };
 
     useEffect(() => {
         getMessages();
@@ -198,7 +197,7 @@ function Chat() {
                                 <p className="user-history">
                                     {msg.user_message}
                                 </p>
-                                <p className="bot-history">{msg.bot_message}</p>
+                                <p className="bot-history" dangerouslySetInnerHTML={{__html: msg.bot_message}} />
                             </div>
                         ))}
                         {loading && (

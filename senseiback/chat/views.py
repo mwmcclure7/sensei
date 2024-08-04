@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from .models import Chat, Message
 from .serializers import ChatSerializer, MessageSerializer
 from rest_framework import generics
+from .llm import generate_response
 
 User = get_user_model()
 
@@ -41,34 +42,21 @@ class MessageListCreate(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        chat_id = self.request.query_params.get('chat_id')
-        return Message.objects.filter(chat_id=chat_id, chat__is_active=True, chat__author=self.request.user).order_by('created_at')
+        chat = Chat.objects.get(id=self.request.query_params.get('chat_id'))
+        if (chat.is_active and chat.author == self.request.user):
+            return chat.messages.all().order_by('created_at')
 
     def post(self, request):
         chat = Chat.objects.get(id=request.data.get('chat_id'))
-        if (chat.is_active == False):
+        if (not chat.is_active):
             return Response({'status': 'error', 'message': 'This chat has been disabled.'})
         user = request.user
         if (chat.author != user):
             return Response({'status': 'error', 'message': 'You are not authorized to send messages to this chat.'})
         user_content = request.data.get('message')
-        response = "This is a test response."
+
+        # OpenAI API
+        response = generate_response(user_content, chat)
+
         Message.objects.create(chat=chat, user_content=user_content, bot_content=response)
         return Response({'status': 'success', 'message': response})
-
-        # message = request.data.get('message')
-        # openai = OpenAI(api_key='sk-proj-IZvL2kVdds65RCNyw1zAT3BlbkFJTHIwhbGKyCpkQ8WrRNtQ')
-        # completion = openai.chat.completions.create(
-        #     model='gpt-4o-mini',
-        #     messages=[
-        #         {'role': 'system', 'content': 'You are a helpful assistant.'},
-        #         {'role': 'user', 'content': message}
-        #     ]
-        # )
-        # return Response({'status': 'success', 'message': completion.choices[0].message.content})
-
-class Test(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        return Response({'message': 'This is a test response. Here is some more test text. This is a test response. Here is some more test text. This is a test response. Here is some more test text. This is a test response. Here is some more test text. This is a test response. Here is some more test text.'})
