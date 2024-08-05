@@ -5,7 +5,6 @@
 
 .chat-window {
     margin-left: 30vw;
-    margin-right: 15vw;
     width: 55vw;
     display: flex;
     flex-direction: column;
@@ -19,44 +18,107 @@
     word-break: break-word;
 }
 
-.message-container p {
+.user-history {
+    background: #00FFA030;
+    max-width: 75%;
+    margin-left: auto;
     width: fit-content;
     border-radius: 10px;
     padding: 10px 20px;
     border: none;
     white-space: pre-wrap;
-    font-size: 18px;
-}
-
-.user-history {
-    background: #00FFA030;
-    max-width: 75%;
-    margin-left: auto;
+    font-size: 16px;
+    cursor: text;
 }
 
 .bot-history {
     background: #00A0FF30;
+    box-sizing: border-box;
     margin-right: auto;
+    width: fit-content;
+    max-width: 100%;
+    border-radius: 10px;
+    padding: 10px 20px;
+    border: none;
+    white-space: pre-wrap;
+    font-size: 16px;
+}
+
+.bot-history * {
+    margin: 0;
+    cursor: text;
 }
 
 .bot-history p {
-    font-weight: var(--light);
-    margin: 0;
-    padding: 0;
+    font-size: 1em;
+}
+
+.bot-history a {
+    font-size: 1em;
+    cursor: pointer;
 }
 
 .bot-history blockquote {
-    margin: 0;
-    background: #00FFA030;
-    border-radius: 10px;
-    padding: 10px;
+    border-left: 2px solid #00A0FF;
+    margin-left: 10px;
+    padding-left: 10px;
 }
 
 .bot-history code {
-    background: #00FFA030;
+    background: #00A0FF50;
+    padding: 3px 5px;
+    border-radius: 5px;
+}
+
+.custom-code-block {
+    padding: 0;
+    margin: 0;
     border-radius: 10px;
+    overflow-x: auto;
+    width: 100%;
+    line-height: 1.5;
+    box-sizing: border-box;
+    white-space: pre-wrap;
+}
+
+.custom-code-block code {
+    padding: 0;
+}
+
+.bot-history table {
+    width: 100%;
+    border-collapse: collapse;
+    line-height: 1.5;
+}
+
+.bot-history th, .bot-history td {
+    border: 1px solid #FFFFFF;
+    text-align: left;
     padding: 5px;
-    font-family: "Ubuntu Mono", monospace;
+}
+
+.bot-history th {
+    background: #00A0FF30;
+    font-weight: bold;
+}
+
+.bot-history li {
+    line-height: 1.5;
+}
+
+.bot-history input[type="checkbox"] {
+    margin: 0 10px;
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    cursor: default;
+}
+
+.bot-history hr {
+    border: none;
+    border-top: 1px solid #00A0FF;
+    margin: 10px 0;
+    width: 100%;
 }
 
 .loading-response {
@@ -64,11 +126,17 @@
     animation: gradientAnimation 2s infinite linear;
     background-size: 300% 100%;
     cursor: default;
-    border: 2px solid cyan;
     box-shadow: none;
+    width: fit-content;
+    border-radius: 10px;
+    padding: 10px 20px;
+    white-space: pre-wrap;
+    border: none;
+    font-size: 16px;
 }
 
 .chat-form {
+    box-sizing: border-box;
     position: fixed;
     bottom: 0;
     left: 30vw;
@@ -79,18 +147,17 @@
 }
 
 .chat-form textarea {
-    box-sizing: content-box;
+    box-sizing: border-box;
     margin-left: 0;
     margin-right: 10px;
     margin-bottom: 10px;
-    width: 100%;
     max-height: 300px;
+    min-height: 50px;
     height: auto;
-    padding: 0 10px;
-    font-size: 1.2em;
+    padding: 5px 10px;
+    font-size: 16px;
     align-content: center;
     border-radius: 10px;
-    line-height: 1.2em;
     background: rgb(20, 20, 30);
     border: 1px solid white;
 }
@@ -107,12 +174,12 @@
 
 .chat-form button {
     background-image: url('../assets/up-arrow.svg');
-    background-size: 50px;
+    background-size: 40px;
     background-position: center;
     background-repeat: no-repeat;
-    height: 50px;
-    width: 50px;
-    margin: 10px 0;
+    height: 40px;
+    width: 40px;
+    margin: 15px 0;
     padding: 0;
     animation: none;
     border-radius: 50vmin;

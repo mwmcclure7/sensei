@@ -1,7 +1,10 @@
 import React, { useEffect, useState, useRef } from "react";
 import api from "../api";
 import "../styles/Chat.css";
-import { marked } from "marked";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { coldarkDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 interface Message {
     user_message: string;
@@ -17,6 +20,28 @@ function adjustHeight() {
 }
 
 function Chat() {
+    // Syntax Highlighting
+    const renderers = {
+        code({ node, inline, className, children, ...props }: { node: any, inline: boolean, className: string, children: React.ReactNode, props: any }) {
+            const match = /language-(\w+)/.exec(className || '');
+            return !inline && match ? (
+                <SyntaxHighlighter
+                    style={coldarkDark}
+                    language={match[1]}
+                    PreTag="div"
+                    className="custom-code-block"
+                    {...props}
+                >
+                    {String(children).replace(/\n$/, '')}
+                </SyntaxHighlighter>
+            ) : (
+                <code className={className} {...props}>
+                    {children}
+                </code>
+            );
+        }
+    };
+
     // Chats
     const [chats, setChats] = useState([]);
     const [title, setTitle] = useState("");
@@ -34,7 +59,7 @@ function Chat() {
             .catch((err) => alert(err));
     };
 
-    const disableChat = async(id: any) => {
+    const disableChat = async (id: any) => {
         if (id === currentChat) setCurrentChat(0);
         await api.post("/api/disable-chat/", { id }).catch((err) => alert(err));
         getChats();
@@ -47,16 +72,16 @@ function Chat() {
         setCreateLoading(true);
         const tempTitle = title;
         setTitle("");
-        api.post("/api/chats/", { title: tempTitle }).catch((err) =>
-            alert(err)
-        ).then((res) => {
-            if (res && res.data) {
-                setCurrentChat(res.data.id);
-            }
-        })
-        .catch((err) => {
-            alert(err);
-        });
+        api.post("/api/chats/", { title: tempTitle })
+            .catch((err) => alert(err))
+            .then((res) => {
+                if (res && res.data) {
+                    setCurrentChat(res.data.id);
+                }
+            })
+            .catch((err) => {
+                alert(err);
+            });
         getChats();
         setCreateLoading(false);
     };
@@ -69,10 +94,10 @@ function Chat() {
     const textareaRef = useRef<HTMLTextAreaElement>(null);
 
     const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
+        if (!input || !currentChat || loading) return;
         setLoading(true);
         e.preventDefault();
 
-        if (!input || currentChat === 0) return;
         setCurrentInputDisplay(input);
         const currentInput = input;
         if (textareaRef.current) textareaRef.current.style.height = "auto";
@@ -86,8 +111,32 @@ function Chat() {
                 setLoading(false);
             })
             .catch((err) => {
-                alert("An error occurred. Please try refreshing your page.\n\nIf the problem persists, contact support@softwaresensei.ai.\n\nError details: " + err);
-                setLoading(false);
+                if (err.response.status === 401) {
+                    window.dispatchEvent(new CustomEvent("auth"));
+                    setTimeout(() => {
+                        api.post("/api/messages/", {
+                            chat_id: currentChat,
+                            message: currentInput,
+                        })
+                            .then(() => {
+                                getMessages();
+                                setLoading(false);
+                            })
+                            .catch((err) => {
+                                alert(
+                                    "An error occurred. Please try refreshing your page.\n\nIf the problem persists, contact support@softwaresensei.ai.\n\nError details: " +
+                                        err
+                                );
+                                setLoading(false);
+                            });
+                    }, 1000);
+                } else {
+                    alert(
+                        "An error occurred. Please try refreshing your page.\n\nIf the problem persists, contact support@softwaresensei.ai.\n\nError details: " +
+                            err
+                    );
+                    setLoading(false);
+                }
             });
     };
 
@@ -106,7 +155,7 @@ function Chat() {
 
     useEffect(() => {
         scrollToBottom();
-    }, [messages, loading]);
+    }, [currentInputDisplay]);
 
     const scrollToBottom = () => {
         if (messagesEndRef.current) {
@@ -116,20 +165,23 @@ function Chat() {
 
     const getMessages = async () => {
         if (!currentChat) return;
-            try {
-                const res = await api.get("/api/messages/", { params: { chat_id: currentChat } });
-                const updatedMessages = await Promise.all(res.data.map(async (msg: any) => {
-                    const botMessage = await marked(msg.bot_content);
+        try {
+            const res = await api.get("/api/messages/", {
+                params: { chat_id: currentChat },
+            });
+            const updatedMessages = await Promise.all(
+                res.data.map(async (msg: any) => {
                     return {
                         user_message: msg.user_content,
-                        bot_message: botMessage.trim(),
+                        bot_message: msg.bot_content,
                     };
-                }));
-                setMessages(updatedMessages);
-            } catch (err) {
-                if ((err as any).status !== 404) alert(err);
-            }
-        };
+                })
+            );
+            setMessages(updatedMessages);
+        } catch (err) {
+            if ((err as any).status !== 404) alert(err);
+        }
+    };
 
     useEffect(() => {
         getMessages();
@@ -197,7 +249,14 @@ function Chat() {
                                 <p className="user-history">
                                     {msg.user_message}
                                 </p>
-                                <p className="bot-history" dangerouslySetInnerHTML={{__html: msg.bot_message}} />
+                                <ReactMarkdown
+                                    remarkPlugins={[remarkGfm]}
+                                    // @ts-ignore: everything is probably fine...
+                                    components={renderers}
+                                    className="bot-history"
+                                >
+                                    {msg.bot_message}
+                                </ReactMarkdown>
                             </div>
                         ))}
                         {loading && (

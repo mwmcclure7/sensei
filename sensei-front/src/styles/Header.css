@@ -10,7 +10,7 @@
     padding: 0 1.5vw;
     align-items: center;
     box-sizing: border-box;
-    height: 8vh;
+    height: 5vh;
     z-index: 1000;
 }
 
@@ -39,7 +39,7 @@
 }
 
 .header .logo {
-    height: 6vh;
+    height: 5vh;
 }
 
 .header a {
@@ -57,7 +57,7 @@
 }
 
 .header .sign-in-button {
-    padding: 1.3vh;
+    padding: 0.75vh 1.5vh;
     border-radius: 50vmin;
     font-size: 1.6vh;
     border: 0.3vh solid white;
@@ -70,8 +70,8 @@
 
 .header .profile-picture {
     padding: 0;
-    height: 5vh;
-    width: 5vh;
+    height: 4vh;
+    width: 4vh;
     border-radius: 50%;
     background-image: url('../assets/profileiconwhite.svg');
     background-size: cover;

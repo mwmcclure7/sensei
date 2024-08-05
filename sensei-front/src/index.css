@@ -11,8 +11,10 @@ body {
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 0.5vw;
+  width: 0.75vw;
+  height: 0.75vw;
   background: var(--header-footer-color);
+  border-radius: 50vmin;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -22,6 +24,7 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(45deg, #00FFA0, #00A0FF);
+  cursor: default;
 }
 
 ::-webkit-scrollbar-track {

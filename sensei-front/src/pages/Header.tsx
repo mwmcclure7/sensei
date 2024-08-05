@@ -37,7 +37,7 @@ const Header = () => {
             <nav className="middle">
                 <a href="/">Home</a>
                 <a href="chat">Sensei</a>
-                <a href="tokens">Tokens</a>
+                <a href="contact">Contact</a>
             </nav>
             <div className="right">
                 {isAuthenticated ? (
