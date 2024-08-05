@@ -13,6 +13,7 @@ import InvalidLink from "./pages/InvalidLink";
 import "./App.css";
 import EmailUpdated from "./pages/EmailUpdated";
 import Chat from "./pages/Chat";
+import Contact from "./pages/Contact";
 
 function Logout() {
     localStorage.clear();
@@ -62,8 +63,8 @@ function App() {
                                 </ProtectedRoute>
                             }
                         />
+                        <Route path="/contact" element={<Contact />} />
                         <Route path="*" element={<NotFound />} />
-                        
                     </Routes>
                 </div>
         </BrowserRouter>
