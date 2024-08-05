@@ -11,7 +11,6 @@ function ProtectedRoute({ children }) {
         auth().catch(() => setIsAuthorized(false));
 
         window.addEventListener("auth", auth);
-
     }, []);
 
     const refreshToken = async () => {
@@ -50,7 +49,13 @@ function ProtectedRoute({ children }) {
     };
 
     if (isAuthorized === null) {
-        return <div>Loading...</div>;
+        return (
+            <div className="spinner">
+                <div>
+                    <div />
+                </div>
+            </div>
+        );
     }
 
     return isAuthorized ? children : <Navigate to="/login" />;

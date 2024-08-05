@@ -264,7 +264,11 @@ function Chat() {
                                 <p className="user-history">
                                     {currentInputDisplay}
                                 </p>
-                                <p className="loading-response">Hmmm . . .</p>
+                                <div className="small-spinner">
+                                    <div>
+                                        <div />
+                                    </div>
+                                </div>
                             </div>
                         )}
                         <div ref={messagesEndRef} />

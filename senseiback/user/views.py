@@ -14,6 +14,7 @@ from .serializers import UserSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from django.core.mail import send_mail
 from django.core import signing
+import os
 
 User = get_user_model()
 
@@ -27,11 +28,19 @@ class CreateUserView(generics.CreateAPIView):
         user = serializer.save()
         token = account_activation_token.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
-        link = f'http://localhost:8000/api/activate/{uid}/{token}'
+        link = f'http://{os.getenv("HOST_IP")}:{os.getenv("DJANGO_PORT")}/api/activate/{uid}/{token}'
         subject = 'Activate Your Sensei Account'
-        message = f'Welcome to SoftwareSensei!\n\nPlease click on the link below to activate your account:\n{link}'
-        send_mail(subject, message, 'mwmcclure7@gmail.com', [user.email], fail_silently=False)
-
+        message = f'''Welcome to SoftwareSensei!
+        
+        Please click on the link below to activate your account:
+        {link}
+        
+        If you did not create an account, please ignore this email.
+        
+        Thanks for joining,
+        The SoftwareSensei Team
+        '''
+        send_mail(subject, message, os.getenv("EMAIL_HOST_USER"), [user.email], fail_silently=False)    
 
 class SendActivationEmailView(APIView):
     permission_classes = [AllowAny]
@@ -42,13 +51,12 @@ class SendActivationEmailView(APIView):
         if user:
             token = account_activation_token.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            link = f'http://localhost:8000/api/activate/{uid}/{token}'
+            link = f'http://{os.getenv("HOST_IP")}:{os.getenv("DJANGO_PORT")}/api/activate/{uid}/{token}'
             subject = 'Activate Your Sensei Account'
             message = f'Welcome to SoftwareSensei!\n\nPlease click on the link below to activate your account:\n{link}'
             send_mail(subject, message, 'mwmcclure7@gmail.com', [email], fail_silently=False)
             return Response({'status': 'success', 'message': 'Activation email has been sent.'})
         return Response({'status': 'fail', 'error': 'No account with that email exists.'}, status=400)
-    
 
 def activate(request, uidb64, token):
     try:
@@ -60,9 +68,9 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        return redirect('http://localhost:5173/login')
+        return redirect(f'http://{os.getenv("HOST_IP")}:{os.getenv("REACT_PORT")}/login')
     else:
-        return redirect('http://localhost:5173/invalid-link')
+        return redirect(f'http://{os.getenv("HOST_IP")}:{os.getenv("REACT_PORT")}/invalid-link')
 
 
 class DeactivateAccountView(APIView):
@@ -92,11 +100,13 @@ class RequestPasswordResetEmail(APIView):
         if user:
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            link = f'http://localhost:5173/reset-password/{uid}/{token}/'
+            link = f'http://{os.getenv("HOST_IP")}:{os.getenv("REACT_PORT")}/reset-password/{uid}/{token}/'
+            
+
             send_mail(
                 'Password Reset Request',
                 f'Click on the link below to reset your password:\n{link}',
-                'mwmcclure7@gmail.com',
+                os.getenv("EMAIL_HOST_USER"),
                 [email],
                 fail_silently=False
             )
@@ -158,11 +168,11 @@ class RequestEmailResetEmail(APIView):
         token = default_token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         signed_email = signing.dumps(new_email)
-        link = f'http://localhost:8000/api/reset-email/{uid}/{token}/?email={signed_email}'
+        link = f'http://{os.getenv("HOST_IP")}:{os.getenv("DJANGO_PORT")}/api/reset-email/{uid}/{token}/?email={signed_email}'
         send_mail(
             'Email Update Request',
             f'Click on the link below to update your email:\n{link}',
-            'mwmcclure7@gmail.com',
+            os.getenv("EMAIL_HOST_USER"),
             [new_email],
             fail_silently=False
         )
@@ -180,12 +190,12 @@ def update_email(request, uidb64, token):
         try:
             new_email = signing.loads(signed_email)
         except signing.BadSignature:
-            return redirect('http://localhost:5173/invalid-link')
+            return redirect(f'http://{os.getenv("HOST_IP")}:{os.getenv("REACT_PORT")}/invalid-link')
         user.email = new_email
         user.save()
-        return redirect('http://localhost:5173/email-updated')
+        return redirect(f'http://{os.getenv("HOST_IP")}:{os.getenv("REACT_PORT")}/email-updated')
     else:
-        return redirect('http://localhost:5173/invalid-link')
+        return redirect(f'http://{os.getenv("HOST_IP")}:{os.getenv("REACT_PORT")}/invalid-link')
 
 class UpdatePasswordView(APIView):
     permission_classes = [IsAuthenticated]

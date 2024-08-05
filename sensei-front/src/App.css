@@ -97,3 +97,33 @@ a:hover {
 .message a, .message p {
   font-size: 2vw;
 }
+
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+}
+
+.spinner div {
+  background: var(--gradient);
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 0.5s linear infinite;
+}
+
+.spinner div div {
+  background: rgb(20, 20, 30);
+  border-radius: 50%;
+  width: 75%;
+  height: 75%;
+  position: relative;
+  top: 12.5%;
+  left: 12.5%;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

@@ -1,0 +1,29 @@
+.contact {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+    margin: 10vh 25vw;
+    margin-bottom: 0;
+    background: var(--block-color);
+    padding: 5vw;
+    border-radius: 5vw;
+}
+
+.contact h1 {
+    font-size: 2.5vw;
+    margin-bottom: 2vw;
+    line-height: 3.5vw;
+    font-weight: var(--normal);
+}
+
+.contact p {
+    font-size: 1.5vw;
+    margin-bottom: 2vw;
+}
+
+.contact a {
+    font-size: 2.5vw;
+    text-decoration: none;
+    font-weight: var(--extra-bold);
+}
