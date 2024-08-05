@@ -31,15 +31,15 @@ class CreateUserView(generics.CreateAPIView):
         link = f'http://{os.getenv("HOST_IP")}:{os.getenv("DJANGO_PORT")}/api/activate/{uid}/{token}'
         subject = 'Activate Your Sensei Account'
         message = f'''Welcome to SoftwareSensei!
-        
-        Please click on the link below to activate your account:
-        {link}
-        
-        If you did not create an account, please ignore this email.
-        
-        Thanks for joining,
-        The SoftwareSensei Team
-        '''
+
+Please click on the link below to activate your account:
+{link}
+
+If you did not create an account, please ignore this email.
+
+Thanks for joining,
+The SoftwareSensei Team
+'''
         send_mail(subject, message, os.getenv("EMAIL_HOST_USER"), [user.email], fail_silently=False)    
 
 class SendActivationEmailView(APIView):
@@ -53,7 +53,16 @@ class SendActivationEmailView(APIView):
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             link = f'http://{os.getenv("HOST_IP")}:{os.getenv("DJANGO_PORT")}/api/activate/{uid}/{token}'
             subject = 'Activate Your Sensei Account'
-            message = f'Welcome to SoftwareSensei!\n\nPlease click on the link below to activate your account:\n{link}'
+            message = f'''Welcome to SoftwareSensei!
+
+Please click on the link below to activate your account:
+{link}
+
+If you did not create an account, please ignore this email.
+
+Thanks for joining,
+The SoftwareSensei Team
+'''
             send_mail(subject, message, 'mwmcclure7@gmail.com', [email], fail_silently=False)
             return Response({'status': 'success', 'message': 'Activation email has been sent.'})
         return Response({'status': 'fail', 'error': 'No account with that email exists.'}, status=400)

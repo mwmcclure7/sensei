@@ -14,6 +14,7 @@ import "./App.css";
 import EmailUpdated from "./pages/EmailUpdated";
 import Chat from "./pages/Chat";
 import Contact from "./pages/Contact";
+import Activate from "./pages/Activate";
 
 function Logout() {
     localStorage.clear();
@@ -37,6 +38,7 @@ function App() {
                         <Route path="/login" element={<Login />} />
                         <Route path="/logout" element={<Logout />} />
                         <Route path="/register" element={<RegisterAndLogout />} />
+                        <Route path="/activate" element={<Activate />} />
                         <Route
                             path="/invalid-link"
                             element={<InvalidLink />}

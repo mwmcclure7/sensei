@@ -32,7 +32,7 @@ function Register() {
             }
         } finally {
             setLoading(false);
-            navigate("/activate-email-sent");
+            navigate("/activate");
         }
     };
 

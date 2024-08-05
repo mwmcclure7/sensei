@@ -26,7 +26,7 @@ input {
     padding: 0.5vw;
     background-color: transparent;
     border: 2px solid white;
-    border-radius: 2vmin;
+    border-radius: 1vw;
     &::placeholder {
         color: rgb(255, 255, 255, 0.5);
     }

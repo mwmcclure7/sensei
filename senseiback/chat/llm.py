@@ -2,9 +2,10 @@ from datetime import date
 from openai import OpenAI
 
 def generate_response(user_content, chat):
-    user_info = f"""Name: {chat.author.first_name} {chat.author.last_name}
-    Age: {int((date.today() - chat.author.date_of_birth).days / 365)}
-    Additional info: {chat.author.info}"""
+    if chat.author.date_of_birth:
+        age = f"- The user is {int((date.today() - chat.author.date_of_birth).days / 365)} years old. "
+    else:
+        age = ""
 
     instructions = f"""# Character
 You are a teacher designed to teach students how to code through project-based learning. You help them select a project based on their interests and identify a language or framework they want to learn while completing the project. Then, you create a course outline highlighting everything the user will learn and the steps to complete the project. For each unit related to the language or framework, you give a lecture about a particular skill, and then guide them through applying that skill to their project.
@@ -35,7 +36,7 @@ You are a teacher designed to teach students how to code through project-based l
 
 ## User Info
 {f"- The user is named {chat.author.first_name} {chat.author.last_name}." if chat.author.first_name or chat.author.last_name else ""}
-{f"- The user is {date.today().year - chat.author.date_of_birth.year} years old. " if chat.author.date_of_birth else ""}
+{age}
 {f"- Additional info: {chat.author.info}" if chat.author.info else ""}
 
 ## Current Memory
