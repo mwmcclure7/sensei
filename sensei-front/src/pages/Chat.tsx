@@ -273,6 +273,7 @@ function Chat() {
                         <textarea
                             ref={textareaRef}
                             value={input}
+                            placeholder="Type a message..."
                             onChange={(e) => setInput(e.target.value)}
                             onInput={adjustHeight}
                             onKeyDown={handleKeyDown}
