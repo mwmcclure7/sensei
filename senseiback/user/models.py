@@ -22,11 +22,11 @@ class CustomUserManager(BaseUserManager):
 
 class CustomUser(AbstractUser):
     username = None
-    email = models.EmailField(unique=True)
+    first_name = None
+    last_name = None
+    last_login = None
 
-    first_name = models.CharField(max_length=30, null=True, blank=True)
-    last_name = models.CharField(max_length=30, null=True, blank=True)
-    date_of_birth = models.DateField(null=True, blank=True)
+    email = models.EmailField(unique=True)
     info = models.TextField(max_length=500, null=True, blank=True)
 
     USERNAME_FIELD = 'email'
@@ -36,11 +36,6 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.email
-    
-    def save(self, *args, **kwargs):
-        if self.date_of_birth == '':
-            self.date_of_birth = None
-        super(CustomUser, self).save(*args, **kwargs)
 
 
 def delete_user_by_email(email):

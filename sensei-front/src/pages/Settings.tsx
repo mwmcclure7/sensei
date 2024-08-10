@@ -47,18 +47,12 @@ const Settings = () => {
     };
 
     // Update account functionality
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [dateOfBirth, setDateOfBirth] = useState("");
     const [info, setInfo] = useState("");
     const [profileMessage, setProfileMessage] = useState("");
 
     const fetchUserData = async () => {
         try {
             const response = await api.get("/api/get-profile/");
-            setFirstName(response.data.first_name);
-            setLastName(response.data.last_name);
-            setDateOfBirth(response.data.date_of_birth);
             setInfo(response.data.info);
             setEmail(response.data.email);
         } catch (error) {
@@ -77,9 +71,6 @@ const Settings = () => {
 
         try {
             await api.post("/api/update-profile/", {
-                first_name: firstName,
-                last_name: lastName,
-                date_of_birth: dateOfBirth,
                 info: info,
             });
             setProfileMessage("Profile updated successfully.");
@@ -125,7 +116,9 @@ const Settings = () => {
             if (password !== confirmPassword) {
                 setPasswordMessage("Passwords do not match.");
             } else if (password.length < 8) {
-                setPasswordMessage("Password must be at least 8 characters long.");
+                setPasswordMessage(
+                    "Password must be at least 8 characters long."
+                );
             } else {
                 await api.post("/api/update-password/", {
                     password: password,
@@ -145,40 +138,11 @@ const Settings = () => {
         <div className="settings">
             <form className="profile-settings" onSubmit={handleProfileSubmit}>
                 <h1>Profile</h1>
-                <div>
-                    <label htmlFor="firstName">First Name</label>
-                    <input
-                        type="text"
-                        id="firstName"
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
-                        maxLength={30}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="lastName">Last Name</label>
-                    <input
-                        type="text"
-                        id="lastName"
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
-                        maxLength={30}
-                    />
-                </div>
-                <div>
-                    <label htmlFor="dateOfBirth">Date of Birth</label>
-                    <input
-                        type="date"
-                        id="dateOfBirth"
-                        value={dateOfBirth}
-                        onChange={(e) => setDateOfBirth(e.target.value)}
-                    />
-                </div>
                 <div className="info-div">
                     <label htmlFor="info" className="info-label">
-                        Enter additional information you want Sensei to know for
-                        further personalization, such as skills or prior
-                        experience.
+                        Enter any information you would like Sensei to know
+                        about you for further personalization, such as skills or
+                        prior experience.
                     </label>
                     <textarea
                         id="info"
@@ -232,7 +196,9 @@ const Settings = () => {
                     <button
                         type="submit"
                         className={loading ? "loading" : "update-email-submit"}
-                    >Update Password</button>
+                    >
+                        Update Password
+                    </button>
                     {passwordMessage && <p>{passwordMessage}</p>}
                 </form>
             </div>

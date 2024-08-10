@@ -147,9 +147,6 @@ class UpdateProfileView(APIView):
         user = request.user
         data = request.data
         
-        user.first_name = data.get('first_name', user.first_name)
-        user.last_name = data.get('last_name', user.last_name)
-        user.date_of_birth = data.get('date_of_birth', user.date_of_birth)
         user.info = data.get('info', user.info)
         user.save()
         return Response({'status': 'success', 'message': 'Profile updated.'})
@@ -161,9 +158,6 @@ class GetProfileView(APIView):
     def get(self, request):
         user = request.user
         return Response({
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'date_of_birth': user.date_of_birth,
             'info': user.info,
             'email': user.email
         })

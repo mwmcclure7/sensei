@@ -23,9 +23,6 @@ api.interceptors.response.use(
         return response;
     },
     (error) => {
-        if (error.response.status === 401) {
-            window.dispatchEvent(new CustomEvent("auth"));
-        }
         return Promise.reject(error);
     }
 );
