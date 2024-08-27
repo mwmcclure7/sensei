@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import "../App.css";
 import "../styles/Settings.css";
 import { useNavigate } from "react-router-dom";
@@ -25,7 +26,6 @@ const Settings = () => {
     // Delete account functionality
     const [isModalOpen, setModalOpen] = useState(false);
     const [confirm, setConfirm] = useState("");
-    const [deleteErrorMessage, setDeleteErrorMessage] = useState("");
 
     const navigate = useNavigate();
 
@@ -33,12 +33,11 @@ const Settings = () => {
 
     const handleDeleteSubmit = async (e: any) => {
         e.preventDefault();
-        setDeleteErrorMessage("");
 
         try {
             await api.post("/api/deactivate-account/");
         } catch (error) {
-            setDeleteErrorMessage("An error occurred. Please try again.");
+            toast.error("An error occurred. Please try again.");
         } finally {
             localStorage.clear();
             window.dispatchEvent(new CustomEvent("login"));
@@ -48,7 +47,6 @@ const Settings = () => {
 
     // Update account functionality
     const [info, setInfo] = useState("");
-    const [profileMessage, setProfileMessage] = useState("");
 
     const fetchUserData = async () => {
         try {
@@ -67,13 +65,12 @@ const Settings = () => {
     const handleProfileSubmit = async (e: any) => {
         e.preventDefault();
         setLoading(true);
-        setProfileMessage("");
 
         try {
             await api.post("/api/update-profile/", {
                 info: info,
             });
-            setProfileMessage("Profile updated successfully.");
+            toast.success("Profile updated successfully.");
         } catch (error) {
             alert(error);
         } finally {
@@ -83,12 +80,10 @@ const Settings = () => {
 
     // Change email functionality
     const [email, setEmail] = useState("");
-    const [emailMessage, setEmailMessage] = useState("");
 
     const handleEmailSubmit = async (e: any) => {
         e.preventDefault();
         setLoading(true);
-        setEmailMessage("");
         try {
             await api.post("/api/update-email-request/", {
                 email: email,
@@ -96,7 +91,7 @@ const Settings = () => {
         } catch (error) {
             alert(error);
         } finally {
-            setEmailMessage(
+            toast.success(
                 "An email has been sent to this address for confirmation."
             );
             setLoading(false);
@@ -106,17 +101,15 @@ const Settings = () => {
     // Change password functionality
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [passwordMessage, setPasswordMessage] = useState("");
 
     const handlePasswordSubmit = async (e: any) => {
         e.preventDefault();
         setLoading(true);
-        setPasswordMessage("");
         try {
             if (password !== confirmPassword) {
-                setPasswordMessage("Passwords do not match.");
+                toast.error("Passwords do not match.");
             } else if (password.length < 8) {
-                setPasswordMessage(
+                toast.error(
                     "Password must be at least 8 characters long."
                 );
             } else {
@@ -125,7 +118,7 @@ const Settings = () => {
                 });
                 setPassword("");
                 setConfirmPassword("");
-                setPasswordMessage("Your password has been updated.");
+                toast.success("Your password has been updated.");
             }
         } catch (error) {
             alert(error);
@@ -157,7 +150,6 @@ const Settings = () => {
                 >
                     Update Profile
                 </button>
-                {profileMessage && <p>{profileMessage}</p>}
             </form>
 
             <div className="account-update">
@@ -175,7 +167,6 @@ const Settings = () => {
                     >
                         Update Email
                     </button>
-                    {emailMessage && <p>{emailMessage}</p>}
                 </form>
                 <form onSubmit={handlePasswordSubmit}>
                     <h1>Password</h1>
@@ -199,7 +190,6 @@ const Settings = () => {
                     >
                         Update Password
                     </button>
-                    {passwordMessage && <p>{passwordMessage}</p>}
                 </form>
             </div>
 
@@ -252,11 +242,6 @@ const Settings = () => {
                             >
                                 DELETE ACCOUNT
                             </button>
-                            {deleteErrorMessage && (
-                                <p style={{ color: "red" }}>
-                                    {deleteErrorMessage}
-                                </p>
-                            )}
                         </form>
                     </Modal>
                 )}

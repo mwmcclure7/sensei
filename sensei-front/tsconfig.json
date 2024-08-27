@@ -24,6 +24,7 @@
   "include": [
     "src",
     "src/components",
+    "src/pages",
     "custom.d.ts"
   ]
 }

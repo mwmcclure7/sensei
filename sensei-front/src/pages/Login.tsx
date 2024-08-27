@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
@@ -8,10 +9,9 @@ function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: any) => {
         setLoading(true);
         e.preventDefault();
 
@@ -21,9 +21,9 @@ function Login() {
             localStorage.setItem(REFRESH_TOKEN, res.data.refresh);
             window.dispatchEvent(new CustomEvent("login"));
             navigate("/chat");
-        } catch (error) {
+        } catch (error: any) {
             if (error.response && error.response.status === 401) {
-                setErrorMessage("Invalid email or password.");
+                toast.error("Invalid email or password.");
             } else {
                 alert(error);
             }
@@ -49,7 +49,6 @@ function Login() {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
             />
-            <p>{errorMessage}</p>
             <button
                 className={loading ? 'loading' : 'auth-button'}
                 type="submit"

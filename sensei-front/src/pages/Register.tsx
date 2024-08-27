@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
 import "../styles/Form.css";
@@ -8,25 +9,23 @@ function Register() {
     const [password, setPassword] = useState("");
     const [passwordConfirm, setPasswordConfirm] = useState("");
     const [loading, setLoading] = useState(false);
-    const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: any) => {
         setLoading(true);
         e.preventDefault();
-        setErrorMessage("");
 
         try {
             if (password !== passwordConfirm) {
-                setErrorMessage("Passwords do not match.");
+                toast.error("Passwords do not match.");
             } else if (password.length < 8) {
-                setErrorMessage("Password must be at least 8 characters.");
+                toast.error("Password must be at least 8 characters.");
             } else {
                 await api.post("/api/register/", { email, password });
             }
-        } catch (error) {
+        } catch (error: any) {
             if (error.response && error.response.status === 400) {
-                setErrorMessage("An account with this email already exists.");
+                toast.error("An account with this email already exists.");
             } else {
                 alert(error);
             }
@@ -60,7 +59,6 @@ function Register() {
                 onChange={(e) => setPasswordConfirm(e.target.value)}
                 placeholder="Confirm Password"
             />
-            <p>{errorMessage}</p>
             <button
                 className={loading ? 'loading' : 'auth-button'}
                 type="submit"

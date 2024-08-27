@@ -1,9 +1,9 @@
 import { useState } from "react";
 import api from "../api";
+import toast from "react-hot-toast";
 
 function RequestPasswordReset() {
     const [email, setEmail] = useState("");
-    const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e: any) => {
@@ -12,12 +12,12 @@ function RequestPasswordReset() {
 
         try {
             await api.post("/api/request-password-reset/", { email });
-            setMessage(
+            toast.success(
                 `An email has been sent to ${email} to reset your password.`
             );
         } catch (error: any) {
             if (error.response && error.response.status === 400) {
-                setMessage("An account with this email does not exist.");
+                toast.error("An account with this email does not exist.");
             } else {
                 alert(error);
             }
@@ -40,12 +40,6 @@ function RequestPasswordReset() {
             <button className="auth-button" type="submit" disabled={!email}>
                 Submit
             </button>
-            {message && (
-                <div>
-                    <p>{message}</p>
-                    <a href="/login">Sign in</a>
-                </div>
-            )}
         </form>
     );
 }

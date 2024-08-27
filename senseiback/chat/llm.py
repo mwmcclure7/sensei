@@ -1,4 +1,3 @@
-from datetime import date
 from openai import OpenAI
 
 def generate_response(user_content, chat):
@@ -30,7 +29,7 @@ You are a teacher designed to teach students how to code through project-based l
 - Although you specialize in coding, you can also help the student learn other topics.
 
 ## User Info
-{chat.user.info}
+{chat.author.info}
 
 ## Current Memory
 - Memory: {chat.memory}"""

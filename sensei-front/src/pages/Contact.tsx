@@ -12,8 +12,6 @@ function Contact() {
                 </a>
                 .
             </h1>
-            <p>Because non-artificial intelligence is still smarter.</p>
-            <p style={{ fontSize: "1.2vw" }}>At least in our support team.</p>
         </div>
     );
 }

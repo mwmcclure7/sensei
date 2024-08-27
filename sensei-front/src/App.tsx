@@ -2,6 +2,7 @@ import React from "react";
 import Header from "./pages/Header";
 import Home from "./pages/Home";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Settings from "./pages/Settings";
@@ -69,6 +70,7 @@ function App() {
                         <Route path="*" element={<NotFound />} />
                     </Routes>
                 </div>
+            <Toaster />
         </BrowserRouter>
     );
 }
