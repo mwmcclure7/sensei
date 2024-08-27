@@ -22,7 +22,6 @@ function Modal({
 }
 
 const Settings = () => {
-    const [loading, setLoading] = useState(false);
     // Delete account functionality
     const [isModalOpen, setModalOpen] = useState(false);
     const [confirm, setConfirm] = useState("");
@@ -47,6 +46,7 @@ const Settings = () => {
 
     // Update account functionality
     const [info, setInfo] = useState("");
+    const [infoLoading, setInfoLoading] = useState(false);
 
     const fetchUserData = async () => {
         try {
@@ -64,7 +64,7 @@ const Settings = () => {
 
     const handleProfileSubmit = async (e: any) => {
         e.preventDefault();
-        setLoading(true);
+        setInfoLoading(true);
 
         try {
             await api.post("/api/update-profile/", {
@@ -74,16 +74,17 @@ const Settings = () => {
         } catch (error) {
             alert(error);
         } finally {
-            setLoading(false);
+            setInfoLoading(false);
         }
     };
 
     // Change email functionality
     const [email, setEmail] = useState("");
+    const [emailLoading, setEmailLoading] = useState(false);
 
     const handleEmailSubmit = async (e: any) => {
         e.preventDefault();
-        setLoading(true);
+        setEmailLoading(true);
         try {
             await api.post("/api/update-email-request/", {
                 email: email,
@@ -92,26 +93,26 @@ const Settings = () => {
             alert(error);
         } finally {
             toast.success(
-                "An email has been sent to this address for confirmation."
+                "An email has been sent to this address for confirmation.",
+                { duration: 5000 }
             );
-            setLoading(false);
+            setEmailLoading(false);
         }
     };
 
     // Change password functionality
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
+    const [passwordLoading, setPasswordLoading] = useState(false);
 
     const handlePasswordSubmit = async (e: any) => {
         e.preventDefault();
-        setLoading(true);
+        setPasswordLoading(true);
         try {
             if (password !== confirmPassword) {
                 toast.error("Passwords do not match.");
             } else if (password.length < 8) {
-                toast.error(
-                    "Password must be at least 8 characters long."
-                );
+                toast.error("Password must be at least 8 characters long.");
             } else {
                 await api.post("/api/update-password/", {
                     password: password,
@@ -123,7 +124,7 @@ const Settings = () => {
         } catch (error) {
             alert(error);
         } finally {
-            setLoading(false);
+            setPasswordLoading(false);
         }
     };
 
@@ -146,7 +147,9 @@ const Settings = () => {
                 </div>
                 <button
                     type="submit"
-                    className={loading ? "loading" : "update-profile-submit"}
+                    className={
+                        infoLoading ? "loading" : "update-profile-submit"
+                    }
                 >
                     Update Profile
                 </button>
@@ -163,7 +166,9 @@ const Settings = () => {
                     />
                     <button
                         type="submit"
-                        className={loading ? "loading" : "update-email-submit"}
+                        className={
+                            emailLoading ? "loading" : "update-email-submit"
+                        }
                     >
                         Update Email
                     </button>
@@ -186,7 +191,9 @@ const Settings = () => {
                     />
                     <button
                         type="submit"
-                        className={loading ? "loading" : "update-email-submit"}
+                        className={
+                            passwordLoading ? "loading" : "update-email-submit"
+                        }
                     >
                         Update Password
                     </button>

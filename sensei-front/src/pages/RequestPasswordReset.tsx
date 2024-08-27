@@ -37,7 +37,7 @@ function RequestPasswordReset() {
                 placeholder="Email"
             />
             <p />
-            <button className="auth-button" type="submit" disabled={!email}>
+            <button className={loading ? 'loading' : 'auth-button'} type="submit" disabled={!email}>
                 Submit
             </button>
         </form>

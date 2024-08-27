@@ -54,8 +54,8 @@ button:active {
   background: linear-gradient(90deg, #00a0ff, #00ffa0, #00a0ff);
   animation: gradientAnimation 2s infinite linear;
   background-size: 300% 100%;
+  border: none;
   cursor: default;
-  border: 2px solid cyan;
   box-shadow: none;
   transform: scale(0.95);
 }

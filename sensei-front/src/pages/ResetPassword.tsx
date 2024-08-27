@@ -53,7 +53,7 @@ function ResetPassword() {
                 placeholder="Confirm new password"
             />
             <p />
-            <button className="auth-button" type="submit" disabled={!password || !confirmPassword}>
+            <button className={loading ? 'loading' : 'auth-button'} type="submit" disabled={!password || !confirmPassword}>
                 Submit
             </button>
             {message && <p>{message}</p>}
