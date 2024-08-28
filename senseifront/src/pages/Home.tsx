@@ -1,4 +1,3 @@
-import React from "react";
 import "../styles/Home.css";
 import Footer from "./Footer";
 import interactive from "../assets/interactive.svg";
