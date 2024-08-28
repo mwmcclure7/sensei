@@ -55,8 +55,6 @@ openai==1.37.1
 orjson==3.10.6
 packaging==24.1
 pandas==2.2.2
-paypalrestsdk==1.13.3
-psycopg2==2.9.9
 psycopg2-binary==2.9.9
 pyarrow==17.0.0
 pyarrow-hotfix==0.6
