@@ -22,8 +22,20 @@ function adjustHeight() {
 function Chat() {
     // Syntax Highlighting
     const renderers = {
-        code({ node, inline, className, children, ...props }: { node: any, inline: boolean, className: string, children: React.ReactNode, props: any }) {
-            const match = /language-(\w+)/.exec(className || '');
+        code({
+            node,
+            inline,
+            className,
+            children,
+            ...props
+        }: {
+            node: any;
+            inline: boolean;
+            className: string;
+            children: React.ReactNode;
+            props: any;
+        }) {
+            const match = /language-(\w+)/.exec(className || "");
             return !inline && match ? (
                 <SyntaxHighlighter
                     style={coldarkDark}
@@ -32,14 +44,14 @@ function Chat() {
                     className="custom-code-block"
                     {...props}
                 >
-                    {String(children).replace(/\n$/, '')}
+                    {String(children).replace(/\n$/, "")}
                 </SyntaxHighlighter>
             ) : (
                 <code className={className} {...props}>
                     {children}
                 </code>
             );
-        }
+        },
     };
 
     // Chats
@@ -92,6 +104,7 @@ function Chat() {
     const [loading, setLoading] = useState(false);
     const [currentInputDisplay, setCurrentInputDisplay] = useState("");
     const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const [messagesLoading, setMessagesLoading] = useState(false);
 
     const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
         if (!input || !currentChat || loading) return;
@@ -106,8 +119,14 @@ function Chat() {
             chat_id: currentChat,
             message: currentInput,
         })
-            .then(() => {
-                getMessages();
+            .then((res) => {
+                setMessages((prevMessages) => [
+                    ...prevMessages,
+                    {
+                        user_message: currentInput,
+                        bot_message: res.data.message,
+                    },
+                ]);
                 setLoading(false);
             })
             .catch((err) => {
@@ -155,7 +174,7 @@ function Chat() {
 
     useEffect(() => {
         scrollToBottom();
-    }, [currentInputDisplay]);
+    }, [messages]);
 
     const scrollToBottom = () => {
         if (messagesEndRef.current) {
@@ -164,6 +183,7 @@ function Chat() {
     };
 
     const getMessages = async () => {
+        setMessagesLoading(true);
         if (!currentChat) return;
         try {
             const res = await api.get("/api/messages/", {
@@ -180,6 +200,8 @@ function Chat() {
             setMessages(updatedMessages);
         } catch (err) {
             if ((err as any).status !== 404) alert(err);
+        } finally {
+            setMessagesLoading(false);
         }
     };
 
@@ -236,43 +258,51 @@ function Chat() {
                 </div>
             ) : (
                 <div className="chat-window">
-                    <div
-                        className="messages"
-                        style={{
-                            marginBottom: `${
-                                (textareaRef.current?.clientHeight ?? 0) + 50
-                            }px`,
-                        }}
-                    >
-                        {messages.map((msg, index) => (
-                            <div key={index} className="message-container">
-                                <p className="user-history">
-                                    {msg.user_message}
-                                </p>
-                                <ReactMarkdown
-                                    remarkPlugins={[remarkGfm]}
-                                    // @ts-ignore: everything is probably fine...
-                                    components={renderers}
-                                    className="bot-history"
-                                >
-                                    {msg.bot_message}
-                                </ReactMarkdown>
+                    {messagesLoading ? (
+                        <div className="spinner">
+                            <div>
+                                <div />
                             </div>
-                        ))}
-                        {loading && (
-                            <div className="message-container">
-                                <p className="user-history">
-                                    {currentInputDisplay}
-                                </p>
-                                <div className="small-spinner">
-                                    <div>
-                                        <div />
+                        </div>
+                    ) : (
+                        <div
+                            className="messages"
+                            style={{
+                                marginBottom: `${
+                                    (textareaRef.current?.clientHeight ?? 0) + 50
+                                }px`,
+                            }}
+                        >
+                            {messages.map((msg, index) => (
+                                <div key={index} className="message-container">
+                                    <p className="user-history">
+                                        {msg.user_message}
+                                    </p>
+                                    <ReactMarkdown
+                                        remarkPlugins={[remarkGfm]}
+                                        // @ts-ignore: everything is probably fine...
+                                        components={renderers}
+                                        className="bot-history"
+                                    >
+                                        {msg.bot_message}
+                                    </ReactMarkdown>
+                                </div>
+                            ))}
+                            {loading && (
+                                <div className="message-container">
+                                    <p className="user-history">
+                                        {currentInputDisplay}
+                                    </p>
+                                    <div className="small-spinner">
+                                        <div>
+                                            <div />
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        )}
-                        <div ref={messagesEndRef} />
-                    </div>
+                            )}
+                            <div ref={messagesEndRef} />
+                        </div>
+                    )}
                     <form className="chat-form" onSubmit={sendMessage}>
                         <textarea
                             ref={textareaRef}
