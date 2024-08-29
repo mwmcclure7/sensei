@@ -15,6 +15,8 @@ import EmailUpdated from "./pages/EmailUpdated";
 import Chat from "./pages/Chat";
 import Contact from "./pages/Contact";
 import Activate from "./pages/Activate";
+import Activated from "./pages/Activated";
+import UpdateEmail from "./pages/UpdateEmail";
 
 function Logout() {
     localStorage.clear();
@@ -38,7 +40,8 @@ function App() {
                         <Route path="/login" element={<Login />} />
                         <Route path="/logout" element={<Logout />} />
                         <Route path="/register" element={<RegisterAndLogout />} />
-                        <Route path="/activate" element={<Activate />} />
+                        <Route path="/activated" element={<Activated />} />
+                        <Route path="/activate/:uid/:token" element={<Activate />} />
                         <Route
                             path="/invalid-link"
                             element={<InvalidLink />}
@@ -55,6 +58,7 @@ function App() {
                             path="/request-password-reset"
                             element={<RequestPasswordReset />}
                         />
+                        <Route path="/reset-email/:uid/:token/:email" element={<UpdateEmail />} />
                         <Route path="/email-updated" element={<EmailUpdated />} />
                         <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
                         <Route

@@ -28,7 +28,7 @@ class CreateUserView(generics.CreateAPIView):
         user = serializer.save()
         token = account_activation_token.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
-        link = f'http://learn.softwaresensei.ai/choreo-apis/sensei/senseiback/v1/api/activate/{uid}/{token}'
+        link = f'https://learn.softwaresensei.ai/activate/{uid}/{token}'
         subject = 'Activate Your Sensei Account'
         message = f'''Welcome to SoftwareSensei!
 
@@ -51,7 +51,7 @@ class SendActivationEmailView(APIView):
         if user:
             token = account_activation_token.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            link = f'http://learn.softwaresensei.ai/choreo-apis/sensei/senseiback/v1/api/activate/{uid}/{token}'
+            link = f'https://learn.softwaresensei.ai/activate/{uid}/{token}'
             subject = 'Activate Your Sensei Account'
             message = f'''Welcome to SoftwareSensei!
 
@@ -67,20 +67,22 @@ The SoftwareSensei Team
             return Response({'status': 'success', 'message': 'Activation email has been sent.'})
         return Response({'status': 'fail', 'error': 'No account with that email exists.'}, status=400)
 
-def activate(request, uidb64, token):
-    try:
-        uid = urlsafe_base64_decode(uidb64).decode()
-        user = User.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-        user = None
-    
-    if user is not None and account_activation_token.check_token(user, token):
-        user.is_active = True
-        user.save()
-        return redirect(f'http://learn.softwaresensei.ai/login')
-    else:
-        return redirect(f'http://learn.softwaresensei.ai/invalid-link')
+class ActivateView(APIView):
+    permission_classes = [AllowAny]
 
+    def post(self, request, uidb64, token):
+        try:
+            uid = urlsafe_base64_decode(uidb64).decode()
+            user = User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+        
+        if user is not None and account_activation_token.check_token(user, token):
+            user.is_active = True
+            user.save()
+            return Response({ 'status': 'success', 'message': 'Your account has been activated.' })
+        else:
+            return Response({ 'status': 'error', 'message': 'Invalid token or user ID' }, status=400)
 
 class DeactivateAccountView(APIView):
     permission_classes = [IsAuthenticated]
@@ -109,7 +111,7 @@ class RequestPasswordResetEmail(APIView):
         if user:
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            link = f'http://learn.softwaresensei.ai/reset-password/{uid}/{token}/'
+            link = f'https://learn.softwaresensei.ai/reset-password/{uid}/{token}/'
             
 
             send_mail(
@@ -171,7 +173,7 @@ class RequestEmailResetEmail(APIView):
         token = default_token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         signed_email = signing.dumps(new_email)
-        link = f'http://learn.softwaresensei.ai/choreo-apis/sensei/senseiback/v1/api/reset-email/{uid}/{token}/?email={signed_email}'
+        link = f'https://learn.softwaresensei.ai/reset-email/{uid}/{token}/{signed_email}'
         send_mail(
             'Email Update Request',
             f'Click on the link below to update your email:\n{link}',
@@ -181,24 +183,25 @@ class RequestEmailResetEmail(APIView):
         )
         return Response({'status': 'success', 'message': 'If an account with that email exists, we have sent an email with further instructions.'})
 
-def update_email(request, uidb64, token):
-    try:
-        uid = urlsafe_base64_decode(uidb64).decode()
-        user = User.objects.get(pk=uid)
-    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-        user = None
-    
-    if user is not None and default_token_generator.check_token(user, token):
-        signed_email = request.GET.get('email')
+class UpdateEmailView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request, uidb64, token, signed_email):
         try:
-            new_email = signing.loads(signed_email)
-        except signing.BadSignature:
-            return redirect(f'http://learn.softwaresensei.ai/invalid-link')
-        user.email = new_email
-        user.save()
-        return redirect(f'http://learn.softwaresensei.ai/email-updated')
-    else:
-        return redirect(f'http://learn.softwaresensei.ai/invalid-link')
+            uid = urlsafe_base64_decode(uidb64).decode()
+            user = User.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            user = None
+        
+        if user is not None and default_token_generator.check_token(user, token):
+            try:
+                new_email = signing.loads(signed_email)
+            except signing.BadSignature:
+                return Response({'status': 'error', 'message': 'Invalid email.'}, status=400)
+            user.email = new_email
+            user.save()
+            return Response({'status': 'success', 'message': 'Email updated.'})
+        return Response({'status': 'error', 'message': 'Invalid token or user ID'}, status=400)
 
 class UpdatePasswordView(APIView):
     permission_classes = [IsAuthenticated]
