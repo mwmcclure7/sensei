@@ -174,7 +174,7 @@ function Chat() {
 
     useEffect(() => {
         scrollToBottom();
-    }, [messages]);
+    }, [messages, loading]);
 
     const scrollToBottom = () => {
         if (messagesEndRef.current) {
