@@ -24,7 +24,7 @@ function Register() {
                 toast.error("Password must be at least 8 characters.");
             } else {
                 await api.post("/api/register/", { email, password });
-                navigate("/activate");
+                navigate("/activated");
             }
         } catch (error: any) {
             if (error.response && error.response.status === 400) {
