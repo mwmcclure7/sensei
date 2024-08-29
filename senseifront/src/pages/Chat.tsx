@@ -57,31 +57,35 @@ function Chat() {
     // Chats
     const [chats, setChats] = useState([]);
     const [title, setTitle] = useState("");
-    const [createLoading, setCreateLoading] = useState(false);
     const [currentChat, setCurrentChat] = useState(0);
+    const [chatLoading, setChatLoading] = useState(false);
 
     useEffect(() => {
         getChats();
     }, []);
 
     const getChats = () => {
+        setChatLoading(true);
         api.get("/api/chats/")
             .then((res) => res.data)
             .then((data) => setChats(data))
+            .then(() => setChatLoading(false))
             .catch((err) => alert(err));
     };
 
     const disableChat = async (id: any) => {
+        setChatLoading(true);
         if (id === currentChat) setCurrentChat(0);
         await api.post("/api/disable-chat/", { id }).catch((err) => alert(err));
         getChats();
+        setChatLoading(false);
         getMessages();
     };
 
     const createChat = (e: any) => {
         e.preventDefault();
         if (!title) return;
-        setCreateLoading(true);
+        setChatLoading(true);
         const tempTitle = title;
         setTitle("");
         api.post("/api/chats/", { title: tempTitle })
@@ -91,11 +95,11 @@ function Chat() {
                     setCurrentChat(res.data.id);
                 }
             })
+            .then(() => getChats())
+            .then(() => setChatLoading(false))
             .catch((err) => {
                 alert(err);
             });
-        getChats();
-        setCreateLoading(false);
     };
 
     // Messages
@@ -220,11 +224,7 @@ function Chat() {
                         placeholder="Enter new chat title"
                     />
                     <button
-                        className={
-                            createLoading
-                                ? "create-button-loading"
-                                : "create-button"
-                        }
+                        className="create-button"
                         onClick={createChat}
                         disabled={!title}
                     >
@@ -251,6 +251,13 @@ function Chat() {
                         />
                     </div>
                 ))}
+                {chatLoading && (
+                    <div className="small-spinner">
+                        <div>
+                            <div />
+                        </div>
+                    </div>
+                )}
             </div>
             {!currentChat ? (
                 <div className="no-chat-selected">
