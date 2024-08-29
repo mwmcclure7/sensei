@@ -4,8 +4,9 @@ import api from "../api";
 import { REFRESH_TOKEN, ACCESS_TOKEN } from "../constants";
 import { useState, useEffect } from "react";
 
+// @ts-ignore
 function ProtectedRoute({ children }) {
-    const [isAuthorized, setIsAuthorized] = useState(null);
+    const [isAuthorized, setIsAuthorized] = useState(false);
 
     useEffect(() => {
         auth().catch(() => setIsAuthorized(false));
@@ -41,6 +42,7 @@ function ProtectedRoute({ children }) {
         const tokenExpiration = decoded.exp;
         const now = Date.now() / 1000;
 
+        // @ts-ignore
         if (tokenExpiration < now) {
             await refreshToken();
         } else {
