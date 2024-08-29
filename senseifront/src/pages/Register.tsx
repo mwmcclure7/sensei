@@ -9,6 +9,8 @@ function Register() {
     const [password, setPassword] = useState("");
     const [passwordConfirm, setPasswordConfirm] = useState("");
     const [loading, setLoading] = useState(false);
+    const [privacyPolicyChecked, setPrivacyPolicyChecked] = useState(false);
+    const [termsChecked, setTermsChecked] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = async (e: any) => {
@@ -22,6 +24,7 @@ function Register() {
                 toast.error("Password must be at least 8 characters.");
             } else {
                 await api.post("/api/register/", { email, password });
+                navigate("/activate");
             }
         } catch (error: any) {
             if (error.response && error.response.status === 400) {
@@ -31,7 +34,6 @@ function Register() {
             }
         } finally {
             setLoading(false);
-            navigate("/activate");
         }
     };
 
@@ -59,14 +61,54 @@ function Register() {
                 onChange={(e) => setPasswordConfirm(e.target.value)}
                 placeholder="Confirm Password"
             />
+            <div className="agree">
+                <div>
+                    <input
+                        type="checkbox"
+                        checked={privacyPolicyChecked}
+                        onChange={(e) =>
+                            setPrivacyPolicyChecked(e.target.checked)
+                        }
+                    />
+                    <label>
+                        I have read and agree to the{" "}
+                        <a
+                            href="SENSEI.AI-Privacy-Policy.pdf"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Privacy Policy
+                        </a>
+                    </label>
+                </div>
+                <div>
+                    <input
+                        type="checkbox"
+                        checked={termsChecked}
+                        onChange={(e) => setTermsChecked(e.target.checked)}
+                    />
+                    <label>
+                        I have read and agree to the{" "}
+                        <a
+                            href="SENSEI.AI-Terms-and-Conditions.pdf"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Terms and Conditions
+                        </a>
+                    </label>
+                </div>
+            </div>
             <button
-                className={loading ? 'loading' : 'auth-button'}
+                className={loading ? "loading" : "auth-button"}
                 type="submit"
-                disabled={!email || !password || !passwordConfirm}
+                disabled={!email || !password || !passwordConfirm || !privacyPolicyChecked || !termsChecked}
             >
                 Create Account
             </button>
-            <p>Already have an account? <a href="/login">Sign in here</a>!</p>
+            <p>
+                Already have an account? <a href="/login">Sign in here</a>!
+            </p>
         </form>
     );
 }
