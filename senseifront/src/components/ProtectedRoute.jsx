@@ -4,10 +4,8 @@ import api from "../api";
 import { REFRESH_TOKEN, ACCESS_TOKEN } from "../constants";
 import { useState, useEffect } from "react";
 
-import { ReactNode } from "react";
-
-function ProtectedRoute({ children }: { children: ReactNode }) {
-    const [isAuthorized, setIsAuthorized] = useState(false);
+function ProtectedRoute({ children }) {
+    const [isAuthorized, setIsAuthorized] = useState(null);
 
     useEffect(() => {
         auth().catch(() => setIsAuthorized(false));
@@ -40,7 +38,7 @@ function ProtectedRoute({ children }: { children: ReactNode }) {
             return;
         }
         const decoded = jwtDecode(token);
-        const tokenExpiration: number = decoded.exp as number;
+        const tokenExpiration = decoded.exp;
         const now = Date.now() / 1000;
 
         if (tokenExpiration < now) {
