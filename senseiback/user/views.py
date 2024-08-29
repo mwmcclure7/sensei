@@ -28,7 +28,7 @@ class CreateUserView(generics.CreateAPIView):
         user = serializer.save()
         token = account_activation_token.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
-        link = f'http://{os.getenv("HOST_IP")}:{os.getenv("DJANGO_PORT")}/api/activate/{uid}/{token}'
+        link = f'http://{os.getenv("DJANGO_URL")}/api/activate/{uid}/{token}'
         subject = 'Activate Your Sensei Account'
         message = f'''Welcome to SoftwareSensei!
 
@@ -51,7 +51,7 @@ class SendActivationEmailView(APIView):
         if user:
             token = account_activation_token.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            link = f'http://{os.getenv("HOST_IP")}:{os.getenv("DJANGO_PORT")}/api/activate/{uid}/{token}'
+            link = f'http://{os.getenv("DJANGO_URL")}/api/activate/{uid}/{token}'
             subject = 'Activate Your Sensei Account'
             message = f'''Welcome to SoftwareSensei!
 
@@ -77,9 +77,9 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token):
         user.is_active = True
         user.save()
-        return redirect(f'http://{os.getenv("HOST_IP")}:{os.getenv("REACT_PORT")}/login')
+        return redirect(f'http://{os.getenv("REACT_URL")}/login')
     else:
-        return redirect(f'http://{os.getenv("HOST_IP")}:{os.getenv("REACT_PORT")}/invalid-link')
+        return redirect(f'http://{os.getenv("REACT_URL")}/invalid-link')
 
 
 class DeactivateAccountView(APIView):
@@ -109,7 +109,7 @@ class RequestPasswordResetEmail(APIView):
         if user:
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            link = f'http://{os.getenv("HOST_IP")}:{os.getenv("REACT_PORT")}/reset-password/{uid}/{token}/'
+            link = f'http://{os.getenv("REACT_URL")}/reset-password/{uid}/{token}/'
             
 
             send_mail(
@@ -171,7 +171,7 @@ class RequestEmailResetEmail(APIView):
         token = default_token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         signed_email = signing.dumps(new_email)
-        link = f'http://{os.getenv("HOST_IP")}:{os.getenv("DJANGO_PORT")}/api/reset-email/{uid}/{token}/?email={signed_email}'
+        link = f'http://{os.getenv("REACT_URL")}/api/reset-email/{uid}/{token}/?email={signed_email}'
         send_mail(
             'Email Update Request',
             f'Click on the link below to update your email:\n{link}',
@@ -193,12 +193,12 @@ def update_email(request, uidb64, token):
         try:
             new_email = signing.loads(signed_email)
         except signing.BadSignature:
-            return redirect(f'http://{os.getenv("HOST_IP")}:{os.getenv("REACT_PORT")}/invalid-link')
+            return redirect(f'http://{os.getenv("REACT_URL")}/invalid-link')
         user.email = new_email
         user.save()
-        return redirect(f'http://{os.getenv("HOST_IP")}:{os.getenv("REACT_PORT")}/email-updated')
+        return redirect(f'http://{os.getenv("REACT_URL")}/email-updated')
     else:
-        return redirect(f'http://{os.getenv("HOST_IP")}:{os.getenv("REACT_PORT")}/invalid-link')
+        return redirect(f'http://{os.getenv("REACT_URL")}/invalid-link')
 
 class UpdatePasswordView(APIView):
     permission_classes = [IsAuthenticated]
