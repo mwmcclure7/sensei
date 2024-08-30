@@ -32,7 +32,6 @@ const Header = () => {
         <header className="header">
             <div className="left">
                 <img src={logo} alt="logo" className="logo" />
-                <p>SoftwareSensei.AI</p>
             </div>
             <nav className="middle">
                 <a href="/">Home</a>
