@@ -20,3 +20,41 @@ def main():
 
 if __name__ == '__main__':
     main()
+
+# My management commands
+from django.contrib.auth import get_user_model
+from chat.models import Chat
+
+User = get_user_model()
+
+def list_users():
+    users = User.objects.all()
+    for user in users:
+        print(user, user.is_active)
+
+def set_active(email, active):
+    user = User.objects.filter(email=email).first()
+    if user:
+        user.is_active = active
+        user.save()
+        print(user, user.is_active)
+    else:
+        print('User not found')
+
+def list_chats(email):
+    user = User.objects.filter(email=email).first()
+    if user:
+        chats = user.chats.all()
+        for chat in chats:
+            print(chat.id, chat.title, chat.is_active)
+    else:
+        print('User not found')
+
+def list_messages(chat_id):
+    chat = Chat.objects.filter(id=chat_id).first()
+    if chat:
+        messages = chat.messages.all()
+        for message in messages:
+            print(message)
+    else:
+        print('Chat not found')

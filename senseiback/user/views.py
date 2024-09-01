@@ -7,12 +7,10 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.core.mail import send_mail
 from django.contrib.auth import get_user_model
-from django.shortcuts import redirect
 from django.contrib.auth.tokens import default_token_generator
 from rest_framework import generics
 from .serializers import UserSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from django.core.mail import send_mail
 from django.core import signing
 import os
 
