@@ -19,3 +19,6 @@ class Message(models.Model):
     bot_content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name='messages')
+
+    def __str__(self):
+        return f'User: {self.user_content} Bot: {self.bot_content}'
