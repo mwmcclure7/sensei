@@ -131,18 +131,14 @@ const Settings = () => {
     return (
         <div className="settings">
             <form className="profile-settings" onSubmit={handleProfileSubmit}>
-                <h1>Profile</h1>
+                <h1>Personalization Info</h1>
                 <div className="info-div">
-                    <label htmlFor="info" className="info-label">
-                        Enter any information you would like Sensei to know
-                        about you for further personalization, such as skills or
-                        prior experience.
-                    </label>
                     <textarea
                         id="info"
                         value={info}
                         onChange={(e) => setInfo(e.target.value)}
                         maxLength={500}
+                        placeholder="Any information you provide will be used to personalize your experience with Sensei. You can include your skills, prior experience, or even give Sensei custom instructions on how to respond."
                     />
                 </div>
                 <button
