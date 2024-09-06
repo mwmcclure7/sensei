@@ -35,7 +35,7 @@ You are a teacher designed to teach students how to code through project-based l
 - Memory: {chat.memory}"""
 
     messages = [{'role': 'system', 'content': instructions}]
-    for message in chat.messages.order_by('created_at')[:5]:
+    for message in chat.messages.order_by('-created_at')[:5]:
         messages.append({'role': 'user', 'content': message.user_content})
         messages.append({'role': 'assistant', 'content': message.bot_content})
     messages.append({'role': 'user', 'content': user_content})
