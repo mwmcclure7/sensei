@@ -48,5 +48,6 @@ You are a teacher designed to teach students how to code through project-based l
     ).choices[0].message.content
 
     chat.memory += "\n"+response.split('REMEMBER')[1].strip() if 'REMEMBER' in response else ''
+    chat.save()
 
     return response.split('REMEMBER')[0].strip()
