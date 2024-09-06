@@ -109,23 +109,23 @@ AUTH_USER_MODEL = 'user.CustomUser'
 
 DATABASES = {
     # Development database configuration
-    # 'default': {
-    #     'ENGINE': "django.db.backends.postgresql",
-    #     'NAME': os.getenv('DEV_DB_NAME'),
-    #     'USER': os.getenv('DEV_DB_USER'),
-    #     'PASSWORD': os.getenv('DEV_DB_PASSWORD'),
-    #     'HOST': os.getenv('DEV_DB_HOST'),
-    #     'PORT': os.getenv('DEV_DB_PORT'),
-    # }
-    # Production database configuration
     'default': {
         'ENGINE': "django.db.backends.postgresql",
-        'NAME': os.getenv('PROD_DB_NAME'),
-        'USER': os.getenv('PROD_DB_USER'),
-        'PASSWORD': os.getenv('PROD_DB_PASSWORD'),
-        'HOST': os.getenv('PROD_DB_HOST'),
-        'PORT': os.getenv('PROD_DB_PORT'),
+        'NAME': os.getenv('DEV_DB_NAME'),
+        'USER': os.getenv('DEV_DB_USER'),
+        'PASSWORD': os.getenv('DEV_DB_PASSWORD'),
+        'HOST': os.getenv('DEV_DB_HOST'),
+        'PORT': os.getenv('DEV_DB_PORT'),
     }
+    # Production database configuration
+    # 'default': {
+    #     'ENGINE': "django.db.backends.postgresql",
+    #     'NAME': os.getenv('PROD_DB_NAME'),
+    #     'USER': os.getenv('PROD_DB_USER'),
+    #     'PASSWORD': os.getenv('PROD_DB_PASSWORD'),
+    #     'HOST': os.getenv('PROD_DB_HOST'),
+    #     'PORT': os.getenv('PROD_DB_PORT'),
+    # }
 }
 
 # Password validation

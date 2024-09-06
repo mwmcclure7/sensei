@@ -23,6 +23,9 @@ api.interceptors.response.use(
         return response;
     },
     (error) => {
+        if (error.response && error.response.status === 401) {
+            window.location.href = "/login";
+        }
         return Promise.reject(error);
     }
 );
