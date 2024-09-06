@@ -38,7 +38,8 @@ If you did not create an account, please ignore this email.
 Thanks for joining,
 The SoftwareSensei Team
 '''
-        send_mail(subject, message, os.getenv("EMAIL_HOST_USER"), [user.email], fail_silently=False)    
+        send_mail(subject, message, os.getenv("EMAIL_HOST_USER"), [user.email], fail_silently=False)
+        send_mail("New Sensei User", f"'{user.email}' just created an account!", os.getenv("EMAIL_HOST_USER"), os.getenv("EMAIL_HOST_USER"), fail_silently=False)
 
 class SendActivationEmailView(APIView):
     permission_classes = [AllowAny]
