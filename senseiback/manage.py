@@ -30,7 +30,7 @@ User = get_user_model()
 def list_users():
     users = User.objects.all()
     for user in users:
-        print(user, user.is_active)
+        print(user, user.date_joined, user.is_active)
 
 def set_active(email, active):
     user = User.objects.filter(email=email).first()

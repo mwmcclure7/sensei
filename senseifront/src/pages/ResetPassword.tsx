@@ -25,7 +25,7 @@ function ResetPassword() {
                 await api.post(`/api/reset-password/${uidb64}/${token}/`, {
                     password,
                 });
-                toast("Your password has been reset.");
+                toast.success("Your password has been reset.");
             }
         } catch (error: any) {
             alert(error);
