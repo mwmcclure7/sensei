@@ -54,7 +54,7 @@ const Settings = () => {
             setInfo(response.data.info);
             setEmail(response.data.email);
         } catch (error) {
-            alert(error);
+            console.log(error);
         }
     };
 
@@ -72,7 +72,7 @@ const Settings = () => {
             });
             toast.success("Profile updated successfully.");
         } catch (error) {
-            alert(error);
+            console.log(error);
         } finally {
             setInfoLoading(false);
         }
@@ -90,7 +90,7 @@ const Settings = () => {
                 email: email,
             });
         } catch (error) {
-            alert(error);
+            console.log(error);
         } finally {
             toast.success(
                 "An email has been sent to this address for confirmation.",
@@ -122,7 +122,7 @@ const Settings = () => {
                 toast.success("Your password has been updated.");
             }
         } catch (error) {
-            alert(error);
+            console.log(error);
         } finally {
             setPasswordLoading(false);
         }

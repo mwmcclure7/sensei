@@ -28,7 +28,7 @@ function ResetPassword() {
                 toast.success("Your password has been reset.");
             }
         } catch (error: any) {
-            alert(error);
+            console.log(error);
         } finally {
             setLoading(false);
         }

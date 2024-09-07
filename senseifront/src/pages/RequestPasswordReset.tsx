@@ -19,7 +19,7 @@ function RequestPasswordReset() {
             if (error.response && error.response.status === 400) {
                 toast.error("An account with this email does not exist.");
             } else {
-                alert(error);
+                console.log(error);
             }
         } finally {
             setLoading(false);
@@ -37,7 +37,11 @@ function RequestPasswordReset() {
                 placeholder="Email"
             />
             <p />
-            <button className={loading ? 'loading' : 'auth-button'} type="submit" disabled={!email}>
+            <button
+                className={loading ? "loading" : "auth-button"}
+                type="submit"
+                disabled={!email}
+            >
                 Submit
             </button>
         </form>
