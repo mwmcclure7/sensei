@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import api from "../api";
-import { toast } from "react-hot-toast";
+import toast from "react-hot-toast";
 import "../styles/Chat.css";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
