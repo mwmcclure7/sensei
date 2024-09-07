@@ -30,7 +30,7 @@ function Register() {
             if (error.response && error.response.status === 400) {
                 toast.error("An account with this email already exists.");
             } else {
-                alert(error);
+                console.log(error);
             }
         } finally {
             setLoading(false);
@@ -102,7 +102,13 @@ function Register() {
             <button
                 className={loading ? "loading" : "auth-button"}
                 type="submit"
-                disabled={!email || !password || !passwordConfirm || !privacyPolicyChecked || !termsChecked}
+                disabled={
+                    !email ||
+                    !password ||
+                    !passwordConfirm ||
+                    !privacyPolicyChecked ||
+                    !termsChecked
+                }
             >
                 Create Account
             </button>

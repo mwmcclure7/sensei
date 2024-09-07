@@ -106,7 +106,7 @@ a:hover {
 }
 
 .spinner div {
-  background: var(--gradient);
+  background: linear-gradient(90deg, #00a0ff, #00000000);
   border-radius: 50%;
   width: 120px;
   height: 120px;

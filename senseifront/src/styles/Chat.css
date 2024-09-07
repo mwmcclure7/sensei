@@ -31,6 +31,19 @@
     cursor: text;
 }
 
+.fun-user-history {
+    background: #FF00FF30;
+    max-width: 75%;
+    margin-left: auto;
+    width: fit-content;
+    border-radius: 10px;
+    padding: 10px 20px;
+    border: none;
+    white-space: pre-wrap;
+    font-size: 16px;
+    cursor: text;
+}
+
 .bot-history {
     background: #00A0FF30;
     box-sizing: border-box;
@@ -122,7 +135,7 @@
 }
 
 .small-spinner div {
-    background: var(--gradient);
+    background: linear-gradient(90deg, #00a0ff, #00000000);
     border-radius: 50%;
     width: 100px;
     height: 100px;
@@ -416,3 +429,48 @@
     z-index: 2;
     font-weight: var(--bold)
 }
+
+.fun-mode-switch {
+    position: fixed;
+    top: 1vh;
+    right: 15vw;
+    display: flex;
+    align-items: center;
+    z-index: 1000;
+}
+
+.fun-mode-switch input {
+    display: none;
+}
+
+.fun-mode-switch label {
+    position: relative;
+    display: inline-block;
+    width: 6vh;
+    height: 3vh;
+    background-color: #00FFA0A0;
+    border-radius: 3vh;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.fun-mode-switch label::before {
+    content: "";
+    position: absolute;
+    top: 0.5vh;
+    left: 0.5vh;
+    width: 2vh;
+    height: 2vh;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.2s;
+}
+
+.fun-mode-switch input:checked + label {
+    background-color: #FF00FFA0;
+}
+
+.fun-mode-switch input:checked + label::before {
+    transform: translateX(3vh);
+}
+

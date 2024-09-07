@@ -54,9 +54,9 @@ class MessageListCreate(generics.ListCreateAPIView):
         if (chat.author != user):
             return Response({'status': 'error', 'message': 'You are not authorized to send messages to this chat.'})
         user_content = request.data.get('message')
-
+        fun_mode = request.data.get('fun_mode')
         # OpenAI API
-        response = generate_response(user_content, chat)
+        response = generate_response(user_content, chat, fun_mode)
 
         Message.objects.create(chat=chat, user_content=user_content, bot_content=response)
         return Response({'status': 'success', 'message': response})
