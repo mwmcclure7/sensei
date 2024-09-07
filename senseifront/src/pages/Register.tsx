@@ -1,7 +1,6 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import api from "../api";
-import { useNavigate } from "react-router-dom";
 import "../styles/Form.css";
 
 function Register() {
@@ -11,7 +10,6 @@ function Register() {
     const [loading, setLoading] = useState(false);
     const [privacyPolicyChecked, setPrivacyPolicyChecked] = useState(false);
     const [termsChecked, setTermsChecked] = useState(false);
-    const navigate = useNavigate();
 
     const handleSubmit = async (e: any) => {
         setLoading(true);
