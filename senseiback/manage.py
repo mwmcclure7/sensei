@@ -68,7 +68,8 @@ def print_messages(chat_id):
 
 def help():
     print("""Available commands:
-    list_users
+    print_users
     set_active <email> <active>
-    list_chats <email>
-    list_messages <chat_id>""")
+    print_chats <email>
+    print_memory <chat_id>
+    print_messages <chat_id>""")
