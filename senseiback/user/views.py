@@ -27,8 +27,8 @@ class CreateUserView(generics.CreateAPIView):
         token = account_activation_token.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         link = f'{os.getenv('URL')}/activate/{uid}/{token}'
-        subject = 'Activate Your Sensei Account'
-        message = f'''Welcome to SoftwareSensei!
+        subject = 'Activate Your Sensei.AI Account'
+        message = f'''Welcome to Sensei.AI!
 
 Please click on the link below to activate your account:
 {link}
@@ -36,7 +36,7 @@ Please click on the link below to activate your account:
 If you did not create an account, please ignore this email.
 
 Thanks for joining,
-The SoftwareSensei Team
+The Sensei.AI Team
 '''
         send_mail(subject, message, os.getenv("EMAIL_HOST_USER"), [user.email], fail_silently=False)
 
@@ -51,7 +51,7 @@ class SendActivationEmailView(APIView):
             uid = urlsafe_base64_encode(force_bytes(user.pk))
             link = f'{os.getenv('URL')}/activate/{uid}/{token}'
             subject = 'Activate Your Sensei Account'
-            message = f'''Welcome to SoftwareSensei!
+            message = f'''Welcome to Sensei.AI!
 
 Please click on the link below to activate your account:
 {link}
@@ -59,7 +59,7 @@ Please click on the link below to activate your account:
 If you did not create an account, please ignore this email.
 
 Thanks for joining,
-The SoftwareSensei Team
+The Sensei.AI Team
 '''
             send_mail(subject, message, 'mwmcclure7@gmail.com', [email], fail_silently=False)
             return Response({'status': 'success', 'message': 'Activation email has been sent.'})
