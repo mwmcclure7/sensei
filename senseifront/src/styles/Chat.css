@@ -349,26 +349,32 @@
 .chat-label {
     font-size: 1em;
     height: auto;
-    width: 100%;
+    width: 11vw;
     margin: 0;
-    padding: 10px;
+    padding: 10px 0.5vw;
     border-radius: 10px;
     border: none;
     text-align: left;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
 }
 
 .chat-label:hover {
     background: transparent;
     animation: none;
-    padding: 10px;
+    padding: 10px 0.5vw;
     margin: 0;
     border-radius: 10px;
     height: auto;
-    width: 100%;
+    width: 11vw;
     box-shadow: none;
     font-size: 1em;
     animation: none;
     border: none;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
 }
 
 .delete-button {
