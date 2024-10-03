@@ -77,7 +77,9 @@ function Chat() {
     const disableChat = async (id: any) => {
         setChatLoading(true);
         if (id === currentChat) setCurrentChat(0);
-        await api.post("/api/disable-chat/", { id }).catch((err) => console.log(err));
+        await api
+            .post("/api/disable-chat/", { id })
+            .catch((err) => console.log(err));
         getChats();
         setChatLoading(false);
         getMessages();
@@ -112,16 +114,29 @@ function Chat() {
     const [messagesLoading, setMessagesLoading] = useState(false);
 
     const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
-        if (!input || !currentChat || loading) return;
-        setLoading(true);
+        if (!input || loading) return;
         e.preventDefault();
+        setLoading(true);
+        var currentTempChat = currentChat;
 
+        if (!currentChat) {
+            const firstFiveWords = input.split(" ").slice(0, 5).join(" ");
+            setChatLoading(true);
+            setTitle("");
+            const res = await api.post("/api/chats/", { title: firstFiveWords })
+            if (res && res.data) {
+                setCurrentChat(res.data.id);
+                currentTempChat = res.data.id;
+            }
+            await getChats();
+            setChatLoading(false);
+        }
         setCurrentInputDisplay(input);
         const currentInput = input;
         if (textareaRef.current) textareaRef.current.style.height = "auto";
         setInput("");
         api.post("/api/messages/", {
-            chat_id: currentChat,
+            chat_id: currentTempChat,
             message: currentInput,
             fun_mode: funMode,
         })
@@ -221,12 +236,16 @@ function Chat() {
     function toggleFunMode() {
         if (!funMode) {
             setFunMode(true);
-            toast("Fun mode on!", { icon: "🎉", style: { background: "purple", color: "white" }, duration: 2000 });
+            toast("Fun mode on!", {
+                icon: "🎉",
+                style: { background: "purple", color: "white" },
+                duration: 2000,
+            });
         } else {
             setFunMode(false);
-            toast("Fun mode off", { duration: 2000});
+            toast("Fun mode off", { duration: 2000 });
         }
-    };
+    }
 
     return (
         <div className="chatbot-page">
@@ -307,7 +326,13 @@ function Chat() {
                         >
                             {messages.map((msg, index) => (
                                 <div key={index} className="message-container">
-                                    <p className={funMode ? 'fun-user-history' : 'user-history'}>
+                                    <p
+                                        className={
+                                            funMode
+                                                ? "fun-user-history"
+                                                : "user-history"
+                                        }
+                                    >
                                         {msg.user_message}
                                     </p>
                                     <ReactMarkdown
@@ -322,7 +347,13 @@ function Chat() {
                             ))}
                             {loading && (
                                 <div className="message-container">
-                                    <p className={funMode ? 'fun-user-history' : 'user-history'}>
+                                    <p
+                                        className={
+                                            funMode
+                                                ? "fun-user-history"
+                                                : "user-history"
+                                        }
+                                    >
                                         {currentInputDisplay}
                                     </p>
                                     <div className="small-spinner">
@@ -335,23 +366,23 @@ function Chat() {
                             <div ref={messagesEndRef} />
                         </div>
                     )}
-                    <form className="chat-form" onSubmit={sendMessage}>
-                        <textarea
-                            ref={textareaRef}
-                            value={input}
-                            placeholder="Type a message..."
-                            onChange={(e) => setInput(e.target.value)}
-                            onInput={adjustHeight}
-                            onKeyDown={handleKeyDown}
-                        />
-                        <button
-                            className={loading ? "loading" : ""}
-                            type="submit"
-                            disabled={loading || !input}
-                        />
-                    </form>
                 </div>
             )}
+            <form className="chat-form" onSubmit={sendMessage}>
+                <textarea
+                    ref={textareaRef}
+                    value={input}
+                    placeholder="Type a message..."
+                    onChange={(e) => setInput(e.target.value)}
+                    onInput={adjustHeight}
+                    onKeyDown={handleKeyDown}
+                />
+                <button
+                    className={loading ? "loading" : ""}
+                    type="submit"
+                    disabled={loading || !input}
+                />
+            </form>
         </div>
     );
 }
