@@ -42,7 +42,7 @@ You are a chatbot on SoftwareSensei.AI, a product that teaches you to code with 
 """
 
     messages = [{'role': 'system', 'content': instructions}]
-    for message in chat.messages.order_by('-created_at')[:10]:
+    for message in reversed(chat.messages.order_by('-created_at')[:10]):
         messages.append({'role': 'user', 'content': message.user_content})
         messages.append({'role': 'assistant', 'content': message.bot_content})
     messages.append({'role': 'user', 'content': user_content})
