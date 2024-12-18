@@ -27,10 +27,10 @@ from chat.models import Chat
 
 User = get_user_model()
 
-def print_users():
+def list_users():
     users = User.objects.all()
     for user in users:
-        print(user, user.date_joined, user.is_active)
+        print(user, user.is_active)
 
 def set_active(email, active):
     user = User.objects.filter(email=email).first()
@@ -41,7 +41,7 @@ def set_active(email, active):
     else:
         print('User not found')
 
-def print_chats(email):
+def list_chats(email):
     user = User.objects.filter(email=email).first()
     if user:
         chats = user.chats.all()
@@ -50,14 +50,7 @@ def print_chats(email):
     else:
         print('User not found')
 
-def print_memory(chat_id):
-    chat = Chat.objects.filter(id=chat_id).first()
-    if chat:
-        print(chat.memory)
-    else:
-        print('Chat not found')
-
-def print_messages(chat_id):
+def list_messages(chat_id):
     chat = Chat.objects.filter(id=chat_id).first()
     if chat:
         messages = chat.messages.all()
@@ -65,11 +58,3 @@ def print_messages(chat_id):
             print(message)
     else:
         print('Chat not found')
-
-def help():
-    print("""Available commands:
-    print_users
-    set_active <email> <active>
-    print_chats <email>
-    print_memory <chat_id>
-    print_messages <chat_id>""")

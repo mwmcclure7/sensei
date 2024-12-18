@@ -1,6 +1,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import api from "../api";
+import { useNavigate } from "react-router-dom";
 import "../styles/Form.css";
 
 function Register() {
@@ -10,6 +11,7 @@ function Register() {
     const [loading, setLoading] = useState(false);
     const [privacyPolicyChecked, setPrivacyPolicyChecked] = useState(false);
     const [termsChecked, setTermsChecked] = useState(false);
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: any) => {
         setLoading(true);
@@ -22,13 +24,13 @@ function Register() {
                 toast.error("Password must be at least 8 characters.");
             } else {
                 await api.post("/api/register/", { email, password });
-                toast.success("Account created successfully. Please check your email to confirm your account.", { duration: 10000});
+                navigate("/activated");
             }
         } catch (error: any) {
             if (error.response && error.response.status === 400) {
                 toast.error("An account with this email already exists.");
             } else {
-                console.log(error);
+                alert(error);
             }
         } finally {
             setLoading(false);
@@ -100,13 +102,7 @@ function Register() {
             <button
                 className={loading ? "loading" : "auth-button"}
                 type="submit"
-                disabled={
-                    !email ||
-                    !password ||
-                    !passwordConfirm ||
-                    !privacyPolicyChecked ||
-                    !termsChecked
-                }
+                disabled={!email || !password || !passwordConfirm || !privacyPolicyChecked || !termsChecked}
             >
                 Create Account
             </button>

@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import api from "../api";
-import toast from "react-hot-toast";
 import "../styles/Chat.css";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -71,15 +70,13 @@ function Chat() {
             .then((res) => res.data)
             .then((data) => setChats(data))
             .then(() => setChatLoading(false))
-            .catch((err) => console.log(err));
+            .catch((err) => alert(err));
     };
 
     const disableChat = async (id: any) => {
         setChatLoading(true);
         if (id === currentChat) setCurrentChat(0);
-        await api
-            .post("/api/disable-chat/", { id })
-            .catch((err) => console.log(err));
+        await api.post("/api/disable-chat/", { id }).catch((err) => alert(err));
         getChats();
         setChatLoading(false);
         getMessages();
@@ -92,7 +89,7 @@ function Chat() {
         const tempTitle = title;
         setTitle("");
         api.post("/api/chats/", { title: tempTitle })
-            .catch((err) => console.log(err))
+            .catch((err) => alert(err))
             .then((res) => {
                 if (res && res.data) {
                     setCurrentChat(res.data.id);
@@ -101,7 +98,7 @@ function Chat() {
             .then(() => getChats())
             .then(() => setChatLoading(false))
             .catch((err) => {
-                console.log(err);
+                alert(err);
             });
     };
 
@@ -114,31 +111,17 @@ function Chat() {
     const [messagesLoading, setMessagesLoading] = useState(false);
 
     const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
-        if (!input || loading) return;
-        e.preventDefault();
+        if (!input || !currentChat || loading) return;
         setLoading(true);
-        var currentTempChat = currentChat;
+        e.preventDefault();
 
-        if (!currentChat) {
-            const firstFiveWords = input.split(" ").slice(0, 5).join(" ");
-            setChatLoading(true);
-            setTitle("");
-            const res = await api.post("/api/chats/", { title: firstFiveWords })
-            if (res && res.data) {
-                setCurrentChat(res.data.id);
-                currentTempChat = res.data.id;
-            }
-            await getChats();
-            setChatLoading(false);
-        }
         setCurrentInputDisplay(input);
         const currentInput = input;
         if (textareaRef.current) textareaRef.current.style.height = "auto";
         setInput("");
         api.post("/api/messages/", {
-            chat_id: currentTempChat,
+            chat_id: currentChat,
             message: currentInput,
-            fun_mode: funMode,
         })
             .then((res) => {
                 setMessages((prevMessages) => [
@@ -163,7 +146,7 @@ function Chat() {
                                 setLoading(false);
                             })
                             .catch((err) => {
-                                console.log(
+                                alert(
                                     "An error occurred. Please try refreshing your page.\n\nIf the problem persists, contact support@softwaresensei.ai.\n\nError details: " +
                                         err
                                 );
@@ -171,7 +154,7 @@ function Chat() {
                             });
                     }, 1000);
                 } else {
-                    console.log(
+                    alert(
                         "An error occurred. Please try refreshing your page.\n\nIf the problem persists, contact support@softwaresensei.ai.\n\nError details: " +
                             err
                     );
@@ -220,7 +203,7 @@ function Chat() {
             );
             setMessages(updatedMessages);
         } catch (err) {
-            if ((err as any).status !== 404) console.log(err);
+            if ((err as any).status !== 404) alert(err);
         } finally {
             setMessagesLoading(false);
         }
@@ -230,34 +213,8 @@ function Chat() {
         getMessages();
     }, [currentChat]);
 
-    // Fun Mode
-    const [funMode, setFunMode] = useState(false);
-
-    function toggleFunMode() {
-        if (!funMode) {
-            setFunMode(true);
-            toast("Fun mode on!", {
-                icon: "🎉",
-                style: { background: "purple", color: "white" },
-                duration: 2000,
-            });
-        } else {
-            setFunMode(false);
-            toast("Fun mode off", { duration: 2000 });
-        }
-    }
-
     return (
         <div className="chatbot-page">
-            <div className="fun-mode-switch">
-                <input
-                    type="checkbox"
-                    id="funModeSwitch"
-                    checked={funMode}
-                    onChange={toggleFunMode}
-                />
-                <label htmlFor="funModeSwitch"></label>
-            </div>
             <div className="sidebar">
                 <form className="create-chat-form" onSubmit={createChat}>
                     <input
@@ -319,20 +276,13 @@ function Chat() {
                             className="messages"
                             style={{
                                 marginBottom: `${
-                                    (textareaRef.current?.clientHeight ?? 0) +
-                                    50
+                                    (textareaRef.current?.clientHeight ?? 0) + 50
                                 }px`,
                             }}
                         >
                             {messages.map((msg, index) => (
                                 <div key={index} className="message-container">
-                                    <p
-                                        className={
-                                            funMode
-                                                ? "fun-user-history"
-                                                : "user-history"
-                                        }
-                                    >
+                                    <p className="user-history">
                                         {msg.user_message}
                                     </p>
                                     <ReactMarkdown
@@ -347,13 +297,7 @@ function Chat() {
                             ))}
                             {loading && (
                                 <div className="message-container">
-                                    <p
-                                        className={
-                                            funMode
-                                                ? "fun-user-history"
-                                                : "user-history"
-                                        }
-                                    >
+                                    <p className="user-history">
                                         {currentInputDisplay}
                                     </p>
                                     <div className="small-spinner">
@@ -366,23 +310,23 @@ function Chat() {
                             <div ref={messagesEndRef} />
                         </div>
                     )}
+                    <form className="chat-form" onSubmit={sendMessage}>
+                        <textarea
+                            ref={textareaRef}
+                            value={input}
+                            placeholder="Type a message..."
+                            onChange={(e) => setInput(e.target.value)}
+                            onInput={adjustHeight}
+                            onKeyDown={handleKeyDown}
+                        />
+                        <button
+                            className={loading ? "loading" : ""}
+                            type="submit"
+                            disabled={loading || !input}
+                        />
+                    </form>
                 </div>
             )}
-            <form className="chat-form" onSubmit={sendMessage}>
-                <textarea
-                    ref={textareaRef}
-                    value={input}
-                    placeholder="Type a message..."
-                    onChange={(e) => setInput(e.target.value)}
-                    onInput={adjustHeight}
-                    onKeyDown={handleKeyDown}
-                />
-                <button
-                    className={loading ? "loading" : ""}
-                    type="submit"
-                    disabled={loading || !input}
-                />
-            </form>
         </div>
     );
 }

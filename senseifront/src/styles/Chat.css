@@ -31,19 +31,6 @@
     cursor: text;
 }
 
-.fun-user-history {
-    background: #FF00FF30;
-    max-width: 75%;
-    margin-left: auto;
-    width: fit-content;
-    border-radius: 10px;
-    padding: 10px 20px;
-    border: none;
-    white-space: pre-wrap;
-    font-size: 16px;
-    cursor: text;
-}
-
 .bot-history {
     background: #00A0FF30;
     box-sizing: border-box;
@@ -135,7 +122,7 @@
 }
 
 .small-spinner div {
-    background: linear-gradient(90deg, #00a0ff, #00000000);
+    background: var(--gradient);
     border-radius: 50%;
     width: 100px;
     height: 100px;
@@ -349,32 +336,26 @@
 .chat-label {
     font-size: 1em;
     height: auto;
-    width: 11vw;
+    width: 100%;
     margin: 0;
-    padding: 10px 0.5vw;
+    padding: 10px;
     border-radius: 10px;
     border: none;
     text-align: left;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    white-space: normal;
 }
 
 .chat-label:hover {
     background: transparent;
     animation: none;
-    padding: 10px 0.5vw;
+    padding: 10px;
     margin: 0;
     border-radius: 10px;
     height: auto;
-    width: 11vw;
+    width: 100%;
     box-shadow: none;
     font-size: 1em;
     animation: none;
     border: none;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    white-space: normal;
 }
 
 .delete-button {
@@ -435,48 +416,3 @@
     z-index: 2;
     font-weight: var(--bold)
 }
-
-.fun-mode-switch {
-    position: fixed;
-    top: 1vh;
-    right: 15vw;
-    display: flex;
-    align-items: center;
-    z-index: 1000;
-}
-
-.fun-mode-switch input {
-    display: none;
-}
-
-.fun-mode-switch label {
-    position: relative;
-    display: inline-block;
-    width: 6vh;
-    height: 3vh;
-    background-color: #00FFA0A0;
-    border-radius: 3vh;
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-.fun-mode-switch label::before {
-    content: "";
-    position: absolute;
-    top: 0.5vh;
-    left: 0.5vh;
-    width: 2vh;
-    height: 2vh;
-    background-color: white;
-    border-radius: 50%;
-    transition: transform 0.2s;
-}
-
-.fun-mode-switch input:checked + label {
-    background-color: #FF00FFA0;
-}
-
-.fun-mode-switch input:checked + label::before {
-    transform: translateX(3vh);
-}
-

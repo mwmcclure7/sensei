@@ -25,7 +25,7 @@ function Login() {
             if (error.response && error.response.status === 401) {
                 toast.error("Invalid email or password.");
             } else {
-                console.log(error);
+                alert(error);
             }
         } finally {
             setLoading(false);
@@ -50,7 +50,7 @@ function Login() {
                 placeholder="Password"
             />
             <button
-                className={loading ? "loading" : "auth-button"}
+                className={loading ? 'loading' : 'auth-button'}
                 type="submit"
                 disabled={!email || !password}
             >

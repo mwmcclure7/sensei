@@ -54,7 +54,7 @@ const Settings = () => {
             setInfo(response.data.info);
             setEmail(response.data.email);
         } catch (error) {
-            console.log(error);
+            alert(error);
         }
     };
 
@@ -72,7 +72,7 @@ const Settings = () => {
             });
             toast.success("Profile updated successfully.");
         } catch (error) {
-            console.log(error);
+            alert(error);
         } finally {
             setInfoLoading(false);
         }
@@ -90,7 +90,7 @@ const Settings = () => {
                 email: email,
             });
         } catch (error) {
-            console.log(error);
+            alert(error);
         } finally {
             toast.success(
                 "An email has been sent to this address for confirmation.",
@@ -122,7 +122,7 @@ const Settings = () => {
                 toast.success("Your password has been updated.");
             }
         } catch (error) {
-            console.log(error);
+            alert(error);
         } finally {
             setPasswordLoading(false);
         }
@@ -131,14 +131,18 @@ const Settings = () => {
     return (
         <div className="settings">
             <form className="profile-settings" onSubmit={handleProfileSubmit}>
-                <h1>Personalization Info</h1>
+                <h1>Profile</h1>
                 <div className="info-div">
+                    <label htmlFor="info" className="info-label">
+                        Enter any information you would like Sensei to know
+                        about you for further personalization, such as skills or
+                        prior experience.
+                    </label>
                     <textarea
                         id="info"
                         value={info}
                         onChange={(e) => setInfo(e.target.value)}
                         maxLength={500}
-                        placeholder="Any information you provide will be used to personalize your experience with Sensei. You can include your skills, prior experience, or even give Sensei custom instructions on how to respond."
                     />
                 </div>
                 <button

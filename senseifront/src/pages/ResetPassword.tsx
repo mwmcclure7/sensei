@@ -25,10 +25,10 @@ function ResetPassword() {
                 await api.post(`/api/reset-password/${uidb64}/${token}/`, {
                     password,
                 });
-                toast.success("Your password has been reset.");
+                toast("Your password has been reset.");
             }
         } catch (error: any) {
-            console.log(error);
+            alert(error);
         } finally {
             setLoading(false);
         }

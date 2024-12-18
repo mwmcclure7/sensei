@@ -31,12 +31,7 @@ const Header = () => {
     return (
         <header className="header">
             <div className="left">
-                <img
-                    src={logo}
-                    alt="logo"
-                    className="logo"
-                    onClick={() => (window.location.href = "/")}
-                />
+                <img src={logo} alt="logo" className="logo" />
             </div>
             <nav className="middle">
                 <a href="/">Home</a>
