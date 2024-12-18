@@ -1,4 +1,5 @@
 from openai import OpenAI
+import os
 
 def generate_response(user_content, chat, fun_mode):
     personality = "Respond with sarcasm." if fun_mode else "Respond professionally."
@@ -47,7 +48,7 @@ You are a chatbot on SoftwareSensei.AI, a product that teaches you to code with 
         messages.append({'role': 'assistant', 'content': message.bot_content})
     messages.append({'role': 'user', 'content': user_content})
     
-    openai = OpenAI()
+    openai = OpenAI(api_key=os.environ.get('OPENAI_API_KEY'))
     response = openai.chat.completions.create(
         model='gpt-4o-mini',
         messages=messages
