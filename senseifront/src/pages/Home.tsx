@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import "../styles/Home.css";
 import Footer from "./Footer";
 import interactive from "../assets/interactive.svg";
@@ -6,9 +7,29 @@ import time from "../assets/time.svg";
 import tutor from "../assets/tutor.svg";
 
 function Home() {
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("animate");
+                    }
+                });
+            },
+            { threshold: 0.1 }
+        );
+
+        const elements = document.querySelectorAll(".animate-on-scroll");
+        elements.forEach((el) => observer.observe(el));
+
+        return () => {
+            elements.forEach((el) => observer.unobserve(el));
+        };
+    }, []);
+
     return (
         <div className="home">
-            <section className="section1">
+            <section className="section1 animate-on-scroll">
                 <p className="title">
                     {" "}
                     Introducing{" "}
@@ -23,7 +44,7 @@ function Home() {
                 </p>
             </section>
             <hr />
-            <section className="section2">
+            <section className="section2 animate-on-scroll">
                 <h1>Master Software Skills with AI Powered Tutoring</h1>
                 <p>
                     Personalized, project-based tutoring so you can learn
@@ -41,7 +62,7 @@ function Home() {
             <section className="section3">
                 <h1>Why Learn with AI?</h1>
                 <div className="why0">
-                    <div className="why1">
+                    <div className="why1 animate-on-scroll">
                         <h2>Personalized Courses</h2>
                         <div className="why2">
                             <img src={learning} alt="icon" className="icon" />
@@ -52,7 +73,7 @@ function Home() {
                             </p>
                         </div>
                     </div>
-                    <div className="why1">
+                    <div className="why1 animate-on-scroll">
                         <h2>24/7 Availability</h2>
                         <div className="why2">
                             <img src={time} alt="icon" className="icon" />
@@ -63,7 +84,7 @@ function Home() {
                             </p>
                         </div>
                     </div>
-                    <div className="why1">
+                    <div className="why1 animate-on-scroll">
                         <h2>Expert AI Tutor</h2>
                         <div className="why2">
                             <img src={tutor} alt="icon" className="icon" />
@@ -74,7 +95,7 @@ function Home() {
                             </p>
                         </div>
                     </div>
-                    <div className="why1">
+                    <div className="why1 animate-on-scroll">
                         <h2>Project-Based Learning</h2>
                         <div className="why2">
                             <img
@@ -94,7 +115,7 @@ function Home() {
                 </div>
             </section>
             <hr />
-            <section className="section4">
+            <section className="section4 animate-on-scroll">
                 <h1>How it Works</h1>
                 <p className="s4-caption">
                     Whether you're a complete beginner unsure where to start or
@@ -103,7 +124,7 @@ function Home() {
                     platform helps you spend less time learning and more time
                     developing, regardless of your current level.
                 </p>
-                <div className="how">
+                <div className="how animate-on-scroll">
                     <p className="bullet">1</p>
                     <div className="description">
                         <h2>Specify your Focus</h2>
@@ -115,7 +136,7 @@ function Home() {
                         </p>
                     </div>
                 </div>
-                <div className="how">
+                <div className="how animate-on-scroll">
                     <p className="bullet">2</p>
                     <div className="description">
                         <h2>Identify a Project</h2>
@@ -127,7 +148,7 @@ function Home() {
                         </p>
                     </div>
                 </div>
-                <div className="how">
+                <div className="how animate-on-scroll">
                     <p className="bullet">3</p>
                     <div className="description">
                         <h2>Receive Lecture</h2>
@@ -139,7 +160,7 @@ function Home() {
                         </p>
                     </div>
                 </div>
-                <div className="how">
+                <div className="how animate-on-scroll">
                     <p className="bullet">4</p>
                     <div className="description">
                         <h2>Apply What You Learned</h2>
@@ -151,7 +172,7 @@ function Home() {
                         </p>
                     </div>
                 </div>
-                <div className="how">
+                <div className="how animate-on-scroll">
                     <p className="bullet">5</p>
                     <div className="description">
                         <h2>Receive Personalized Feedback</h2>
@@ -173,7 +194,7 @@ function Home() {
                 </button>
             </section>
             <hr />
-            <section className="about">
+            <section className="about animate-on-scroll">
                 <h1>About SENSEI.AI LLC</h1>
                 <p className="description">
                     SENSEI.AI LLC was founded in 2024 with the goal of using
