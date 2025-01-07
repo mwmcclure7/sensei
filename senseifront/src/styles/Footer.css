@@ -1,7 +1,7 @@
 .footer {
     display: flex;
-    justify-content: space-evenly;
-    padding: 10px 0;
+    justify-content: center;
+    padding: 1rem 0;
     text-align: center;
     color: white;
     width: 100%;
@@ -10,17 +10,9 @@
     left: 0;
     right: 0;
     z-index: 100;
-    box-shadow: 0 0 10px white;
-}
-
-.footer p {
-    margin: 0;
-    font-size: 2vh;
-    font-weight: var(--light);
+    border-top: 1px solid white;
 }
 
 .footer a {
-    color: white;
-    text-decoration: none;
-    font-weight: var(--light);
+    margin: 0 1rem;
 }

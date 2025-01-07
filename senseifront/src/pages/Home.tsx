@@ -10,17 +10,32 @@ function Home() {
         <div className="home">
             <section className="section1">
                 <p className="title">
-                    Introducing <span className="sensei">Sensei</span>
+                    {" "}
+                    Introducing{" "}
+                    <span
+                        className="sensei"
+                        onClick={() => {
+                            window.location.href = "/chat";
+                        }}
+                    >
+                        Sensei
+                    </span>
                 </p>
             </section>
             <hr />
             <section className="section2">
-                <h1>Master Software Skills with AI-Powered Tutoring</h1>
+                <h1>Master Software Skills with AI Powered Tutoring</h1>
                 <p>
                     Personalized, project-based tutoring so you can learn
                     programming effectively.
                 </p>
-                <button onClick={() => {window.location.href = "/register"}}>Get Started</button>
+                <button
+                    onClick={() => {
+                        window.location.href = "/register";
+                    }}
+                >
+                    Get Started
+                </button>
             </section>
             <hr />
             <section className="section3">
@@ -48,8 +63,6 @@ function Home() {
                             </p>
                         </div>
                     </div>
-                </div>
-                <div className="why0">
                     <div className="why1">
                         <h2>Expert AI Tutor</h2>
                         <div className="why2">
@@ -141,7 +154,7 @@ function Home() {
                 <div className="how">
                     <p className="bullet">5</p>
                     <div className="description">
-                        <h2>Recieve Personalized Feedback</h2>
+                        <h2>Receive Personalized Feedback</h2>
                         <p>
                             Receive tailored feedback and support from Sensei to
                             refine your skills and enhance your understanding.
@@ -151,7 +164,13 @@ function Home() {
                     </div>
                 </div>
                 <h1>Ready to Get Started?</h1>
-                <button onClick={() => {window.location.href = "/register"}}>Sign Up Now</button>
+                <button
+                    onClick={() => {
+                        window.location.href = "/register";
+                    }}
+                >
+                    Sign Up Now
+                </button>
             </section>
             <hr />
             <section className="about">
@@ -167,7 +186,7 @@ function Home() {
                     has the potential to revolutionize the way we learn, as it
                     is more affordable and accessible than hiring a tutor or
                     enrolling in a class, while also being more personalized and
-                    interacitve than previous mediums of self-education. We also
+                    interactive than previous mediums of self-education. We also
                     believe that as AI becomes more sophisticated, it will
                     become increasingly important to be able to pass on
                     knowledge learned by AI back to humans. It is our hope that
@@ -179,6 +198,6 @@ function Home() {
             <Footer />
         </div>
     );
-};
+}
 
 export default Home;

@@ -51,10 +51,6 @@
     font-size: 1.2rem;
 }
 
-.header .sign-in-button:hover {
-    border: transparent;
-}
-
 .header .profile-picture {
     padding: 0;
     height: calc(var(--header-height) - 0.75rem);

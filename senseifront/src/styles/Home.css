@@ -14,17 +14,17 @@ hr {
 p {
     font-family: "Ubuntu", sans-serif;
     font-weight: var(--light);
-    font-size: 1.5vw;
+    font-size: 1.5rem;
     line-height: 1.5;
 }
 
 .section1 {
     align-content: center;
-    height: 85vh;
+    height: calc(90vh - var(--header-height));
 }
 
 .home .title {
-    font-size: 11vw;
+    font-size: max(11vw, 7rem);
     font-family: "Ubuntu Condensed", sans-serif;
     align-items: center;
     margin: 0;
@@ -33,25 +33,33 @@ p {
 .sensei {
     font-family: "Ubuntu", sans-serif;
     font-weight: var(--extra-bold);
-    background: linear-gradient(90deg, #00a0ff, #00ffa0, #00a0ff);
+    background: var(--linear-gradient);
     animation: linearGradientAnimation 10s infinite linear;
     background-size: 300% 100%;
-    padding: 1vw;
-    border-radius: 2vw;
+    padding: 1rem;
+    border-radius: 2rem;
     transition: 0.5s;
+    background-position: 50% 50%;
+    cursor: pointer;
 }
 
 .sensei:hover {
-    letter-spacing: 1vw;
+    background: var(--radial-gradient);
+    animation: radialGradientAnimation 1s linear;
+    background-position: 50% 50%;
+    background-size: var(--radial-zoom);
+    border: solid 0.3rem cyan;
+    box-shadow: 0 0 2rem cyan;
 }
 
 .section2 {
     align-content: center;
     height: 70vh;
+    width: 90vw;
 }
 
 .home h1 {
-    font-size: 3.25vw;
+    font-size: 3.5rem;
     font-weight: var(--bold);
 }
 
@@ -60,24 +68,30 @@ p {
 }
 
 .section2 p {
-    font-size: 1.75vw;
-    margin: 6vh 0;
+    font-size: 2rem;
+    margin: 4rem 0;
     font-weight: var(--normal);
+}
+
+.section3 {
+    margin: 5rem;
+    width: min(95vw, 90rem);
 }
 
 .why0 {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+    flex-wrap: wrap;
+    justify-content: space-around;
 }
 
 .why1 {
     background: var(--bg3);
-    width: 100vw;
-    margin: 1vw 1vw;
-    border-radius: 1vw;
+    width: 48%;
+    margin: 1rem 0;
+    border-radius: 2rem;
     transition: 0.5s;
+    padding: 1rem;
+    box-sizing: border-box;
 }
 
 .why1:hover {
@@ -95,12 +109,14 @@ p {
     text-align: left;
 }
 
-.section3 {
-    margin: 5vh;
+@media (max-width: 1000px) {
+    .why1 {
+        width: min(100%, 50rem);
+    }
 }
 
 .section3 h2 {
-    font-size: 2vw;
+    font-size: 2rem;
     font-weight: var(--bold);
 }
 
@@ -109,27 +125,17 @@ p {
     margin: 5%;
 }
 
-.section3 {
-    width: 95vw;
-}
-
-.section3 p {
-    font-size: 1.5vw;
-    line-height: 1.5;
-    margin-right: 1vw;
-}
-
 .section4 {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-bottom: 12vh;
+    margin: 5rem;
 }
 
 .s4-caption {
     font-weight: var(--light);
-    width: 80vw;
+    width: min(80vw, 90rem);
     text-align: justify;
 }
 
@@ -137,48 +143,44 @@ p {
     display: flex;
     flex-direction: row;
     align-items: center;
-    width: 80vw;
+    width: min(80vw, 90rem);
     background-color: var(--bg3);
-    padding: 2vw;
-    height: 10vw;
-    border-radius: 2vw;
+    padding: 2rem;
+    border-radius: 3rem;
     transition: 0.5s;
-    margin: 1vw 0;
+    margin: 1rem 0;
 }
 
 .how:hover {
     background-color: var(--bg4);
 }
 
-.section4 h1 {
-    margin-top: 5vw;
-}
-
 .section4 h2 {
-    font-size: 2vw;
+    font-size: 2rem;
     font-weight: var(--extra-bold);
 }
 
 .section4 .bullet {
-    width: 9vw;
-    height: 9vw;
+    width: 10rem;
+    height: 10rem;
     border-radius: 50%;
     background: linear-gradient(90deg, #00a0ff, #00ffa0, #00a0ff);
     animation: linearGradientAnimation 10s infinite linear;
     background-size: 300% 100%;
     font-weight: var(--extra-bold);
     align-content: center;
-    font-size: 6vw;
+    font-size: 6rem;
     flex: none;
+    margin: 0;
 }
 
 .section4 .description {
     text-align: left;
-    margin-left: 3vw;
+    margin-left: 2rem;
 }
 
 .about {
-    width: 71vw;
+    width: min(90vw, 80rem);
     margin: 5vh 0;
 }
 
