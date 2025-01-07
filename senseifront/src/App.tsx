@@ -10,7 +10,6 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import RequestPasswordReset from "./pages/RequestPasswordReset";
 import ResetPassword from "./pages/ResetPassword";
 import InvalidLink from "./pages/InvalidLink";
-import "./App.css";
 import EmailUpdated from "./pages/EmailUpdated";
 import Chat from "./pages/Chat";
 import Contact from "./pages/Contact";

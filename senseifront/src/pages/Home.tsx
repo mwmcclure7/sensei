@@ -10,7 +10,7 @@ function Home() {
         <div className="home">
             <section className="section1">
                 <p className="title">
-                    Introducing <span className="sensei">sensei</span>
+                    Introducing <span className="sensei">Sensei</span>
                 </p>
             </section>
             <hr />

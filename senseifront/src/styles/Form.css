@@ -13,7 +13,7 @@
     flex-direction: column;
     margin: 5vw auto;
     padding: 6vw;
-    background: var(--block-color);
+    background: var(--bg3);
     width: 30vw;
     border-radius: 10vmin;
     transition: 0.5s;
@@ -38,13 +38,13 @@ input {
 }
 
 input:hover {
-    background: var(--hover-block-color);
+    background: var(--bg4);
 }
 
 input:focus {
     border: 2px solid #00FFFF;
     outline: none;
-    background: var(--hover-block-color);
+    background: var(--bg4);
     box-shadow: 0 0 1vw #00FFFF;
 }
 

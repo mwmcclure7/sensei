@@ -1,36 +1,222 @@
+:root {
+    --text: #ffffff;
+
+    --light: 300;
+    --normal: 400;
+    --bold: 500;
+    --extra-bold: 600;
+
+    --bg1: rgb(0, 0, 10);
+    --bg2: rgb(0, 10, 20);
+    --bg3: rgb(0, 15, 30);
+    --bg4: rgb(0, 20, 40);
+    --bg5: rgb(0, 5, 15);
+
+    --primary: #00a0ff;
+    --secondary: #00ffa0;
+    --primary-dark: #00a0ffa0;
+    --secondary-dark: #00ffa0a0;
+
+    --linear-gradient: linear-gradient(90deg, var(--secondary), var(--primary), var(--secondary));
+    --radial-gradient: radial-gradient(circle, #00a0ff, #00ffa0, transparent, transparent);
+    --radial-zoom: 500% 500%;
+
+    --header-height: 3rem;
+}
+
 body {
-  margin: 0;
-  font-family: 'Ubuntu', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: rgb(20, 20, 30);
-  cursor: default;
-  text-align: center;
-  color: white;
+    margin: 0;
+    font-family: "Ubuntu", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: var(--bg2);
+    cursor: default;
+    text-align: center;
+    color: white;
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 0.75vw;
-  height: 0.75vw;
-  background: var(--header-footer-color);
-  border-radius: 50vmin;
+    width: 0.5rem;
+    background: var(--bg1);
 }
 
 ::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.5);
-  border-radius: 50vmin;
+    background-color: var(--primary-dark);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(45deg, #00FFA0, #00A0FF);
-  cursor: default;
+    background-color: var(--secondary);
 }
 
 ::-webkit-scrollbar-track {
-  background-color: transparent;
+    background: var(--bg1);
 }
 
 ::selection {
-  background: #00A0FFA0;
+    background: #00a0ffa0;
+}
+
+@media (max-width: 480px) {
+    :root {
+        --header-height: 4rem;
+    }
+    html {
+        font-size: 12px;
+    }
+}
+
+.main-container {
+    margin-top: var(--header-height);
+}
+
+button {
+    background-color: transparent;
+    color: white;
+    padding: 1rem 5rem;
+    border: solid 0.1rem white;
+    cursor: pointer;
+    border-radius: 1rem;
+    transition: 0.5s;
+    font-size: 2rem;
+    background-position: 50% 50%;
+}
+
+button:hover {
+    background: var(--radial-gradient);
+    animation: radialGradientAnimation 1s linear;
+    background-position: 50% 50%;
+    background-size: var(--radial-zoom);
+    border: solid 0.1rem cyan;
+}
+
+button:active {
+    transform: scale(0.95);
+    background: var(--radial-gradient);
+    background-position: 50% 50%;
+    background-size: var(--radial-zoom);
+    box-shadow: 0 0 1rem cyan;
+}
+
+.loading,
+.loading:hover,
+.loading:active {
+    background: var(--linear-gradient);
+    animation: linearGradientAnimation 1s infinite linear;
+    background-size: 300% 300%;
+    border: none;
+    cursor: default;
+    box-shadow: none;
+    transform: scale(0.95);
+}
+
+@keyframes linearGradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: -300% 50%;
+    }
+}
+
+@keyframes radialGradientAnimation {
+    0% {
+        background-size: 100% 100%;
+    }
+    100% {
+        background-size: var(--radial-zoom);
+    }
+}
+
+a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: 0.3s;
+    font-weight: var(--normal);
+    font-size: 1rem;
+}
+
+a:hover {
+    color: var(--secondary);
+}
+
+a:active {
+    transform: scale(0.9);
+}
+
+.message {
+    height: calc(100vh - var(--header-height));
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.message h1 {
+    font-size: 5rem;
+    line-height: 1.5rem;
+}
+
+.message h1 a {
+    font-size: 3rem;
+}
+
+.message a,
+.message p {
+    font-size: 2rem;
+}
+
+.spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: calc(100vh - var(--header-height));
+}
+
+.spinner div {
+    background: linear-gradient(90deg, #00a0ff, #00000000);
+    border-radius: 50%;
+    width: 7px;
+    height: 7px;
+    animation: spin 0.5s linear infinite;
+}
+
+.spinner div div {
+    background: transparent;
+    border-radius: 50%;
+    width: 75%;
+    height: 75%;
+    position: relative;
+    top: 12.5%;
+    left: 12.5%;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 50;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    width: 40rem;
+    background: var(--bg3);
+    padding: 2rem;
+    border-radius: 2rem;
+    border: 1px solid white;
 }

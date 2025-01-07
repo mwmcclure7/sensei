@@ -19,7 +19,7 @@
 }
 
 .user-history {
-    background: #00FFA030;
+    background: #00ffa030;
     max-width: 75%;
     margin-left: auto;
     width: fit-content;
@@ -32,7 +32,7 @@
 }
 
 .fun-user-history {
-    background: #FF00FF30;
+    background: #ff00ff30;
     max-width: 75%;
     margin-left: auto;
     width: fit-content;
@@ -45,7 +45,7 @@
 }
 
 .bot-history {
-    background: #00A0FF30;
+    background: #00a0ff30;
     box-sizing: border-box;
     margin-right: auto;
     width: fit-content;
@@ -72,13 +72,13 @@
 }
 
 .bot-history blockquote {
-    border-left: 2px solid #00A0FF;
+    border-left: 2px solid #00a0ff;
     margin-left: 10px;
     padding-left: 10px;
 }
 
 .bot-history code {
-    background: #00A0FF50;
+    background: #00a0ff50;
     padding: 3px 5px;
     border-radius: 5px;
 }
@@ -104,14 +104,15 @@
     line-height: 1.5;
 }
 
-.bot-history th, .bot-history td {
-    border: 1px solid #FFFFFF;
+.bot-history th,
+.bot-history td {
+    border: 1px solid #ffffff;
     text-align: left;
     padding: 5px;
 }
 
 .bot-history th {
-    background: #00A0FF30;
+    background: #00a0ff30;
     font-weight: bold;
 }
 
@@ -129,7 +130,7 @@
 
 .bot-history hr {
     border: none;
-    border-top: 1px solid #00A0FF;
+    border-top: 1px solid #00a0ff;
     margin: 10px 0;
     width: 100%;
 }
@@ -141,9 +142,9 @@
     height: 100px;
     animation: spin 0.5s linear infinite;
 }
-  
+
 .small-spinner div div {
-    background: rgb(20, 20, 30);
+    background: transparent;
     border-radius: 50%;
     width: 75%;
     height: 75%;
@@ -175,22 +176,22 @@
     font-size: 16px;
     align-content: center;
     border-radius: 10px;
-    background: rgb(20, 20, 30);
+    background: var(--bg1);
     border: 1px solid white;
 }
 
 .chat-form textarea:hover {
-    background: var(--block-color);
+    background: var(--bg3);
 }
 
 .chat-form textarea:focus {
     outline: none;
     border: 1px solid cyan;
-    background: var(--block-color);
+    background: var(--bg3);
 }
 
 .chat-form button {
-    background-image: url('../assets/up-arrow.svg');
+    background-image: url("../assets/up-arrow.svg");
     background-size: 40px;
     background-position: center;
     background-repeat: no-repeat;
@@ -201,7 +202,7 @@
     animation: none;
     border-radius: 50vmin;
     flex-shrink: 0;
-    background-color: rgb(20, 20, 30);
+    background-color: var(--bg1);
 }
 
 .chat-form button:hover {
@@ -209,7 +210,7 @@
 }
 
 .chat-form button:disabled {
-    background-image: url('../assets/up-arrow.svg');
+    background-image: url("../assets/up-arrow.svg");
     background-size: 50px;
     background-repeat: no-repeat;
     opacity: 0.3;
@@ -225,7 +226,7 @@
     box-sizing: border-box;
     height: 100%;
     width: 15vw;
-    background: rgb(10, 10, 20);
+    background: var(--bg5);
     padding: 0 0.5vw;
     justify-content: top;
     align-items: center;
@@ -250,17 +251,17 @@
     border: none;
     border-radius: 10px;
     padding: 10px;
-    background: var(--block-color);
+    background: var(--bg3);
 }
 
 .sidebar input:hover {
-    background: var(--hover-block-color);
+    background: var(--bg4);
 }
 
 .sidebar input:focus {
     border: none;
-    background: var(--hover-block-color);
-    box-shadow: #00ffff 0 0 10px;
+    background: var(--bg4);
+    box-shadow: #00ffff 0 0 0.5rem;
 }
 
 .create-button {
@@ -301,7 +302,7 @@
     justify-content: center;
     align-items: center;
     background: linear-gradient(90deg, #00a0ff, #00ffa0, #00a0ff);
-    animation: gradientAnimation 2s infinite linear;
+    animation: linearGradientAnimation 2s infinite linear;
     border: none;
 }
 
@@ -318,14 +319,14 @@
     justify-content: space-evenly;
     align-items: center;
     margin: 5px 0;
-    background: var(--block-color);
+    background: var(--bg3);
     width: 100%;
     border-radius: 10px;
     transition: 0.2s;
 }
 
 .chat-item:hover {
-    background: var(--hover-block-color);
+    background: var(--bg4);
 }
 
 .chat-item-active {
@@ -334,7 +335,7 @@
     justify-content: space-evenly;
     align-items: center;
     margin: 10px 0;
-    background: var(--block-color);
+    background: var(--bg3);
     width: 100%;
     border-radius: 10px;
     transition: 0.2s;
@@ -342,9 +343,8 @@
 }
 
 .chat-item-active:hover {
-    background: var(--hover-block-color);
+    background: var(--bg4);
 }
-
 
 .chat-label {
     font-size: 1em;
@@ -384,7 +384,7 @@
     margin: 0;
     padding: 0;
     border-radius: 10px;
-    background-image: url('../assets/trash.svg');
+    background-image: url("../assets/trash.svg");
     background-size: 30px;
     background-position: center;
     background-repeat: no-repeat;
@@ -393,7 +393,7 @@
 }
 
 .delete-button:hover {
-    background-image: url('../assets/trash.svg');
+    background-image: url("../assets/trash.svg");
     background-size: 35px;
     background-position: center;
     background-repeat: no-repeat;
@@ -414,13 +414,13 @@
 }
 
 .no-chat-selected::before {
-    content: '';
+    content: "";
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: url('../assets/sensei-logo-t.svg');
+    background-image: url("../assets/sensei-logo-t.svg");
     background-repeat: no-repeat;
     background-position: center;
     background-size: 60%;
@@ -433,7 +433,7 @@
     color: white;
     position: relative;
     z-index: 2;
-    font-weight: var(--bold)
+    font-weight: var(--bold);
 }
 
 .fun-mode-switch {
@@ -454,7 +454,7 @@
     display: inline-block;
     width: 6vh;
     height: 3vh;
-    background-color: #00FFA0A0;
+    background-color: #00ffa0a0;
     border-radius: 3vh;
     cursor: pointer;
     transition: background-color 0.2s;
@@ -473,10 +473,9 @@
 }
 
 .fun-mode-switch input:checked + label {
-    background-color: #FF00FFA0;
+    background-color: #ff00ffa0;
 }
 
 .fun-mode-switch input:checked + label::before {
     transform: translateX(3vh);
 }
-

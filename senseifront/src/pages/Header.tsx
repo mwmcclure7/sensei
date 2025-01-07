@@ -30,34 +30,30 @@ const Header = () => {
 
     return (
         <header className="header">
-            <div className="left">
-                <img
-                    src={logo}
-                    alt="logo"
-                    className="logo"
-                    onClick={() => (window.location.href = "/")}
-                />
-            </div>
-            <nav className="middle">
+            <img
+                src={logo}
+                alt="logo"
+                className="logo"
+                onClick={() => (window.location.href = "/")}
+            />
+            <nav>
                 <a href="/">Home</a>
                 <a href="chat">Sensei</a>
                 <a href="contact">Contact</a>
             </nav>
-            <div className="right">
-                {isAuthenticated ? (
-                    <button
-                        onClick={() => (window.location.href = "/settings")}
-                        className="profile-picture"
-                    />
-                ) : (
-                    <button
-                        onClick={() => (window.location.href = "/login")}
-                        className="sign-in-button"
-                    >
-                        Sign In
-                    </button>
-                )}
-            </div>
+            {isAuthenticated ? (
+                <button
+                    onClick={() => (window.location.href = "/settings")}
+                    className="profile-picture"
+                />
+            ) : (
+                <button
+                    onClick={() => (window.location.href = "/login")}
+                    className="sign-in-button"
+                >
+                    Sign In
+                </button>
+            )}
         </header>
     );
 };

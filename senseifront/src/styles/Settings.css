@@ -48,13 +48,13 @@
 }
 
 .delete-modal input:hover {
-    background: var(--hover-block-color);
+    background: var(--bg4);
 }
 
 .delete-modal input:focus {
     border: 2px solid red;
     outline: none;
-    background: var(--hover-block-color);
+    background: var(--bg4);
     box-shadow: 0 0 1vw red;
 }
 
@@ -83,7 +83,7 @@
     flex-direction: column;
     margin: 2vw auto;
     padding: 4vw;
-    background: var(--block-color);
+    background: var(--bg3);
     width: 40vw;
     border-radius: 10vmin;
     transition: 0.5s;
@@ -138,13 +138,13 @@ textarea {
 }
 
 textarea:hover {
-    background: var(--hover-block-color);
+    background: var(--bg4);
 }
 
 textarea:focus {
     border: 2px solid cyan;
     outline: none;
-    background: var(--hover-block-color);
+    background: var(--bg4);
     box-shadow: 0 0 1vw cyan;
 }
 
@@ -170,7 +170,7 @@ input[type="date"] {
     flex-direction: column;
     margin: 2vw;
     padding: 4vw;
-    background: var(--block-color);
+    background: var(--bg3);
     width: 30vw;
     border-radius: 10vmin;
     transition: 0.5s;
@@ -186,7 +186,7 @@ input[type="date"] {
     justify-content: center;
     align-items: center;
     flex-direction: row;
-    background: var(--block-color);
+    background: var(--bg3);
     padding: 3vw;
     margin: 2vw 20vw;
     border-radius: 3vw;

@@ -5,27 +5,26 @@
     right: 0;
     display: flex;
     justify-content: space-between;
-    background: var(--header-footer-color);
+    background: var(--bg1);
     color: white;
-    padding: 0 1.5vw;
+    padding: 0 1rem;
     align-items: center;
     box-sizing: border-box;
-    height: 5vh;
-    z-index: 1000;
+    height: var(--header-height);
+    z-index: 10;
 }
 
-.header p {
-    font-size: 2.5vh;
-    font-weight: var(--bold);
-    margin: 0;
+.header .logo {
+    height: var(--header-height);
+    cursor: pointer;
+    transition: 0.3s;
 }
 
-.header .left {
-    display: flex;
-    align-items: center;
+.header .logo:hover {
+    transform: scale(1.05);
 }
 
-.header .middle {
+.header nav {
     display: flex;
     align-items: center;
     position: absolute;
@@ -33,60 +32,49 @@
     transform: translateX(-50%);
 }
 
-.header .right {
-    display: flex;
-    align-items: center;
-}
-
-.header .logo {
-    height: 5vh;
-    cursor: pointer;
-}
-
 .header a {
     color: white;
-    padding: 0 1vw;
+    padding: 0 1rem;
     text-decoration: none;
     font-weight: var(--light);
-    transition: 0.2s;
-    font-size: 2vh;
+    transition: 0.3s;
+    font-size: 1.2rem;
 }
 
 .header a:hover {
-    font-size: 2.2vh;
-    color: cyan;
+    font-size: 1.3rem;
 }
 
 .header .sign-in-button {
-    padding: 0.75vh 1.5vh;
-    border-radius: 50vmin;
-    font-size: 1.6vh;
-    border: 0.3vh solid white;
+    padding: 0.5rem 1rem;
+    border-radius: 1rem;
+    font-size: 1.2rem;
 }
 
 .header .sign-in-button:hover {
-    border: 0.3vh solid transparent;
-    box-shadow: 0 0 2vh 0 cyan;
+    border: transparent;
 }
 
 .header .profile-picture {
     padding: 0;
-    height: 4vh;
-    width: 4vh;
+    height: calc(var(--header-height) - 0.75rem);
+    width: calc(var(--header-height) - 0.75rem);
     border-radius: 50%;
     background-image: url('../assets/profileiconwhite.svg');
     background-size: cover;
     background-position: 0;
     background-color: transparent;
     border: none;
-    transition: 0.2s;
+    transition: 0.3s;
     cursor: pointer;
+    background-repeat: no-repeat;
 }
 
 .header .profile-picture:hover {
     background-image: url('../assets/profileiconcolor.svg');
     background-size: cover;
     background-position: 0;
-    box-shadow: 0 0 2vh 0 cyan;
+    box-shadow: 0 0 0.5rem 0 cyan;
     animation: none;
+    scale: 1.05;
 }

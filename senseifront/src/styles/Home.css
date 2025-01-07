@@ -7,23 +7,12 @@
     color: white;
 }
 
-:root {
-    --light: 300;
-    --normal: 400;
-    --bold: 500;
-    --extra-bold: 600;
-    --gradient: linear-gradient(45deg, #00a0ff, #00ffa0);
-    --block-color: rgb(20, 30, 50);
-    --hover-block-color: rgb(20, 40, 60);
-    --header-footer-color: rgb(0, 0, 10);
-}
-
 hr {
     width: 80%;
 }
 
 p {
-    font-family: 'Ubuntu', sans-serif;
+    font-family: "Ubuntu", sans-serif;
     font-weight: var(--light);
     font-size: 1.5vw;
     line-height: 1.5;
@@ -36,16 +25,16 @@ p {
 
 .home .title {
     font-size: 11vw;
-    font-family: 'Ubuntu Condensed', sans-serif;
+    font-family: "Ubuntu Condensed", sans-serif;
     align-items: center;
     margin: 0;
 }
 
 .sensei {
-    font-family: 'Ubuntu', sans-serif;
+    font-family: "Ubuntu", sans-serif;
     font-weight: var(--extra-bold);
     background: linear-gradient(90deg, #00a0ff, #00ffa0, #00a0ff);
-    animation: gradientAnimation 10s infinite linear;
+    animation: linearGradientAnimation 10s infinite linear;
     background-size: 300% 100%;
     padding: 1vw;
     border-radius: 2vw;
@@ -84,7 +73,7 @@ p {
 }
 
 .why1 {
-    background: var(--block-color);
+    background: var(--bg3);
     width: 100vw;
     margin: 1vw 1vw;
     border-radius: 1vw;
@@ -92,7 +81,7 @@ p {
 }
 
 .why1:hover {
-    background: var(--hover-block-color);
+    background: var(--bg4);
 }
 
 .why2 {
@@ -149,7 +138,7 @@ p {
     flex-direction: row;
     align-items: center;
     width: 80vw;
-    background-color: var(--block-color);
+    background-color: var(--bg3);
     padding: 2vw;
     height: 10vw;
     border-radius: 2vw;
@@ -158,7 +147,7 @@ p {
 }
 
 .how:hover {
-    background-color: var(--hover-block-color);
+    background-color: var(--bg4);
 }
 
 .section4 h1 {
@@ -175,7 +164,7 @@ p {
     height: 9vw;
     border-radius: 50%;
     background: linear-gradient(90deg, #00a0ff, #00ffa0, #00a0ff);
-    animation: gradientAnimation 10s infinite linear;
+    animation: linearGradientAnimation 10s infinite linear;
     background-size: 300% 100%;
     font-weight: var(--extra-bold);
     align-content: center;

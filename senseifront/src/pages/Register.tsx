@@ -22,7 +22,7 @@ function Register() {
                 toast.error("Password must be at least 8 characters.");
             } else {
                 await api.post("/api/register/", { email, password });
-                toast.success("Account created successfully. Please check your email to confirm your account.", { duration: 10000});
+                window.location.href = "/activated";
             }
         } catch (error: any) {
             if (error.response && error.response.status === 400) {
