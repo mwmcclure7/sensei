@@ -247,18 +247,22 @@ function Chat() {
         }
     }
 
+    // Sidebar Collapse
+    const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+    const toggleSidebar = () => {
+        setIsSidebarCollapsed(!isSidebarCollapsed);
+    };
+
     return (
         <div className="chatbot-page">
-            <div className="fun-mode-switch">
-                <input
-                    type="checkbox"
-                    id="funModeSwitch"
-                    checked={funMode}
-                    onChange={toggleFunMode}
-                />
-                <label htmlFor="funModeSwitch"></label>
-            </div>
-            <div className="sidebar">
+            <div className={`sidebar ${isSidebarCollapsed ? "collapsed" : ""}`}>
+                <button
+                    className={`sidebar-toggle ${isSidebarCollapsed ? "collapsed" : ""}`}
+                    onClick={toggleSidebar}
+                >
+                    ➤
+                </button>
                 <form className="create-chat-form" onSubmit={createChat}>
                     <input
                         type="text"
