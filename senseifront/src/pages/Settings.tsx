@@ -214,7 +214,7 @@ const Settings = () => {
                                 onClick={toggleModal}
                                 className="exit-modal-button"
                             >
-                                X
+                                ×
                             </a>
                             <h1>Delete Account</h1>
                             <p>

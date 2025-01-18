@@ -1,77 +1,42 @@
-.auth-container h1 {
-    font-size: 2vw;
-}
-
-.auth-container p {
-    font-size: 1.2vw;
-}
-
 .auth-container {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin: 5vw auto;
-    padding: 6vw;
+    justify-self: center;
+    padding: 4rem;
     background: var(--bg3);
-    width: 30vw;
-    border-radius: 10vmin;
-    transition: 0.5s;
+    width: 30rem;
+    border-radius: 4rem;
+    margin-top: calc(var(--header-height) + 2rem);
 }
 
-input {
-    width: 80%;
-    height: 2vw;
-    margin: 1vw;
-    padding: 0.5vw;
-    background-color: transparent;
-    border: 2px solid white;
-    border-radius: 1vw;
-    &::placeholder {
-        color: rgb(255, 255, 255, 0.5);
-    }
-    font-size:1.2vw;
-    color: white;
-    transition: 0.5s;
-    font-family: 'Ubuntu', sans-serif;
-    font-weight: var(--light);
+.auth-container a {
+    margin-top: 1rem;
+    font-size: 1.2rem;
 }
 
-input:hover {
-    background: var(--bg4);
-}
-
-input:focus {
-    border: 2px solid #00FFFF;
-    outline: none;
-    background: var(--bg4);
-    box-shadow: 0 0 1vw #00FFFF;
+.auth-container p {
+    font-size: 1.2rem;
+    margin-top: 1rem;
 }
 
 .agree input, .agree input:focus {
-    width: 1.25vw;
-    height: 1.25vw;
+    width: 1.25rem;
+    height: 1.25rem;
     cursor: pointer;
     box-shadow: none;
 }
 
 .agree input:hover {
-    box-shadow: 0 0 1vw #00FFFF;
+    box-shadow: 0 0 0.75rem #00FFFF;
 }
 
 .agree label {
     width: 100%;
-    font-size: 1vw;
-    color: white;
-    font-family: 'Ubuntu', sans-serif;
+    font-size: 1rem;
     font-weight: var(--light);
     text-align: left;
-}
-
-.agree label a {
-    font-size: 1vw;
-    text-decoration: none;
-    transition: 0.5s;
 }
 
 .agree {
@@ -88,24 +53,4 @@ input:focus {
     align-items: center;
     flex-direction: row;
     width: 100%;
-}
-
-button:disabled {
-    border: 2px solid #FFFFFF50;
-    color: #FFFFFF50;
-    cursor: default;
-    box-shadow: none;
-    background: transparent;
-}
-
-button:disabled:hover {
-    border: 2px solid #FFFFFF50;
-    color: #FFFFFF50;
-    cursor: default;
-    box-shadow: none;
-    background: transparent;
-}
-
-.auth-container button {
-    margin: 2vw;
 }

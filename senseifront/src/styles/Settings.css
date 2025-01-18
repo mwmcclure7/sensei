@@ -1,79 +1,47 @@
 .settings {
-    margin-top: 6vw;
+    margin-top: calc(var(--header-height) + 2rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    justify-self: center;
+    width: min(70rem, 90%);
+    gap: 1rem;
 }
 
 .delete-modal .modal-content {
     border: 2px solid #ff0000;
-    box-shadow: 0 0 3vw #ff0000;
-}
-
-.settings h1 {
-    font-size: 2vw;
+    box-shadow: 0 0 2rem #ff0000;
 }
 
 .exit-modal-button {
     float: right;
-    margin-top: -1.5vw;
+    translate: 0 -2rem;
     cursor: pointer;
-    font-size: 2vw;
-    text-decoration: none;
-    transition: 0.1s;
-    font-weight: var(--light);
+    font-size: 1rem;
+    transition: 0.3s;
+    color: white;
+    transform: scale(3);
 }
 
 .exit-modal-button:hover {
     color: red;
-    transform: scale(1.3);
+    transform: scale(4);
 }
 
 .delete-modal p {
-    font-size: 1.5vw;
     text-align: left;
-}
-
-.delete-modal input {
-    width: 80%;
-    height: 2vw;
-    margin: 1vw;
-    padding: 0.5vw;
-    background-color: transparent;
-    border: 2px solid white;
-    border-radius: 2vmin;
-    &::placeholder {
-        color: rgb(255, 255, 255, 0.5);
-    }
-    font-size:1.2vw;
-    color: white;
-    transition: 0.5s;
-}
-
-.delete-modal input:hover {
-    background: var(--bg4);
 }
 
 .delete-modal input:focus {
     border: 2px solid red;
     outline: none;
     background: var(--bg4);
-    box-shadow: 0 0 1vw red;
+    box-shadow: 0 0 1rem red;
 }
 
 .delete-modal button {
-    margin: 1vw;
-}
-
-.delete-modal button:hover {
-    background: red;
-    border: 2px solid red;
-    box-shadow: 0 0 3vw red;
-}
-
-.delete-modal button:disabled {
-    border: 2px solid #FFFFFF50;
-    color: #FFFFFF50;
-    cursor: default;
-    box-shadow: none;
-    background: transparent;
+    margin: 1rem;
 }
 
 .profile-settings {
@@ -81,12 +49,12 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin: 2vw auto;
-    padding: 4vw;
+    padding: 4rem;
     background: var(--bg3);
-    width: 40vw;
-    border-radius: 10vmin;
+    border-radius: 4rem;
     transition: 0.5s;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .profile-settings div {
@@ -95,6 +63,7 @@
     align-items: center;
     flex-direction: row;
     width: 100%;
+    box-sizing: border-box;
 }
 
 div .info-div {
@@ -102,34 +71,18 @@ div .info-div {
     justify-content: space-evenly;
     align-items: center;
     flex-direction: column;
-    margin-bottom: 2vw;
-}
-
-label {
-    font-size: 1.5vw;
-    color: white;
-    width: 30%;
-    text-align: right;
-}
-
-.info-label {
-    font-size: 1.4vw;
-    line-height: 2vw;
-    color: white;
-    width: 100%;
-    text-align: left;
-    margin-top: 2vw;
+    margin-bottom: 1rem;
 }
 
 textarea {
     width: 100%;
-    height: 10vw;
-    margin: 1vw;
-    padding: 0.5vw;
+    height: 10rem;
+    margin: 1rem;
+    padding: 0.5rem;
     background-color: transparent;
     border: 2px solid white;
-    border-radius: 2vmin;
-    font-size:1.2vw;
+    border-radius: 1rem;
+    font-size: 1.2rem;
     color: white;
     resize: none;
     font-family: 'Ubuntu', sans-serif;
@@ -145,15 +98,7 @@ textarea:focus {
     border: 2px solid cyan;
     outline: none;
     background: var(--bg4);
-    box-shadow: 0 0 1vw cyan;
-}
-
-input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(100%);
-}
-
-input[type="date"] {
-    cursor: text;
+    box-shadow: 0 0 1rem cyan;
 }
 
 .account-update {
@@ -161,6 +106,10 @@ input[type="date"] {
     justify-content: center;
     align-items: center;
     flex-direction: row;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    gap: 1rem;
 }
 
 .account-update form {
@@ -168,37 +117,53 @@ input[type="date"] {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin: 2vw;
-    padding: 4vw;
+    padding: 4rem;
     background: var(--bg3);
-    width: 30vw;
-    border-radius: 10vmin;
+    border-radius: 4rem;
     transition: 0.5s;
-    height: 20vw;
+    height: 30rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
-.account-update button {
-    margin-top: 2vw;
+.account-update input {
+    width: 100%;
 }
 
 .exit {
     display: flex;
-    justify-content: center;
+    justify-content: space-evenly;
     align-items: center;
     flex-direction: row;
     background: var(--bg3);
-    padding: 3vw;
-    margin: 2vw 20vw;
-    border-radius: 3vw;
+    padding: 2rem;
+    border-radius: 2rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .exit button {
-    margin: 0 3vw;
-    width: 20vw;
+    margin: 0 3rem;
+    width: 20rem;
 }
 
-.delete-account-button:hover {
+.delete-modal button:hover {
     background: red;
     border: 2px solid red;
-    box-shadow: 0 0 3vw red;
+    box-shadow: 0 0 2rem red;
+}
+
+@media (max-width: 1000px) {
+    .account-update {
+        flex-direction: column;
+    }
+
+    .exit {
+        flex-direction: column;
+    }
+
+    .exit button {
+        margin: 1rem 0;
+        width: 100%;
+    }
 }
