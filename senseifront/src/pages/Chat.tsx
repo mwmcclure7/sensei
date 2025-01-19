@@ -206,8 +206,8 @@ function Chat() {
     };
 
     const getMessages = async () => {
-        setMessagesLoading(true);
         if (!currentChat) return;
+        setMessagesLoading(true);
         try {
             const res = await api.get("/api/messages/", {
                 params: { chat_id: currentChat },
