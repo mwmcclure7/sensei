@@ -37,11 +37,14 @@ body {
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
     width: 0.5rem;
+    height: 0.5rem;
     background: var(--bg1);
 }
 
 ::-webkit-scrollbar-thumb {
     background-color: var(--primary-dark);
+    cursor: default;
+    border-radius: 0.25rem;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -99,19 +102,9 @@ button:active {
 }
 
 button:disabled {
-    border: 2px solid #FFFFFF50;
-    color: #FFFFFF50;
+    border-color: #FFFFFF50;
     cursor: default;
-    box-shadow: none;
-    background: transparent;
-}
-
-button:disabled:hover {
-    border: 2px solid #FFFFFF50;
-    color: #FFFFFF50;
-    cursor: default;
-    box-shadow: none;
-    background: transparent;
+    animation: none;
 }
 
 .loading,
@@ -257,7 +250,7 @@ input {
 
 input:hover {
     background: var(--bg4);
-    border: 2px solid #FFFFFF
+    border-color: #FFFFFF
 }
 
 input:focus {

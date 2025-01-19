@@ -123,7 +123,9 @@ function Chat() {
             const firstFiveWords = input.split(" ").slice(0, 5).join(" ");
             setChatLoading(true);
             setTitle("");
-            const res = await api.post("/api/chats/", { title: firstFiveWords })
+            const res = await api.post("/api/chats/", {
+                title: firstFiveWords,
+            });
             if (res && res.data) {
                 setCurrentChat(res.data.id);
                 currentTempChat = res.data.id;
@@ -258,11 +260,23 @@ function Chat() {
         <div className="chatbot-page">
             <div className={`sidebar ${isSidebarCollapsed ? "collapsed" : ""}`}>
                 <button
-                    className={`sidebar-toggle ${isSidebarCollapsed ? "collapsed" : ""}`}
+                    className={`sidebar-toggle ${
+                        isSidebarCollapsed ? "collapsed" : ""
+                    }`}
                     onClick={toggleSidebar}
                 >
                     ➤
                 </button>
+                <div className="fun-mode-switch">
+                    <p>Fun Mode</p>
+                    <input
+                        type="checkbox"
+                        id="funModeSwitch"
+                        checked={funMode}
+                        onChange={toggleFunMode}
+                    />
+                    <label htmlFor="funModeSwitch"></label>
+                </div>
                 <form className="create-chat-form" onSubmit={createChat}>
                     <input
                         type="text"
@@ -306,11 +320,7 @@ function Chat() {
                     </div>
                 )}
             </div>
-            {!currentChat ? (
-                <div className="no-chat-selected">
-                    <p>Select a chat or create a new one.</p>
-                </div>
-            ) : (
+            <div className={`chat-container${isSidebarCollapsed ? " collapsed" : ""}`}>
                 <div className="chat-window">
                     {messagesLoading ? (
                         <div className="spinner">
@@ -341,7 +351,7 @@ function Chat() {
                                     </p>
                                     <ReactMarkdown
                                         remarkPlugins={[remarkGfm]}
-                                        // @ts-ignore: everything is probably fine...
+                                        // @ts-ignore: mostly harmless
                                         components={renderers}
                                         className="bot-history"
                                     >
@@ -370,23 +380,23 @@ function Chat() {
                             <div ref={messagesEndRef} />
                         </div>
                     )}
+                    <form className="chat-form" onSubmit={sendMessage}>
+                        <textarea
+                            ref={textareaRef}
+                            value={input}
+                            placeholder="Type a message..."
+                            onChange={(e) => setInput(e.target.value)}
+                            onInput={adjustHeight}
+                            onKeyDown={handleKeyDown}
+                        />
+                        <button
+                            className={loading ? "loading" : ""}
+                            type="submit"
+                            disabled={loading || !input}
+                        />
+                    </form>
                 </div>
-            )}
-            <form className="chat-form" onSubmit={sendMessage}>
-                <textarea
-                    ref={textareaRef}
-                    value={input}
-                    placeholder="Type a message..."
-                    onChange={(e) => setInput(e.target.value)}
-                    onInput={adjustHeight}
-                    onKeyDown={handleKeyDown}
-                />
-                <button
-                    className={loading ? "loading" : ""}
-                    type="submit"
-                    disabled={loading || !input}
-                />
-            </form>
+            </div>
         </div>
     );
 }
