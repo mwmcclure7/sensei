@@ -39,6 +39,10 @@
     text-align: left;
 }
 
+.agree label a {
+    font-size: inherit;
+}
+
 .agree {
     display: flex;
     justify-content: center;

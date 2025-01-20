@@ -4,6 +4,7 @@
     width: 100px;
     height: 100px;
     animation: spin 0.5s linear infinite;
+    justify-self: center;
 }
 
 .spinner div {

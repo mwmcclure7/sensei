@@ -8,7 +8,7 @@
 
     --bg1: rgb(0, 0, 10);
     --bg2: rgb(0, 10, 20);
-    --bg3: rgb(0, 15, 30);
+    --bg3: rgb(0, 20, 40);
     --bg4: rgb(0, 20, 40);
     --bg5: rgb(0, 5, 15);
 
@@ -105,6 +105,15 @@ button:disabled {
     border-color: #FFFFFF50;
     cursor: default;
     animation: none;
+    color: #FFFFFF50;
+}
+
+button:disabled:hover {
+    background: transparent;
+    border-color: #FFFFFF50;
+    color: #FFFFFF50;
+    box-shadow: none;
+    transform: none;
 }
 
 .loading,
