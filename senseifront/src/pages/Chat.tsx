@@ -245,7 +245,7 @@ function Chat() {
                     }`}
                     onClick={toggleSidebar}
                 >
-                    ➤
+                    ⇥
                 </button>
                 <div className="fun-mode-switch">
                     <p>Fun Mode</p>
