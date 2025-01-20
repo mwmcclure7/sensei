@@ -6,6 +6,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { coldarkDark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import Spinner from "../components/Spinner";
 
 interface Message {
     user_message: string;
@@ -284,11 +285,7 @@ function Chat() {
                     </div>
                 ))}
                 {chatLoading && (
-                    <div className="small-spinner">
-                        <div>
-                            <div />
-                        </div>
-                    </div>
+                    <Spinner />
                 )}
             </div>
             <div
@@ -298,11 +295,7 @@ function Chat() {
             >
                 <div className="chat-window">
                     {messagesLoading ? (
-                        <div className="spinner">
-                            <div>
-                                <div />
-                            </div>
-                        </div>
+                        <Spinner />
                     ) : (
                         <div
                             className="messages"
@@ -345,11 +338,7 @@ function Chat() {
                                     >
                                         {currentInputDisplay}
                                     </p>
-                                    <div className="small-spinner">
-                                        <div>
-                                            <div />
-                                        </div>
-                                    </div>
+                                    <Spinner />
                                 </div>
                             )}
                             <div ref={messagesEndRef} />

@@ -1,0 +1,26 @@
+.spinner {
+    background: linear-gradient(0deg, #00a0ff, #00000000);
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    animation: spin 0.5s linear infinite;
+}
+
+.spinner div {
+    background: var(--bg2);
+    border-radius: 50%;
+    width: 75px;
+    height: 75px;
+    position: relative;
+    top: 12.5px;
+    left: 12.5px;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

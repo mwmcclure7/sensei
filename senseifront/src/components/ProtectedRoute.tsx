@@ -3,6 +3,7 @@ import { jwtDecode } from "jwt-decode";
 import api from "../api";
 import { REFRESH_TOKEN, ACCESS_TOKEN } from "../constants";
 import { useState, useEffect } from "react";
+import Spinner from "./Spinner";
 
 /* Just a quick explanation for all of the @ts-ignore lines.
 This worked before as a .jsx file. Then, I rewrote the frontend for Vite instead of create-react-app.
@@ -64,11 +65,7 @@ function ProtectedRoute({ children }) {
 
     if (isAuthorized === null) {
         return (
-            <div className="spinner">
-                <div>
-                    <div />
-                </div>
-            </div>
+            <Spinner />
         );
     }
 

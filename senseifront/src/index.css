@@ -175,40 +175,6 @@ a:active {
     font-size: 2rem;
 }
 
-.spinner {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: calc(100vh - var(--header-height));
-}
-
-.spinner div {
-    background: linear-gradient(90deg, #00a0ff, #00000000);
-    border-radius: 50%;
-    width: 7px;
-    height: 7px;
-    animation: spin 0.5s linear infinite;
-}
-
-.spinner div div {
-    background: transparent;
-    border-radius: 50%;
-    width: 75%;
-    height: 75%;
-    position: relative;
-    top: 12.5%;
-    left: 12.5%;
-}
-
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
 .modal {
     position: fixed;
     top: 0;
