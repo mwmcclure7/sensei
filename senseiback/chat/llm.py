@@ -67,3 +67,16 @@ You are a teacher at Sensei.AI designed to teach students how to code through pr
         chat.save()
 
     return response.split('<REMEMBER>')[0].strip()
+
+def generate_title(user_content):
+    message = [{'role': 'system', 'content': 'Generate a title for this chat based on the user input. Only return the title.'}]
+    message.append({'role': 'user', 'content': user_content})
+
+    client = OpenAI(api_key=os.environ.get('GROK_API_KEY'), base_url='https://api.x.ai/v1')
+    response = client.chat.completions.create(
+        model='grok-2-latest',
+        temperature=0.2,
+        messages=message
+    ).choices[0].message.content
+
+    return response

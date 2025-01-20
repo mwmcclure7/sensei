@@ -166,6 +166,13 @@
     display: flex;
     align-items: center;
     width: min(55rem, calc(100vw - 21rem));
+    background: var(--bg4);
+    padding: 0 0.5rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0.75rem;
+    border: 1px solid transparent;
+    transition: 0.3s;
+    border: 1px solid #00a0ffa0;
 }
 
 .collapsed .chat-form {
@@ -173,20 +180,16 @@
 }
 
 .chat-form textarea {
-    margin-left: 0;
-    margin-right: 0.75rem;
-    margin-bottom: 0.75rem;
     max-height: 20rem;
-    height: auto;
-    padding: 0.5rem 0.5rem;
+    height: 100%;
     font-size: 1rem;
     align-content: center;
     border-radius: 0.75rem;
-    background: var(--bg2);
-    border: 2px solid #FFFFFFA0;
+    border: none;
     z-index: 10;
     line-height: 1.5;
     box-sizing: border-box;
+    margin: 0;
 }
 
 .chat-form textarea::-webkit-scrollbar {
@@ -211,14 +214,11 @@
 }
 
 .chat-form textarea:hover {
-    background: var(--bg3);
-    border-color: white;
+    background: transparent;
 }
 
 .chat-form textarea:focus {
-    outline: none;
-    border-color: cyan;
-    background: var(--bg3);
+    background: transparent;
     box-shadow: none;
 }
 
@@ -232,21 +232,24 @@
     margin: 1rem 0;
     padding: 0;
     animation: none;
-    border-radius: 50vmin;
+    border-radius: 1rem;
     flex-shrink: 0;
-    background-color: var(--bg1);
+    background-color: transparent;
+    transition: 0.3s;
+    margin: 0;
+    opacity: 1;
+}
+
+.chat-form button:hover {
+    background-image: url("../assets/up-arrow.svg");
+    background-color: cyan;
+    animation: none;
+    background-size: 2.5rem;
 }
 
 .chat-form button:disabled {
-    background-image: url("../assets/up-arrow.svg");
-    background-size: 2.5rem;
-    background-repeat: no-repeat;
-    opacity: 0.3;
-    background-position: center;
-}
-
-.chat-form button:disabled:hover {
-    background-color: transparent;
+    opacity: 0;
+    scale: 0;
 }
 
 .chat-container {
@@ -285,10 +288,6 @@
     display: none;
 }
 
-.sidebar.collapsed .create-chat-form {
-    display: none;
-}
-
 .sidebar.collapsed .delete-button {
     display: none;
 }
@@ -301,73 +300,40 @@
     display: none;
 }
 
-.create-chat-form {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    align-items: center;
-    margin: 3vh 0;
-    width: 100%;
+.sidebar.collapsed .create-chat {
+    display: none;
 }
 
-.sidebar input {
-    font-size: 1em;
-    height: auto;
-    margin: 0;
-    margin-right: 0.5rem;
-    border: none;
+.create-chat {
+    margin: 0.3rem 0;
     background: var(--bg3);
-}
-
-.sidebar input:hover {
-    background: var(--bg4);
-}
-
-.sidebar input:focus {
+    width: 100%;
+    border-radius: 0.75rem;
+    transition: 0.2s;
     border: none;
+    font-size: 1rem;
+    margin: 1.5rem 0;
+}
+
+.create-chat:hover {
     background: var(--bg4);
-    box-shadow: #00ffff 0 0 0.5rem;
+    border: none;
 }
 
-.create-button {
-    width: 2rem;
-    height: 2rem;
-    flex-shrink: 0;
-    margin: 0;
-    padding: 0;
-    font-size: 2rem;
-    text-align: center;
-    border-radius: 50%;
-    border: 2px solid white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.create-chat-active {
+    margin: 0.3rem 0;
+    width: 100%;
+    border-radius: 0.75rem;
+    transition: 0.2s;
+    border: none;
+    font-size: 1rem;
+    margin: 1.5rem 0;
+    background: var(--bg3);
+    box-shadow: #00ffff 0 0 0.25rem;
 }
 
-.create-button:hover {
-    background: #00ffa0;
-    animation: none;
-    box-shadow: #00ffa0 0 0 0.75rem;
-}
-
-.create-button:disabled {
-    opacity: 0.3;
-}
-
-.create-button-loading {
-    width: 2rem;
-    height: 2rem;
-    flex-shrink: 0;
-    margin: 0;
-    padding: 0;
-    font-size: 2rem;
-    text-align: center;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background: linear-gradient(90deg, #00a0ff, #00ffa0, #00a0ff);
-    animation: linearGradientAnimation 2s infinite linear;
+.create-chat-active:hover {
+    background: var(--bg4);
     border: none;
 }
 

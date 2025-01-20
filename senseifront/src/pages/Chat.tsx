@@ -57,7 +57,6 @@ function Chat() {
 
     // Chats
     const [chats, setChats] = useState([]);
-    const [title, setTitle] = useState("");
     const [currentChat, setCurrentChat] = useState(0);
     const [chatLoading, setChatLoading] = useState(false);
 
@@ -85,26 +84,6 @@ function Chat() {
         getMessages();
     };
 
-    const createChat = (e: any) => {
-        e.preventDefault();
-        if (!title) return;
-        setChatLoading(true);
-        const tempTitle = title;
-        setTitle("");
-        api.post("/api/chats/", { title: tempTitle })
-            .catch((err) => console.log(err))
-            .then((res) => {
-                if (res && res.data) {
-                    setCurrentChat(res.data.id);
-                }
-            })
-            .then(() => getChats())
-            .then(() => setChatLoading(false))
-            .catch((err) => {
-                console.log(err);
-            });
-    };
-
     // Messages
     const [messages, setMessages] = useState<Message[]>([]);
     const [input, setInput] = useState("");
@@ -118,13 +97,14 @@ function Chat() {
         e.preventDefault();
         setLoading(true);
         var currentTempChat = currentChat;
+        setCurrentInputDisplay(input);
+        const tempInput = input;
+        setInput("");
 
         if (!currentChat) {
-            const firstFiveWords = input.split(" ").slice(0, 5).join(" ");
             setChatLoading(true);
-            setTitle("");
             const res = await api.post("/api/chats/", {
-                title: firstFiveWords,
+                title: tempInput,
             });
             if (res && res.data) {
                 setCurrentChat(res.data.id);
@@ -133,20 +113,17 @@ function Chat() {
             await getChats();
             setChatLoading(false);
         }
-        setCurrentInputDisplay(input);
-        const currentInput = input;
         if (textareaRef.current) textareaRef.current.style.height = "auto";
-        setInput("");
         api.post("/api/messages/", {
             chat_id: currentTempChat,
-            message: currentInput,
+            message: tempInput,
             fun_mode: funMode,
         })
             .then((res) => {
                 setMessages((prevMessages) => [
                     ...prevMessages,
                     {
-                        user_message: currentInput,
+                        user_message: tempInput,
                         bot_message: res.data.message,
                     },
                 ]);
@@ -158,7 +135,7 @@ function Chat() {
                     setTimeout(() => {
                         api.post("/api/messages/", {
                             chat_id: currentChat,
-                            message: currentInput,
+                            message: tempInput,
                         })
                             .then(() => {
                                 getMessages();
@@ -206,7 +183,10 @@ function Chat() {
     };
 
     const getMessages = async () => {
-        if (!currentChat) return;
+        if (!currentChat) {
+            setMessages([]);
+            return;
+        }
         setMessagesLoading(true);
         try {
             const res = await api.get("/api/messages/", {
@@ -277,21 +257,12 @@ function Chat() {
                     />
                     <label htmlFor="funModeSwitch"></label>
                 </div>
-                <form className="create-chat-form" onSubmit={createChat}>
-                    <input
-                        type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        placeholder="Enter new chat title"
-                    />
-                    <button
-                        className="create-button"
-                        onClick={createChat}
-                        disabled={!title}
-                    >
-                        +
-                    </button>
-                </form>
+                <button
+                    className={`create-chat${!currentChat ? "-active" : ""}`}
+                    onClick={() => setCurrentChat(0)}
+                >
+                    New Chat
+                </button>
                 <hr />
                 {chats.map((chat: any) => (
                     <div
@@ -320,7 +291,11 @@ function Chat() {
                     </div>
                 )}
             </div>
-            <div className={`chat-container${isSidebarCollapsed ? " collapsed" : ""}`}>
+            <div
+                className={`chat-container${
+                    isSidebarCollapsed ? " collapsed" : ""
+                }`}
+            >
                 <div className="chat-window">
                     {messagesLoading ? (
                         <div className="spinner">

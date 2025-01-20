@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from .models import Chat, Message
 from .serializers import ChatSerializer, MessageSerializer
 from rest_framework import generics
-from .llm import generate_response
+from .llm import *
 
 User = get_user_model()
 
@@ -20,7 +20,7 @@ class ChatListCreate(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         if serializer.is_valid():
-            serializer.save(author=self.request.user, title=self.request.data.get('title'))
+            serializer.save(author=self.request.user, title=generate_title(self.request.data.get('title')))
             return Response({'id': serializer.data.get('id')})
         else:
             print(serializer.errors)
@@ -55,7 +55,7 @@ class MessageListCreate(generics.ListCreateAPIView):
             return Response({'status': 'error', 'message': 'You are not authorized to send messages to this chat.'})
         user_content = request.data.get('message')
         fun_mode = request.data.get('fun_mode')
-        # OpenAI API
+        
         response = generate_response(user_content, chat, fun_mode)
 
         Message.objects.create(chat=chat, user_content=user_content, bot_content=response)
