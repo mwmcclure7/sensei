@@ -1,4 +1,4 @@
-import Header from "./pages/Header";
+import Header from "./components/Header";
 import Home from "./pages/Home";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";

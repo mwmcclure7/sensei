@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import "../styles/Home.css";
-import Footer from "./Footer";
+import Footer from "../components/Footer";
 import interactive from "../assets/interactive.svg";
 import learning from "../assets/learning.svg";
 import time from "../assets/time.svg";
