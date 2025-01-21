@@ -68,11 +68,12 @@
 }
 
 .bot-history p {
-    font-size: 1em;
+    font-size: 1rem;
+    
 }
 
 .bot-history a {
-    font-size: 1em;
+    font-size: 1rem;
     cursor: pointer;
 }
 
@@ -85,7 +86,7 @@
 .bot-history code {
     background: #00a0ff50;
     padding: 0.3rem;
-    border-radius: 5px;
+    border-radius: 0.3rem;
 }
 
 .custom-code-block {
@@ -362,7 +363,7 @@
 }
 
 .chat-label {
-    font-size: 1em;
+    font-size: 1rem;
     height: auto;
     width: 11rem;
     margin: 0;
