@@ -85,5 +85,6 @@ typing_extensions==4.12.2
 tzdata==2024.1
 urllib3==2.2.2
 uuid6==2024.1.12
+whitenoise==6.6.0
 xxhash==3.4.1
 yarl==1.9.4
