@@ -1,24 +1,30 @@
 import { useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import api from "../api";
 
 function UpdateEmail() {
-    useEffect(() => {
-        const currentUrl = window.location.pathname;
-        const parts = currentUrl.split("/");
-        const uidb64 = parts[parts.length - 3];
-        const token = parts[parts.length - 2];
-        const signed_email = parts[parts.length - 1];
+    const navigate = useNavigate();
+    const { uid, token, signed_email } = useParams();
 
-        api.post(`/api/reset-email/${uidb64}/${token}/${signed_email}`)
+    useEffect(() => {
+        if (!uid || !token || !signed_email) {
+            navigate("/invalid-link");
+            return;
+        }
+
+        api.post(`/api/reset-email/${uid}/${token}/${signed_email}/`)
             .then((res) => res.data)
             .then((data) => {
                 if (data.status === "success") {
-                    window.location.href = "/email-updated";
+                    navigate("/email-updated");
                 } else {
-                    window.location.href = "/invalid-link";
+                    navigate("/invalid-link");
                 }
+            })
+            .catch(() => {
+                navigate("/invalid-link");
             });
-    }, []);
+    }, [uid, token, signed_email, navigate]);
 
     return null;
 }

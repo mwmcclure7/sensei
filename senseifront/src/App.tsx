@@ -34,7 +34,7 @@ function App() {
         <HashRouter>
             <Header />
                 <div className="main-container">
-                    <Routes >
+                    <Routes>
                         <Route path="/" element={<Home />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/logout" element={<Logout />} />
@@ -57,7 +57,7 @@ function App() {
                             path="/request-password-reset"
                             element={<RequestPasswordReset />}
                         />
-                        <Route path="/reset-email/:uid/:token/:email" element={<UpdateEmail />} />
+                        <Route path="/reset-email/:uid/:token/:signed_email" element={<UpdateEmail />} />
                         <Route path="/email-updated" element={<EmailUpdated />} />
                         <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
                         <Route

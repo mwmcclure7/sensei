@@ -1,6 +1,7 @@
 import { useState } from "react";
 import toast from "react-hot-toast";
 import api from "../api";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/Form.css";
 
 function Register() {
@@ -10,6 +11,8 @@ function Register() {
     const [loading, setLoading] = useState(false);
     const [privacyPolicyChecked, setPrivacyPolicyChecked] = useState(false);
     const [termsChecked, setTermsChecked] = useState(false);
+
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: any) => {
         setLoading(true);
@@ -22,7 +25,7 @@ function Register() {
                 toast.error("Password must be at least 8 characters.");
             } else {
                 await api.post("/api/register/", { email, password });
-                window.location.href = "/activated";
+                navigate("/activated");
             }
         } catch (error: any) {
             if (error.response && error.response.status === 400) {
@@ -111,7 +114,7 @@ function Register() {
                 Create Account
             </button>
             <p>
-                Already have an account? <a href="/login">Sign in here</a>!
+                Already have an account? <Link to="/login">Sign in here</Link>!
             </p>
         </form>
     );

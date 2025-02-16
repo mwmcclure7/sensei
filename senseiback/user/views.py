@@ -109,7 +109,7 @@ class RequestPasswordResetEmail(APIView):
         if user:
             token = default_token_generator.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            link = f"{os.getenv('URL')}/reset-password/{uid}/{token}/"
+            link = f"{os.getenv('URL')}/#/reset-password/{uid}/{token}/"
             
 
             send_mail(
@@ -171,7 +171,7 @@ class RequestEmailResetEmail(APIView):
         token = default_token_generator.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
         signed_email = signing.dumps(new_email)
-        link = f"{os.getenv('URL')}/reset-email/{uid}/{token}/{signed_email}"
+        link = f"{os.getenv('URL')}/#/reset-email/{uid}/{token}/{signed_email}"
         send_mail(
             'Email Update Request',
             f'Click on the link below to update your email:\n{link}',

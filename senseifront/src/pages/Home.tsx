@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "../styles/Home.css";
 import Footer from "../components/Footer";
 import interactive from "../assets/interactive.svg";
@@ -7,6 +8,8 @@ import time from "../assets/time.svg";
 import tutor from "../assets/tutor.svg";
 
 function Home() {
+    const navigate = useNavigate();
+
     useEffect(() => {
         const observer = new IntersectionObserver(
             (entries) => {
@@ -35,9 +38,7 @@ function Home() {
                     Introducing{" "}
                     <span
                         className="sensei"
-                        onClick={() => {
-                            window.location.href = "/chat";
-                        }}
+                        onClick={() => navigate("/chat")}
                     >
                         Sensei
                     </span>
@@ -50,11 +51,7 @@ function Home() {
                     Personalized, project-based tutoring so you can learn
                     programming effectively.
                 </p>
-                <button
-                    onClick={() => {
-                        window.location.href = "/register";
-                    }}
-                >
+                <button onClick={() => navigate("/register")}>
                     Get Started
                 </button>
             </section>
@@ -185,11 +182,7 @@ function Home() {
                     </div>
                 </div>
                 <h1>Ready to Get Started?</h1>
-                <button
-                    onClick={() => {
-                        window.location.href = "/register";
-                    }}
-                >
+                <button onClick={() => navigate("/register")}>
                     Sign Up Now
                 </button>
             </section>

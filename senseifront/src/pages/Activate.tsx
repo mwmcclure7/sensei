@@ -1,23 +1,30 @@
 import { useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import api from "../api";
 
 function Activate() {
-    useEffect(() => {
-        const currentUrl = window.location.pathname;
-        const parts = currentUrl.split("/");
-        const uidb64 = parts[parts.length - 2];
-        const token = parts[parts.length - 1];
+    const { uid, token } = useParams();
+    const navigate = useNavigate();
 
-        api.post(`/api/activate/${uidb64}/${token}/`)
+    useEffect(() => {
+        if (!uid || !token) {
+            navigate("/invalid-link");
+            return;
+        }
+
+        api.post(`/api/activate/${uid}/${token}/`)
             .then((res) => res.data)
             .then((data) => {
                 if (data.status === "success") {
-                    window.location.href = "/login";
+                    navigate("/login");
                 } else {
-                    window.location.href = "/invalid-link";
+                    navigate("/invalid-link");
                 }
+            })
+            .catch(() => {
+                navigate("/invalid-link");
             });
-    }, []);
+    }, [uid, token, navigate]);
 
     return null;
 }
