@@ -52,9 +52,9 @@ const Header = () => {
             ) : (
                 <button
                     onClick={() => navigate("/login")}
-                    className="login-button"
+                    className="sign-in-button"
                 >
-                    Login
+                    Sign In
                 </button>
             )}
         </header>
