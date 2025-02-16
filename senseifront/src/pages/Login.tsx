@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import api from "../api";
 import { useNavigate } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
+import { Link } from "react-router-dom";
 import "../styles/Form.css";
 
 function Login() {
@@ -56,9 +57,9 @@ function Login() {
             >
                 Sign In
             </button>
-            <a href="/request-password-reset">Forgot password</a>
+            <Link to="/request-password-reset">Forgot password</Link>
             <p>
-                Don't have an account? <a href="/register">Sign up here</a>!
+                Don't have an account? <Link to="/register">Sign up here</Link>!
             </p>
         </form>
     );

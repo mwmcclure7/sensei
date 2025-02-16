@@ -26,7 +26,7 @@ class CreateUserView(generics.CreateAPIView):
         user = serializer.save()
         token = account_activation_token.make_token(user)
         uid = urlsafe_base64_encode(force_bytes(user.pk))
-        link = f'{os.getenv('URL')}/activate/{uid}/{token}'
+        link = f'{os.getenv('URL')}/#/activate/{uid}/{token}'
         subject = 'Activate Your Sensei.AI Account'
         message = f'''Welcome to Sensei.AI!
 
@@ -49,7 +49,7 @@ class SendActivationEmailView(APIView):
         if user:
             token = account_activation_token.make_token(user)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            link = f'{os.getenv('URL')}/activate/{uid}/{token}'
+            link = f'{os.getenv('URL')}/#/activate/{uid}/{token}'
             subject = 'Activate Your Sensei Account'
             message = f'''Welcome to Sensei.AI!
 

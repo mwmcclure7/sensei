@@ -1,6 +1,6 @@
 import Header from "./components/Header";
 import Home from "./pages/Home";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -31,7 +31,7 @@ function RegisterAndLogout() {
 
 function App() {
     return (
-        <BrowserRouter>
+        <HashRouter>
             <Header />
                 <div className="main-container">
                     <Routes >
@@ -73,7 +73,7 @@ function App() {
                     </Routes>
                 </div>
             <Toaster />
-        </BrowserRouter>
+        </HashRouter>
     );
 }
 

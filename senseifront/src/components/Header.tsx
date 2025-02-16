@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import "../styles/Header.css";
 import logo from "../assets/sensei-logo-t.svg";
 import { ACCESS_TOKEN } from "../constants";
 
 const Header = () => {
+    const navigate = useNavigate();
     const [isAuthenticated, setIsAuthenticated] = useState(
         localStorage.getItem(ACCESS_TOKEN) !== null
     );
@@ -30,28 +32,29 @@ const Header = () => {
 
     return (
         <header className="header">
-            <img
-                src={logo}
-                alt="logo"
-                className="logo"
-                onClick={() => (window.location.href = "/")}
-            />
+            <Link to="/">
+                <img
+                    src={logo}
+                    alt="logo"
+                    className="logo"
+                />
+            </Link>
             <nav>
-                <a href="/">Home</a>
-                <a href="chat">Sensei</a>
-                <a href="contact">Contact</a>
+                <Link to="/">Home</Link>
+                <Link to="/chat">Sensei</Link>
+                <Link to="/contact">Contact</Link>
             </nav>
             {isAuthenticated ? (
                 <button
-                    onClick={() => (window.location.href = "/settings")}
+                    onClick={() => navigate("/settings")}
                     className="profile-picture"
                 />
             ) : (
                 <button
-                    onClick={() => (window.location.href = "/login")}
-                    className="sign-in-button"
+                    onClick={() => navigate("/login")}
+                    className="login-button"
                 >
-                    Sign In
+                    Login
                 </button>
             )}
         </header>
