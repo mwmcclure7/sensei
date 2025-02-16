@@ -159,7 +159,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # CORS settings
-CORS_ALLOWED_ORIGINS = ['https://softwaresensei.ai', 'http://localhost:5173', 'https://senseiai.onrender.com']
+CORS_ALLOWED_ORIGINS = ['https://softwaresensei.ai', 'https://www.softwaresensei.ai', 'http://localhost:5173', 'https://senseiai.onrender.com']
 CORS_ALLOW_CREDENTIALS = True
 
 # Security settings
