@@ -1,5 +1,7 @@
 :root {
     --text: #ffffff;
+    --border: #ffffff50;
+    --primary-border: #00a0ff50;
 
     --light: 300;
     --normal: 400;

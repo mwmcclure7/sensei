@@ -12,6 +12,7 @@
     box-sizing: border-box;
     height: var(--header-height);
     z-index: 10;
+    border-bottom: 1px solid var(--border);
 }
 
 .header .logo {
