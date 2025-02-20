@@ -78,7 +78,7 @@ You are a teacher at Sensei.AI designed to teach students how to code through pr
         return response.split('<REMEMBER>')[0].strip()
 
 def generate_title(user_content):
-    message = [{'role': 'system', 'content': 'Generate a title for this chat based on the user input. Only return the title.'}]
+    message = [{'role': 'system', 'content': 'Generate a title for this chat based on the user input (no more than 5 words). Only return the title.'}]
     message.append({'role': 'user', 'content': user_content})
 
     client = OpenAI(api_key=os.environ.get('GROK_API_KEY'), base_url='https://api.x.ai/v1')
