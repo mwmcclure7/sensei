@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import api from "../api";
+import api, { streamRequest } from "../api";
 import toast from "react-hot-toast";
 import "../styles/Chat.css";
 import ReactMarkdown from "react-markdown";
@@ -82,7 +82,6 @@ function Chat() {
             .catch((err) => console.log(err));
         getChats();
         setChatLoading(false);
-        getMessages();
     };
 
     // Messages
@@ -92,94 +91,102 @@ function Chat() {
     const [currentInputDisplay, setCurrentInputDisplay] = useState("");
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const [messagesLoading, setMessagesLoading] = useState(false);
+    const [forceUpdate, setForceUpdate] = useState(0);
 
     const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
         if (!input || loading) return;
         e.preventDefault();
         setLoading(true);
         var currentTempChat = currentChat;
-        setCurrentInputDisplay(input);
-        const tempInput = input;
+
+        // Add user message immediately
+        const userMessage = input;
+        setCurrentInputDisplay(userMessage);
         setInput("");
+        if (textareaRef.current) {
+            textareaRef.current.style.height = "auto";
+        }
 
-        if (!currentChat) {
-            setChatLoading(true);
-            const res = await api.post("/api/chats/", {
-                title: tempInput,
-            });
-            if (res && res.data) {
-                setCurrentChat(res.data.id);
-                currentTempChat = res.data.id;
+        try {
+            if (currentTempChat === 0) {
+                const chatResponse = await api.post("/api/chats/", {
+                    title: userMessage,
+                });
+                currentTempChat = chatResponse.data.id;
+                setCurrentChat(currentTempChat);
+                getChats();
             }
-            await getChats();
-            setChatLoading(false);
-        }
-        if (textareaRef.current) textareaRef.current.style.height = "auto";
-        api.post("/api/messages/", {
-            chat_id: currentTempChat,
-            message: tempInput,
-            fun_mode: funMode,
-        })
-            .then((res) => {
-                setMessages((prevMessages) => [
-                    ...prevMessages,
-                    {
-                        user_message: tempInput,
-                        bot_message: res.data.message,
-                    },
-                ]);
-                setLoading(false);
-            })
-            .catch((err) => {
-                if (err.response.status === 401) {
-                    window.dispatchEvent(new CustomEvent("auth"));
-                    setTimeout(() => {
-                        api.post("/api/messages/", {
-                            chat_id: currentChat,
-                            message: tempInput,
-                        })
-                            .then(() => {
-                                getMessages();
-                                setLoading(false);
-                            })
-                            .catch((err) => {
-                                console.log(
-                                    "An error occurred. Please try refreshing your page.\n\nIf the problem persists, contact support@softwaresensei.ai.\n\nError details: " +
-                                        err
-                                );
-                                setLoading(false);
-                            });
-                    }, 1000);
-                } else {
-                    console.log(
-                        "An error occurred. Please try refreshing your page.\n\nIf the problem persists, contact support@softwaresensei.ai.\n\nError details: " +
-                            err
-                    );
-                    setLoading(false);
-                }
+
+            // Add temporary message for streaming
+            const messageIndex = messages.length;
+            setMessages((prev) => [...prev, { user_message: userMessage, bot_message: "" }]);
+
+            const response = await streamRequest("/api/messages/", {
+                message: userMessage,
+                chat_id: currentTempChat,
+                fun_mode: funMode,
             });
-    };
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-        if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault();
-            sendMessage(
-                new Event(
-                    "submit"
-                ) as unknown as React.FormEvent<HTMLFormElement>
-            );
-        }
-    };
+            const reader = response.body?.getReader();
+            const decoder = new TextDecoder();
 
-    const messagesEndRef = useRef<HTMLDivElement>(null);
+            if (!reader) {
+                throw new Error("No reader available");
+            }
 
-    useEffect(() => {
-        scrollToBottom();
-    }, [messages, loading]);
+            let accumulatedResponse = "";
 
-    const scrollToBottom = () => {
-        if (messagesEndRef.current) {
-            messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) break;
+
+                const chunk = decoder.decode(value);
+                const lines = chunk.split("\n");
+
+                for (const line of lines) {
+                    if (line.startsWith("data: ")) {
+                        const content = line.slice(6);
+                        if (content === "[DONE]") {
+                            break;
+                        }
+                        accumulatedResponse += content;
+                        // Update the message at the specific index
+                        setMessages((prev) => {
+                            const newMessages = [...prev];
+                            if (messageIndex < newMessages.length) {
+                                newMessages[messageIndex].bot_message = accumulatedResponse;
+                            }
+                            return newMessages;
+                        });
+                    }
+                }
+            }
+
+            // Fetch the final message to ensure proper formatting
+            const finalMessageResponse = await api.get("/api/messages/", {
+                params: { chat_id: currentTempChat },
+            });
+
+            const finalMessages = finalMessageResponse.data.map((msg: any) => ({
+                user_message: msg.user_content,
+                bot_message: msg.bot_content,
+            }));
+
+            // Update only the last message
+            setMessages((prev) => {
+                const newMessages = [...prev];
+                if (messageIndex < finalMessages.length) {
+                    newMessages[messageIndex] = finalMessages[messageIndex];
+                }
+                return newMessages;
+            });
+        } catch (err) {
+            console.error(err);
+            toast.error("Failed to send message");
+            setMessages((prev) => prev.slice(0, -1));
+        } finally {
+            setLoading(false);
+            setCurrentInputDisplay("");
         }
     };
 
@@ -212,6 +219,29 @@ function Chat() {
     useEffect(() => {
         getMessages();
     }, [currentChat]);
+
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage(
+                new Event(
+                    "submit"
+                ) as unknown as React.FormEvent<HTMLFormElement>
+            );
+        }
+    };
+
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages, loading]);
+
+    const scrollToBottom = () => {
+        if (messagesEndRef.current) {
+            messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+    };
 
     // Fun Mode
     const [funMode, setFunMode] = useState(false);
@@ -307,7 +337,7 @@ function Chat() {
                             }}
                         >
                             {messages.map((msg, index) => (
-                                <div key={index} className="message-container">
+                                <div key={`${index}-${forceUpdate}`} className="message-container">
                                     <p
                                         className={
                                             funMode
@@ -318,8 +348,9 @@ function Chat() {
                                         {msg.user_message}
                                     </p>
                                     <ReactMarkdown
+                                        key={`${index}-${forceUpdate}`}
                                         remarkPlugins={[remarkGfm]}
-                                        // @ts-ignore: mostly harmless
+                                        // @ts-ignore mostly harmless
                                         components={renderers}
                                         className="bot-history"
                                     >
@@ -327,7 +358,7 @@ function Chat() {
                                     </ReactMarkdown>
                                 </div>
                             ))}
-                            {loading && (
+                            {loading && !messages.find(msg => msg.user_message === currentInputDisplay) && (
                                 <div className="message-container">
                                     <p
                                         className={

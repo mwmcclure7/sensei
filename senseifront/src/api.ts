@@ -27,4 +27,22 @@ api.interceptors.response.use(
     }
 );
 
+export const streamRequest = async (url: string, data: any) => {
+    const token = localStorage.getItem(ACCESS_TOKEN);
+    const response = await fetch(`${import.meta.env.VITE_API_URL}${url}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify(data)
+    });
+
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    return response;
+};
+
 export default api;

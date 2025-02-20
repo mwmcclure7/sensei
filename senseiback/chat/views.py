@@ -7,6 +7,7 @@ from .models import Chat, Message
 from .serializers import ChatSerializer, MessageSerializer
 from rest_framework import generics
 from .llm import *
+from django.http import StreamingHttpResponse
 
 User = get_user_model()
 
@@ -56,7 +57,31 @@ class MessageListCreate(generics.ListCreateAPIView):
         user_content = request.data.get('message')
         fun_mode = request.data.get('fun_mode')
         
-        response = generate_response(user_content, chat, fun_mode)
+        def generate_stream():
+            response = ""
+            stream = generate_response(user_content, chat, fun_mode, stream=True)
+            for chunk in stream:
+                if chunk.choices[0].delta.content is not None:
+                    content = chunk.choices[0].delta.content
+                    # Don't stream the REMEMBER part
+                    if '<REMEMBER>' in content:
+                        memory_part = content[content.index('<REMEMBER>'):]
+                        content = content[:content.index('<REMEMBER>')]
+                        if content:
+                            yield f"data: {content}\n\n"
+                        chat.memory += "\n" + memory_part.replace('<REMEMBER>', '').strip()
+                        chat.save()
+                        break
+                    response += content
+                    yield f"data: {content}\n\n"
+            
+            # Save the complete message, excluding REMEMBER part
+            if '<REMEMBER>' in response:
+                response = response[:response.index('<REMEMBER>')].strip()
+            Message.objects.create(chat=chat, user_content=user_content, bot_content=response)
+            yield "data: [DONE]\n\n"
 
-        Message.objects.create(chat=chat, user_content=user_content, bot_content=response)
-        return Response({'status': 'success', 'message': response})
+        return StreamingHttpResponse(
+            generate_stream(),
+            content_type='text/event-stream'
+        )

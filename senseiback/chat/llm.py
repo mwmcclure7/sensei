@@ -1,7 +1,7 @@
 from openai import OpenAI
 import os
 
-def generate_response(user_content, chat, fun_mode):
+def generate_response(user_content, chat, fun_mode, stream=False):
     personality = "Respond sarcastically." if fun_mode else "Respond professionally."
 
     instructions = f"""# Character
@@ -55,18 +55,27 @@ You are a teacher at Sensei.AI designed to teach students how to code through pr
     messages.append({'role': 'user', 'content': user_content})
     
     client = OpenAI(api_key=os.environ.get('GROK_API_KEY'), base_url='https://api.x.ai/v1')
-    response = client.chat.completions.create(
-        model='grok-2-latest',
-        temperature= 1 if fun_mode else 0.2,
-        messages=messages
-    ).choices[0].message.content
     
-    if '<REMEMBER>' in response:
-        memory_update = response.split('<REMEMBER>')[1].strip()
-        chat.memory += "\n" + memory_update
-        chat.save()
+    if stream:
+        return client.chat.completions.create(
+            model='grok-2-latest',
+            temperature=1 if fun_mode else 0.2,
+            messages=messages,
+            stream=True
+        )
+    else:
+        response = client.chat.completions.create(
+            model='grok-2-latest',
+            temperature=1 if fun_mode else 0.2,
+            messages=messages
+        ).choices[0].message.content
+        
+        if '<REMEMBER>' in response:
+            memory_update = response.split('<REMEMBER>')[1].strip()
+            chat.memory += "\n" + memory_update
+            chat.save()
 
-    return response.split('<REMEMBER>')[0].strip()
+        return response.split('<REMEMBER>')[0].strip()
 
 def generate_title(user_content):
     message = [{'role': 'system', 'content': 'Generate a title for this chat based on the user input. Only return the title.'}]
