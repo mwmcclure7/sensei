@@ -91,7 +91,7 @@ function Chat() {
     const [currentInputDisplay, setCurrentInputDisplay] = useState("");
     const textareaRef = useRef<HTMLTextAreaElement>(null);
     const [messagesLoading, setMessagesLoading] = useState(false);
-    const [forceUpdate, setForceUpdate] = useState(0);
+    const [forceUpdate] = useState(0);
 
     const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
         if (!input || loading) return;
