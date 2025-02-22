@@ -5,6 +5,7 @@
     justify-content: center;
     height: auto;
     color: white;
+    background: radial-gradient(circle at right, var(--bg2), var(--bg1));
 }
 
 hr {
