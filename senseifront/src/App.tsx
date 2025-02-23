@@ -16,6 +16,10 @@ import Contact from "./pages/Contact";
 import Activate from "./pages/Activate";
 import Activated from "./pages/Activated";
 import UpdateEmail from "./pages/UpdateEmail";
+import Courses from "./pages/Courses";
+import CourseCreation from "./pages/CourseCreation";
+import CourseOverview from "./pages/CourseOverview";
+import Unit from "./pages/Unit";
 
 function Logout() {
     localStorage.clear();
@@ -65,6 +69,38 @@ function App() {
                             element={
                                 <ProtectedRoute>
                                     <Chat />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/courses"
+                            element={
+                                <ProtectedRoute>
+                                    <Courses />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/courses/create"
+                            element={
+                                <ProtectedRoute>
+                                    <CourseCreation />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/courses/:courseId"
+                            element={
+                                <ProtectedRoute>
+                                    <CourseOverview />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/courses/:courseId/units/:unitId"
+                            element={
+                                <ProtectedRoute>
+                                    <Unit />
                                 </ProtectedRoute>
                             }
                         />

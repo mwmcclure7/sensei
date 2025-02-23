@@ -1,0 +1,144 @@
+.course-creation-container {
+    height: calc(100vh - var(--header-height));
+    display: flex;
+    flex-direction: column;
+    background: var(--bg2);
+}
+
+.messages-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.message {
+    max-width: 80%;
+    padding: 1rem;
+    border-radius: 1rem;
+    animation: messageAppear 0.3s ease-out;
+}
+
+.user-message {
+    align-self: flex-end;
+    background: var(--primary-dark);
+    margin-left: 20%;
+}
+
+.bot-message {
+    align-self: flex-start;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    margin-right: 20%;
+}
+
+.message-content {
+    color: var(--text);
+    line-height: 1.5;
+}
+
+.message-content p {
+    margin: 0;
+}
+
+.input-container {
+    padding: 1.5rem;
+    background: var(--bg3);
+    border-top: 1px solid var(--border);
+    display: flex;
+    gap: 1rem;
+}
+
+.input-container textarea {
+    flex-grow: 1;
+    background: var(--bg4);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 1rem;
+    resize: none;
+    height: 60px;
+    transition: all 0.3s ease;
+}
+
+.input-container textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px var(--primary-dark);
+}
+
+.input-container textarea::placeholder {
+    color: var(--text);
+    opacity: 0.5;
+}
+
+.input-container button {
+    align-self: flex-end;
+    min-width: 120px;
+}
+
+@keyframes messageAppear {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Code block styling */
+.message-content pre {
+    background: var(--bg4);
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+}
+
+.message-content code {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+}
+
+/* List styling */
+.message-content ul, 
+.message-content ol {
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;
+}
+
+.message-content li {
+    margin: 0.25rem 0;
+}
+
+/* Link styling */
+.message-content a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.message-content a:hover {
+    color: var(--secondary);
+}
+
+@media (max-width: 768px) {
+    .message {
+        max-width: 90%;
+    }
+    
+    .input-container {
+        padding: 1rem;
+        flex-direction: column;
+    }
+    
+    .input-container button {
+        width: 100%;
+    }
+}

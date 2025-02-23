@@ -22,3 +22,31 @@ class Message(models.Model):
 
     def __str__(self):
         return f'User: {self.user_content} Bot: {self.bot_content}'
+
+
+class Course(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    summary = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='courses')
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.title
+
+
+class Unit(models.Model):
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    content = models.TextField(blank=True)
+    order = models.IntegerField()
+    is_completed = models.BooleanField(default=False)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='units')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['order']
+
+    def __str__(self):
+        return f'{self.course.title} - Unit {self.order}: {self.title}'

@@ -42,6 +42,7 @@ const Header = () => {
             <nav>
                 <Link to="/">Home</Link>
                 <Link to="/chat">Sensei</Link>
+                <Link to="/courses">Courses</Link>
                 <Link to="/contact">Contact</Link>
             </nav>
             {isAuthenticated ? (
