@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
-import axios from 'axios';
 import '../styles/Unit.css';
 import api from '../api';
 import CourseSidebar from '../components/CourseSidebar';
