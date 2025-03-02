@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import api from '../api';
 import '../styles/CourseOverview.css';
+import CourseSidebar from '../components/CourseSidebar';
 
 interface Unit {
     id: number;
@@ -89,25 +90,12 @@ const CourseOverview: React.FC = () => {
 
     return (
         <div className="course-overview-container">
-            <aside className="course-sidebar">
-                <div 
-                    className={`sidebar-item ${activeSection === 'overview' ? 'active' : ''}`}
-                    onClick={() => setActiveSection('overview')}
-                >
-                    Course Overview
-                </div>
-                {course.units.map(unit => (
-                    <div 
-                        key={unit.id}
-                        className={`sidebar-item ${activeSection === unit.order ? 'active' : ''} ${unit.is_completed ? 'completed' : ''}`}
-                        onClick={() => handleUnitClick(unit.id)}
-                    >
-                        <span className="unit-number">{unit.order}</span>
-                        {unit.title}
-                        {unit.is_completed && <span className="completion-check">✓</span>}
-                    </div>
-                ))}
-            </aside>
+            <CourseSidebar 
+                course={course}
+                activeSection={activeSection}
+                setActiveSection={setActiveSection}
+                variant="course"
+            />
             
             <main className="course-content">
                 <h1 className="course-title">{course.title}</h1>

@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
+import axios from 'axios';
 import '../styles/Unit.css';
+import api from '../api';
+import CourseSidebar from '../components/CourseSidebar';
 
 interface Unit {
     id: number;
@@ -35,13 +37,31 @@ const Unit: React.FC = () => {
             setIsLoading(true);
             
             // Fetch course data to get all units
-            const courseResponse = await axios.get(`/api/courses/${courseId}/`);
+            const courseResponse = await api.get(`/api/courses/${courseId}/`);
+            console.log('Course response:', courseResponse.data);
+            
+            // Check if course data has the expected structure
+            if (!courseResponse.data || !courseResponse.data.units || !Array.isArray(courseResponse.data.units)) {
+                console.error('Course data is missing units array:', courseResponse.data);
+                throw new Error('Course data is not in the expected format');
+            }
+            
             setCourse(courseResponse.data);
             
             // Fetch unit content
-            const unitResponse = await axios.get(`/api/units/${unitId}/content/`);
+            const unitResponse = await api.get(`/api/units/${unitId}/content/`);
+            console.log('Unit content response:', unitResponse.data);
+            
+            // Find the unit in the course data
+            const foundUnit = courseResponse.data.units.find((u: Unit) => u.id === parseInt(unitId!));
+            
+            if (!foundUnit) {
+                console.error(`Unit with ID ${unitId} not found in course units:`, courseResponse.data.units);
+                throw new Error(`Unit with ID ${unitId} not found in course`);
+            }
+            
             setUnit({
-                ...courseResponse.data.units.find((u: Unit) => u.id === parseInt(unitId!)),
+                ...foundUnit,
                 content: unitResponse.data.content
             });
             
@@ -54,7 +74,7 @@ const Unit: React.FC = () => {
 
     const handleComplete = async () => {
         try {
-            await axios.post(`/api/courses/${courseId}/complete_unit/`, {
+            await api.post(`/api/units/${unitId}/complete/`, {
                 unit_order: unit?.order
             });
             
@@ -89,21 +109,11 @@ const Unit: React.FC = () => {
 
     return (
         <div className="unit-container">
-            <aside className="unit-sidebar">
-                <h3>Course Progress</h3>
-                <div className="progress-indicator">
-                    {course.units.map((u, index) => (
-                        <div 
-                            key={u.id}
-                            className={`progress-dot ${u.is_completed ? 'completed' : ''} ${u.id === unit.id ? 'current' : ''}`}
-                            onClick={() => navigate(`/courses/${courseId}/units/${u.id}`)}
-                        >
-                            <span className="dot-number">{index + 1}</span>
-                            <span className="dot-title">{u.title}</span>
-                        </div>
-                    ))}
-                </div>
-            </aside>
+            <CourseSidebar 
+                course={course}
+                currentUnitId={unit.id}
+                variant="unit"
+            />
             
             <main className="unit-content">
                 <div className="unit-header">
@@ -135,11 +145,7 @@ const Unit: React.FC = () => {
                     </div>
                 </div>
                 
-                <div className="unit-description">
-                    <p>{unit.description}</p>
-                </div>
-                
-                <div className="unit-lesson">
+                <div className="unit-body">
                     <ReactMarkdown>{unit.content}</ReactMarkdown>
                 </div>
             </main>
