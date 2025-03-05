@@ -77,7 +77,7 @@ class CourseListCreate(generics.ListCreateAPIView):
         return super().post(request)
 
 
-class CourseDetail(generics.RetrieveAPIView):
+class CourseDetail(generics.RetrieveDestroyAPIView):
     serializer_class = CourseSerializer
     permission_classes = [IsAuthenticated]
 
@@ -86,6 +86,11 @@ class CourseDetail(generics.RetrieveAPIView):
             author=self.request.user, 
             is_active=True
         ).prefetch_related('units')
+    
+    def perform_destroy(self, instance):
+        # Soft delete by setting is_active to False
+        instance.is_active = False
+        instance.save()
 
 
 class UnitList(generics.ListAPIView):
@@ -130,5 +135,39 @@ class UnitContent(APIView):
                 }
             )
             unit.save()
+
+        # Preload the next unit's content in the background
+        try:
+            next_unit = Unit.objects.filter(
+                course=unit.course,
+                order__gt=unit.order
+            ).order_by('order').first()
+            
+            if next_unit and not next_unit.content:
+                # Start a background task to generate content for the next unit
+                import threading
+                
+                def generate_next_unit_content():
+                    try:
+                        next_unit.content = generate_unit_content(
+                            next_unit.course.title,
+                            {
+                                'title': next_unit.title,
+                                'description': next_unit.description
+                            }
+                        )
+                        next_unit.save()
+                        logger.info(f"Successfully preloaded content for unit {next_unit.id}")
+                    except Exception as e:
+                        logger.error(f"Error preloading next unit content: {str(e)}")
+                
+                # Start the background task
+                thread = threading.Thread(target=generate_next_unit_content)
+                thread.daemon = True
+                thread.start()
+                logger.info(f"Started background task to preload content for unit {next_unit.id}")
+        except Exception as e:
+            # Don't let preloading errors affect the current request
+            logger.error(f"Error setting up preloading for next unit: {str(e)}")
 
         return Response({'content': unit.content})

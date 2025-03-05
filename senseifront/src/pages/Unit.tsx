@@ -24,7 +24,9 @@ const Unit: React.FC = () => {
     const { courseId, unitId } = useParams<{ courseId: string; unitId: string }>();
     const [unit, setUnit] = useState<Unit | null>(null);
     const [course, setCourse] = useState<Course | null>(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoadingCourse, setIsLoadingCourse] = useState(true);
+    const [isLoadingUnitContent, setIsLoadingUnitContent] = useState(true);
+    const [isCompletingUnit, setIsCompletingUnit] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -33,7 +35,8 @@ const Unit: React.FC = () => {
 
     const fetchData = async () => {
         try {
-            setIsLoading(true);
+            setIsLoadingCourse(true);
+            setIsLoadingUnitContent(true);
             
             // Fetch course data to get all units
             const courseResponse = await api.get(`/api/courses/${courseId}/`);
@@ -46,10 +49,7 @@ const Unit: React.FC = () => {
             }
             
             setCourse(courseResponse.data);
-            
-            // Fetch unit content
-            const unitResponse = await api.get(`/api/units/${unitId}/content/`);
-            console.log('Unit content response:', unitResponse.data);
+            setIsLoadingCourse(false);
             
             // Find the unit in the course data
             const foundUnit = courseResponse.data.units.find((u: Unit) => u.id === parseInt(unitId!));
@@ -59,45 +59,77 @@ const Unit: React.FC = () => {
                 throw new Error(`Unit with ID ${unitId} not found in course`);
             }
             
+            // Set the unit with basic info before content loads
+            setUnit(foundUnit);
+            
+            // Fetch unit content
+            const unitResponse = await api.get(`/api/units/${unitId}/content/`);
+            console.log('Unit content response:', unitResponse.data);
+            
             setUnit({
                 ...foundUnit,
                 content: unitResponse.data.content
             });
             
-            setIsLoading(false);
+            setIsLoadingUnitContent(false);
         } catch (error) {
             console.error('Error fetching unit:', error);
-            setIsLoading(false);
+            setIsLoadingCourse(false);
+            setIsLoadingUnitContent(false);
         }
     };
 
-    const handleComplete = async () => {
+    const handleCompleteAndContinue = async () => {
+        if (!course || !unit) return;
+        
         try {
-            await api.post(`/api/units/${unitId}/complete/`, {
-                unit_order: unit?.order
-            });
+            setIsCompletingUnit(true);
+            
+            // Only mark as complete if not already completed
+            if (!unit.is_completed) {
+                await api.post(`/api/units/${unitId}/complete/`, {
+                    unit_order: unit.order
+                });
+                
+                // Update local state to reflect completion
+                setUnit({
+                    ...unit,
+                    is_completed: true
+                });
+            }
             
             // Find the next unit
-            if (course && unit) {
-                const currentIndex = course.units.findIndex(u => u.id === unit.id);
-                if (currentIndex < course.units.length - 1) {
-                    // Navigate to next unit
-                    navigate(`/courses/${courseId}/units/${course.units[currentIndex + 1].id}`);
-                } else {
-                    // Show completion screen
-                    navigate(`/courses/${courseId}/complete`);
-                }
+            const currentIndex = course.units.findIndex(u => u.id === unit.id);
+            if (currentIndex < course.units.length - 1) {
+                // Navigate to next unit
+                navigate(`/courses/${courseId}/units/${course.units[currentIndex + 1].id}`);
+            } else {
+                // Show completion screen or navigate back to course overview
+                navigate(`/courses/${courseId}`);
             }
         } catch (error) {
             console.error('Error completing unit:', error);
+        } finally {
+            setIsCompletingUnit(false);
         }
     };
 
-    if (isLoading || !unit || !course) {
+    // Show loading state only when we don't have course data yet
+    if (isLoadingCourse || !course) {
         return (
             <div className="unit-loading">
                 <div className="loading-spinner" />
-                <p>Loading unit content...</p>
+                <p>Loading course information...</p>
+            </div>
+        );
+    }
+
+    // If we have course data but no unit, show error
+    if (!unit) {
+        return (
+            <div className="unit-error">
+                <p>Unit not found</p>
+                <button onClick={() => navigate(`/courses/${courseId}`)}>Back to Course</button>
             </div>
         );
     }
@@ -105,6 +137,7 @@ const Unit: React.FC = () => {
     const currentIndex = course.units.findIndex(u => u.id === unit.id);
     const previousUnit = currentIndex > 0 ? course.units[currentIndex - 1] : null;
     const nextUnit = currentIndex < course.units.length - 1 ? course.units[currentIndex + 1] : null;
+    const isLastUnit = currentIndex === course.units.length - 1;
 
     return (
         <div className="unit-container">
@@ -118,34 +151,42 @@ const Unit: React.FC = () => {
                 <div className="unit-header">
                     <h1>{unit.title}</h1>
                     <div className="unit-navigation">
-                        {previousUnit && (
+                        {previousUnit ? (
                             <button 
                                 className="nav-button previous"
                                 onClick={() => navigate(`/courses/${courseId}/units/${previousUnit.id}`)}
                             >
                                 ← Previous Unit
                             </button>
+                        ) : (
+                            <button 
+                                className="nav-button previous"
+                                onClick={() => navigate(`/courses/${courseId}`)}
+                            >
+                                ← Back to Course
+                            </button>
                         )}
                         <button 
                             className="complete-button"
-                            onClick={handleComplete}
-                            disabled={unit.is_completed}
+                            onClick={handleCompleteAndContinue}
+                            disabled={isCompletingUnit}
                         >
-                            {unit.is_completed ? 'Completed' : 'Complete & Continue'}
+                            {isCompletingUnit ? 'Processing...' : 
+                                isLastUnit ? 'Complete & Finish Course' : 
+                                unit.is_completed ? 'Continue to Next Unit' : 'Complete & Continue'}
                         </button>
-                        {nextUnit && (
-                            <button 
-                                className="nav-button next"
-                                onClick={() => navigate(`/courses/${courseId}/units/${nextUnit.id}`)}
-                            >
-                                Next Unit →
-                            </button>
-                        )}
                     </div>
                 </div>
                 
                 <div className="unit-body">
-                    <ReactMarkdown>{unit.content}</ReactMarkdown>
+                    {isLoadingUnitContent ? (
+                        <div className="content-loading">
+                            <div className="loading-spinner" />
+                            <p>Generating unit content...</p>
+                        </div>
+                    ) : (
+                        <ReactMarkdown>{unit.content}</ReactMarkdown>
+                    )}
                 </div>
             </main>
         </div>

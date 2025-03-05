@@ -27,6 +27,8 @@ const CourseOverview: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [activeSection, setActiveSection] = useState<'overview' | number>('overview');
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [deleting, setDeleting] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -59,6 +61,22 @@ const CourseOverview: React.FC = () => {
 
     const handleUnitClick = (unitId: number) => {
         navigate(`/courses/${courseId}/units/${unitId}`);
+    };
+
+    const handleDeleteCourse = async () => {
+        if (!course) return;
+        
+        try {
+            setDeleting(true);
+            await api.delete(`/api/courses/${courseId}/`);
+            navigate('/courses', { state: { message: 'Course deleted successfully' } });
+        } catch (error: any) {
+            console.error('Error deleting course:', error);
+            setError(error.response?.data?.error || 'Failed to delete course. Please try again.');
+            setShowDeleteModal(false);
+        } finally {
+            setDeleting(false);
+        }
     };
 
     if (loading) {
@@ -98,7 +116,16 @@ const CourseOverview: React.FC = () => {
             />
             
             <main className="course-content">
-                <h1 className="course-title">{course.title}</h1>
+                <div className="course-header">
+                    <h1 className="course-title">{course.title}</h1>
+                    <button 
+                        className="delete-course-btn"
+                        onClick={() => setShowDeleteModal(true)}
+                    >
+                        Delete Course
+                    </button>
+                </div>
+                
                 <p className="course-description">{course.description}</p>
                 
                 <div className="course-progress-bar">
@@ -124,6 +151,31 @@ const CourseOverview: React.FC = () => {
                     </button>
                 )}
             </main>
+
+            {showDeleteModal && (
+                <div className="modal-overlay">
+                    <div className="modal-content">
+                        <h2>Delete Course</h2>
+                        <p>Are you sure you want to delete "{course.title}"? This action cannot be undone.</p>
+                        <div className="modal-actions">
+                            <button 
+                                className="cancel-btn"
+                                onClick={() => setShowDeleteModal(false)}
+                                disabled={deleting}
+                            >
+                                Cancel
+                            </button>
+                            <button 
+                                className="delete-btn"
+                                onClick={handleDeleteCourse}
+                                disabled={deleting}
+                            >
+                                {deleting ? 'Deleting...' : 'Delete'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

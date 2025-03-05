@@ -6,6 +6,7 @@
     height: auto;
     color: white;
     background: radial-gradient(circle at right, var(--bg2), var(--bg1));
+    text-align: center;
 }
 
 hr {
@@ -51,7 +52,6 @@ p {
     animation: radialGradientAnimation 1s linear;
     background-position: 50% 50%;
     background-size: var(--radial-zoom);
-    border: solid 0.3rem cyan;
     box-shadow: 0 0 2rem cyan;
 }
 

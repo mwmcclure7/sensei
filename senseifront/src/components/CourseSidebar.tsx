@@ -47,7 +47,7 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({
     };
 
     const handleOverviewClick = () => {
-        if (setActiveSection) {
+        if (variant === 'course' && setActiveSection) {
             setActiveSection('overview');
         } else {
             navigate(`/courses/${course.id}`);
@@ -56,45 +56,33 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({
 
     return (
         <aside className="course-sidebar">
-            {variant === 'course' ? (
-                // Course overview sidebar
-                <>
+            <div className="sidebar-header">
+                <h3>{course.title}</h3>
+                <button 
+                    className={`sidebar-button ${variant === 'course' && activeSection === 'overview' ? 'active' : ''}`}
+                    onClick={handleOverviewClick}
+                >
+                    Course Overview
+                </button>
+            </div>
+            
+            <div className="sidebar-units">
+                {course.units.map((unit, index) => (
                     <div 
-                        className={`sidebar-item ${activeSection === 'overview' ? 'active' : ''}`}
-                        onClick={handleOverviewClick}
+                        key={unit.id}
+                        className={`sidebar-item ${
+                            (variant === 'course' && activeSection === unit.order) || 
+                            (variant === 'unit' && unit.id === currentUnitId) ? 
+                            'active' : ''
+                        } ${unit.is_completed ? 'completed' : ''}`}
+                        onClick={() => handleUnitClick(unit.id)}
                     >
-                        Course Overview
+                        <span className="unit-number">{unit.order}</span>
+                        <span className="unit-title">{unit.title}</span>
+                        {unit.is_completed && <span className="completion-check">✓</span>}
                     </div>
-                    {course.units.map(unit => (
-                        <div 
-                            key={unit.id}
-                            className={`sidebar-item ${activeSection === unit.order ? 'active' : ''} ${unit.is_completed ? 'completed' : ''}`}
-                            onClick={() => handleUnitClick(unit.id)}
-                        >
-                            <span className="unit-number">{unit.order}</span>
-                            {unit.title}
-                            {unit.is_completed && <span className="completion-check">✓</span>}
-                        </div>
-                    ))}
-                </>
-            ) : (
-                // Unit page sidebar
-                <>
-                    <h3>Course Progress</h3>
-                    <div className="progress-indicator">
-                        {course.units.map((unit, index) => (
-                            <div 
-                                key={unit.id}
-                                className={`progress-dot ${unit.is_completed ? 'completed' : ''} ${unit.id === currentUnitId ? 'current' : ''}`}
-                                onClick={() => handleUnitClick(unit.id)}
-                            >
-                                <span className="dot-number">{index + 1}</span>
-                                <span className="dot-title">{unit.title}</span>
-                            </div>
-                        ))}
-                    </div>
-                </>
-            )}
+                ))}
+            </div>
         </aside>
     );
 };
