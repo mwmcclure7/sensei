@@ -67,7 +67,7 @@ const CourseSidebar: React.FC<CourseSidebarProps> = ({
             </div>
             
             <div className="sidebar-units">
-                {course.units.map((unit, index) => (
+                {course.units.map((unit) => (
                     <div 
                         key={unit.id}
                         className={`sidebar-item ${
