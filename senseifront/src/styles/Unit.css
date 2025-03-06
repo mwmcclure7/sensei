@@ -8,23 +8,25 @@
 .unit-content {
     padding: 3rem 4rem;
     overflow-y: auto;
-    max-width: 1200px;
-    margin: 0 auto;
 }
 
 .unit-header {
     margin-bottom: 2.5rem;
     padding-bottom: 1.5rem;
     border-bottom: 1px solid var(--border);
+    max-width: 1000px;
+    margin: 0 auto;
 }
 
 .unit-header h1 {
-    font-size: 2rem;
+    font-size: 3rem;
     font-weight: 600;
     margin-bottom: 1.5rem;
-    color: var(--text);
     text-align: left;
     line-height: 1.2;
+    background: var(--linear-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .unit-navigation {
@@ -43,7 +45,7 @@
     cursor: pointer;
     transition: all 0.2s ease;
     color: var(--text);
-    font-size: 0.875rem;
+    font-size: 1rem;
     font-weight: 500;
     display: flex;
     align-items: center;
@@ -63,12 +65,13 @@
     cursor: pointer;
     transition: all 0.2s ease;
     color: white;
-    font-size: 0.875rem;
+    font-size: 1rem;
     font-weight: 500;
 }
 
 .complete-button:hover:not(:disabled) {
-    background: var(--primary-dark);
+    background: var(--secondary);
+    color: black;
     transform: translateY(-1px);
 }
 
@@ -83,6 +86,7 @@
     line-height: 1.6;
     font-size: 1rem;
     max-width: 800px;
+    margin: 0 auto;
 }
 
 .unit-body h1, 
@@ -107,28 +111,45 @@
 .unit-body p {
     margin-bottom: 1.25rem;
     text-align: left;
+    font-size: 1rem;
 }
 
-.unit-body code {
-    background: var(--bg3);
-    padding: 0.2rem 0.4rem;
+.unit-lesson code {
+    background: var(--bg4);
+    padding: 0.3rem;
     border-radius: 0.3rem;
+    font-family: 'Fira Code', monospace;
     font-size: 0.9rem;
-    font-family: 'Ubuntu Mono', monospace;
-    color: var(--text);
 }
 
-.unit-body pre {
-    background: var(--bg3);
-    padding: 1.25rem;
-    border-radius: 0.5rem;
+.unit-body .custom-code-block {
+    padding: 0;
+    margin: 1rem 0;
+    border-radius: 0.75rem;
     overflow-x: auto;
-    margin: 1.5rem 0;
+    width: 100%;
+    line-height: 1.5;
+    box-sizing: border-box;
+    white-space: pre-wrap;
     border: 1px solid var(--border);
 }
 
-.unit-body pre code {
-    background: none;
+.unit-body .custom-code-block code {
+    padding: 0;
+    background: transparent;
+}
+
+.unit-body pre {
+    background: transparent;
+    padding: 0;
+    border-radius: 0;
+    overflow-x: visible;
+    margin: 0;
+    border: none;
+}
+
+.unit-body pre > code {
+    background: transparent;
     padding: 0;
     display: block;
     line-height: 1.5;
@@ -151,8 +172,7 @@
 }
 
 .unit-body a:hover {
-    text-decoration: underline;
-    color: var(--primary-dark);
+    color: var(--secondary);
 }
 
 .unit-body blockquote {
@@ -260,7 +280,7 @@
 }
 
 .unit-error button:hover {
-    background: var(--primary-dark);
+    background: var(--secondary);
     transform: translateY(-1px);
 }
 

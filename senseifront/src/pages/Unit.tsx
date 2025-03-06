@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { coldarkDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import '../styles/Unit.css';
 import api from '../api';
 import CourseSidebar from '../components/CourseSidebar';
@@ -28,6 +31,40 @@ const Unit: React.FC = () => {
     const [isLoadingUnitContent, setIsLoadingUnitContent] = useState(true);
     const [isCompletingUnit, setIsCompletingUnit] = useState(false);
     const navigate = useNavigate();
+
+    // Code syntax highlighting configuration
+    const markdownComponents = {
+        code({
+            node,
+            inline,
+            className,
+            children,
+            ...props
+        }: {
+            node: any;
+            inline: boolean;
+            className: string;
+            children: React.ReactNode;
+            props: any;
+        }) {
+            const match = /language-(\w+)/.exec(className || "");
+            return !inline && match ? (
+                <SyntaxHighlighter
+                    style={coldarkDark}
+                    language={match[1]}
+                    PreTag="div"
+                    className="custom-code-block"
+                    {...props}
+                >
+                    {String(children).replace(/\n$/, "")}
+                </SyntaxHighlighter>
+            ) : (
+                <code className={className} {...props}>
+                    {children}
+                </code>
+            );
+        },
+    };
 
     useEffect(() => {
         fetchData();
@@ -136,7 +173,6 @@ const Unit: React.FC = () => {
 
     const currentIndex = course.units.findIndex(u => u.id === unit.id);
     const previousUnit = currentIndex > 0 ? course.units[currentIndex - 1] : null;
-    const nextUnit = currentIndex < course.units.length - 1 ? course.units[currentIndex + 1] : null;
     const isLastUnit = currentIndex === course.units.length - 1;
 
     return (
@@ -185,7 +221,13 @@ const Unit: React.FC = () => {
                             <p>Generating unit content...</p>
                         </div>
                     ) : (
-                        <ReactMarkdown>{unit.content}</ReactMarkdown>
+                        <ReactMarkdown 
+                            remarkPlugins={[remarkGfm]} 
+                            // @ts-ignore
+                            components={markdownComponents}
+                        >
+                            {unit.content}
+                        </ReactMarkdown>
                     )}
                 </div>
             </main>

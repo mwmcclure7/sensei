@@ -19,6 +19,9 @@
     color: var(--text);
     text-align: left;
     line-height: 1.2;
+    background: var(--linear-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .course-description {
@@ -110,7 +113,8 @@
 }
 
 .start-course-btn:hover {
-    background: var(--primary-dark);
+    background: var(--secondary);
+    color: black;
     transform: translateY(-1px);
 }
 
