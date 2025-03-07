@@ -249,7 +249,7 @@ const CourseCreation: React.FC = () => {
                          conversationStage === 'complete') ? 'completed' : ''
                     }`}>
                         <div className="stage-dot"></div>
-                        <span>Information</span>
+                        <span>Basic Info</span>
                     </div>
                     <div className={`progress-stage ${
                         conversationStage === 'refining' ? 'active' : 
@@ -258,7 +258,7 @@ const CourseCreation: React.FC = () => {
                          conversationStage === 'complete') ? 'completed' : ''
                     }`}>
                         <div className="stage-dot"></div>
-                        <span>Refining</span>
+                        <span>Additional Info</span>
                     </div>
                     <div className={`progress-stage ${
                         conversationStage === 'finalizing' ? 'active' : 
@@ -266,7 +266,7 @@ const CourseCreation: React.FC = () => {
                          conversationStage === 'complete') ? 'completed' : ''
                     }`}>
                         <div className="stage-dot"></div>
-                        <span>Finalizing</span>
+                        <span>Refining Course</span>
                     </div>
                     <div className={`progress-stage ${
                         conversationStage === 'generating' || conversationStage === 'complete' ? 'active' : ''
@@ -358,9 +358,7 @@ const CourseCreation: React.FC = () => {
                     onClick={() => handleSend()}
                     disabled={isGenerating || !input.trim() || conversationStage === 'generating'}
                     className={isGenerating ? 'loading' : ''}
-                >
-                    {isGenerating ? 'Thinking...' : 'Send'}
-                </button>
+                />
             </div>
         </div>
     );
