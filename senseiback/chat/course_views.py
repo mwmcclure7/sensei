@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from django.shortcuts import get_object_or_404
 from .models import Course, Unit, Message
 from .serializers import CourseSerializer, UnitSerializer
-from .course_llm import generate_course, generate_unit_content
+from .course_llm import generate_course, generate_unit_content, handle_conversation
 import logging
 import json
 
@@ -69,6 +69,66 @@ class CourseListCreate(generics.ListCreateAPIView):
                 )
             except Exception as e:
                 logger.error(f"Error in course generation: {str(e)}")
+                return Response(
+                    {'error': str(e)},
+                    status=400
+                )
+        elif request.data.get('action') == 'conversation':
+            if 'user_content' not in request.data:
+                return Response(
+                    {'error': 'user_content is required'},
+                    status=400
+                )
+
+            chat_history = []
+            if 'messages' in request.data:
+                chat_history = request.data['messages']
+
+            try:
+                logger.debug(f"Processing conversation with content: {request.data['user_content']}")
+                logger.debug(f"Chat history: {chat_history}")
+                
+                conversation_result = handle_conversation(request.data['user_content'], chat_history)
+                
+                # If the AI decides it's time to generate a course
+                if conversation_result['should_generate']:
+                    logger.debug(f"Generating course with prompt: {conversation_result['generation_prompt']}")
+                    
+                    # Generate the course using the extracted prompt
+                    course_data = generate_course(conversation_result['generation_prompt'])
+                    
+                    # Create the course
+                    course = Course.objects.create(
+                        title=course_data['title'],
+                        description=course_data['description'],
+                        summary=course_data.get('summary', ''),
+                        author=request.user
+                    )
+
+                    # Create the units
+                    for unit_data in course_data['units']:
+                        Unit.objects.create(
+                            course=course,
+                            title=unit_data['title'],
+                            description=unit_data['description'],
+                            order=unit_data['order']
+                        )
+
+                    serializer = self.get_serializer(course)
+                    return Response({
+                        'response': conversation_result['response'],
+                        'should_generate': True,
+                        'course': serializer.data
+                    }, status=201)
+                else:
+                    # Just return the conversation response
+                    return Response({
+                        'response': conversation_result['response'],
+                        'should_generate': False
+                    }, status=200)
+                    
+            except Exception as e:
+                logger.error(f"Error in conversation handling: {str(e)}")
                 return Response(
                     {'error': str(e)},
                     status=400
