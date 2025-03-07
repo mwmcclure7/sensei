@@ -151,30 +151,6 @@ Example generation prompt:
 
 IMPORTANT: Only include the <GENERATE> tag when you're confident you have enough information to create a truly personalized course that meets the user's specific needs. Otherwise, continue the conversation to gather more details."""
 
-    # Analyze conversation stage based on message count
-    conversation_stage = "initial"
-    if len(chat_history) <= 2:
-        conversation_stage = "initial"
-    elif len(chat_history) <= 5:
-        conversation_stage = "gathering_info"
-    elif len(chat_history) <= 8:
-        conversation_stage = "refining"
-    else:
-        conversation_stage = "finalizing"
-    
-    # Add conversation stage to the instructions
-    stage_guidance = f"\nCURRENT CONVERSATION STAGE: {conversation_stage.upper()}\n"
-    if conversation_stage == "initial":
-        stage_guidance += "Focus on understanding the basic learning goals and current knowledge level. Be welcoming and establish rapport."
-    elif conversation_stage == "gathering_info":
-        stage_guidance += "Dive deeper into specific requirements, preferences, and constraints. Ask about time commitment and learning style."
-    elif conversation_stage == "refining":
-        stage_guidance += "Focus on details that will make the course truly personalized. Ask about specific projects or applications they want to build."
-    else:
-        stage_guidance += "Begin summarizing what you've learned and confirm you have all necessary information. If you do, prepare to generate the course."
-    
-    instructions += stage_guidance
-
     messages = [{'role': 'system', 'content': instructions}]
     for message in chat_history:
         messages.append({'role': 'user' if message['is_user'] else 'assistant', 'content': message['content']})

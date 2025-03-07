@@ -140,7 +140,6 @@
 
 .message-content {
     line-height: 1.5;
-    font-size: 1rem;
 }
 
 .message-content p {
@@ -320,90 +319,6 @@
         opacity: 1;
         transform: translateY(0);
     }
-}
-
-/* Code block styling */
-.message-content pre {
-    background: var(--bg4);
-    padding: 0.875rem;
-    border-radius: 0.5rem;
-    overflow-x: auto;
-    margin: 0.75rem 0;
-    font-size: 0.9rem;
-}
-
-.message-content code {
-    font-family: 'Fira Code', monospace;
-    font-size: 0.9rem;
-}
-
-/* Inline code styling */
-.message-content :not(pre) > code {
-    background: var(--bg4);
-    padding: 0.15rem 0.3rem;
-    border-radius: 0.25rem;
-    font-size: 0.9rem;
-}
-
-/* List styling */
-.message-content ul, 
-.message-content ol {
-    margin: 0.5rem 0;
-    padding-left: 1.5rem;
-}
-
-.message-content li {
-    margin: 0.25rem 0;
-}
-
-/* Link styling */
-.message-content a {
-    color: var(--primary);
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-.message-content a:hover {
-    text-decoration: underline;
-}
-
-/* Table styling */
-.message-content table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1rem 0;
-    font-size: 0.9rem;
-}
-
-.message-content th,
-.message-content td {
-    padding: 0.5rem;
-    border: 1px solid var(--border);
-}
-
-.message-content th {
-    background: var(--bg4);
-    font-weight: 600;
-}
-
-/* Blockquote styling */
-.message-content blockquote {
-    border-left: 3px solid var(--primary);
-    margin: 0.75rem 0;
-    padding-left: 1rem;
-    color: var(--text-secondary);
-    font-style: italic;
-}
-
-/* Custom code block styling */
-.custom-code-block {
-    background: var(--bg4) !important;
-    border-radius: 0.5rem !important;
-    margin: 0.75rem 0 !important;
-    padding: 1rem !important;
-    font-family: 'Fira Code', monospace !important;
-    font-size: 0.9rem !important;
-    line-height: 1.5 !important;
 }
 
 /* Responsive adjustments */
