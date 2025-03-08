@@ -165,12 +165,31 @@ class CourseDetail(generics.RetrieveDestroyAPIView):
                 
                 def generate_first_unit_content():
                     try:
+                        # For the first unit, there are no previous units
+                        
+                        # Get future units' information (after first unit)
+                        future_units = Unit.objects.filter(
+                            course=instance,
+                            order__gt=1
+                        ).order_by('order')
+                        
+                        future_units_info = []
+                        for future_unit in future_units:
+                            future_units_info.append({
+                                'title': future_unit.title,
+                                'description': future_unit.description
+                            })
+                        
                         first_unit.content = generate_unit_content(
                             first_unit.course.title,
                             {
                                 'title': first_unit.title,
-                                'description': first_unit.description
-                            }
+                                'description': first_unit.description,
+                                'order': first_unit.order
+                            },
+                            course_summary=instance.summary,
+                            previous_units_content=None,  # No previous units for the first unit
+                            future_units_info=future_units_info if future_units_info else None
                         )
                         first_unit.save()
                         logger.info(f"Successfully generated content for first unit {first_unit.id} in background")
@@ -227,13 +246,51 @@ class UnitContent(APIView):
         unit = get_object_or_404(Unit, id=pk, course__author=request.user)
         
         if not unit.content:
-            # Generate content if it doesn't exist
+            # Get course summary for context
+            course = unit.course
+            
+            # Get previous units' content for context
+            previous_units = []
+            if unit.order > 1:  # If not the first unit
+                previous_units = Unit.objects.filter(
+                    course=course,
+                    order__lt=unit.order
+                ).order_by('order')
+                
+                previous_units_content = []
+                for prev_unit in previous_units:
+                    previous_units_content.append({
+                        'title': prev_unit.title,
+                        'description': prev_unit.description,
+                        'content': prev_unit.content
+                    })
+            else:
+                previous_units_content = None
+            
+            # Get future units' information (titles and descriptions only)
+            future_units = Unit.objects.filter(
+                course=course,
+                order__gt=unit.order
+            ).order_by('order')
+            
+            future_units_info = []
+            for future_unit in future_units:
+                future_units_info.append({
+                    'title': future_unit.title,
+                    'description': future_unit.description
+                })
+            
+            # Generate content with context
             unit.content = generate_unit_content(
-                unit.course.title,
+                course.title,
                 {
                     'title': unit.title,
-                    'description': unit.description
-                }
+                    'description': unit.description,
+                    'order': unit.order
+                },
+                course_summary=course.summary,
+                previous_units_content=previous_units_content,
+                future_units_info=future_units_info if future_units_info else None
             )
             unit.save()
 
@@ -250,12 +307,43 @@ class UnitContent(APIView):
                 
                 def generate_next_unit_content():
                     try:
+                        # Get previous units' content (including current unit)
+                        previous_units = Unit.objects.filter(
+                            course=unit.course,
+                            order__lte=unit.order  # Include current unit
+                        ).order_by('order')
+                        
+                        previous_units_content = []
+                        for prev_unit in previous_units:
+                            previous_units_content.append({
+                                'title': prev_unit.title,
+                                'description': prev_unit.description,
+                                'content': prev_unit.content
+                            })
+                        
+                        # Get future units' information (after next unit)
+                        future_units = Unit.objects.filter(
+                            course=unit.course,
+                            order__gt=next_unit.order
+                        ).order_by('order')
+                        
+                        future_units_info = []
+                        for future_unit in future_units:
+                            future_units_info.append({
+                                'title': future_unit.title,
+                                'description': future_unit.description
+                            })
+                        
                         next_unit.content = generate_unit_content(
                             next_unit.course.title,
                             {
                                 'title': next_unit.title,
-                                'description': next_unit.description
-                            }
+                                'description': next_unit.description,
+                                'order': next_unit.order
+                            },
+                            course_summary=unit.course.summary,
+                            previous_units_content=previous_units_content,
+                            future_units_info=future_units_info if future_units_info else None
                         )
                         next_unit.save()
                         logger.info(f"Successfully preloaded content for unit {next_unit.id}")

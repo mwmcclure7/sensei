@@ -124,22 +124,14 @@ Follow these conversation guidelines:
    - Current knowledge level and background
    - Learning goals and objectives
    - Preferred learning style (practical, theoretical, project-based)
-   - Available time commitment
-   - Any specific technologies, frameworks, or tools they want to learn
 
 2. REFINEMENT PHASE: Ask targeted follow-up questions to clarify:
    - Specific projects or applications they want to build
-   - Their motivation for learning this subject
-   - How they plan to apply their knowledge
-   - Any past learning experiences (what worked/didn't work)
    - Preferred pace and depth of learning
 
 3. CONVERSATION STYLE:
    - Be conversational, friendly, and encouraging
-   - Acknowledge and validate the user's responses
-   - Provide brief insights or suggestions that demonstrate your expertise
    - Ask one or two focused questions at a time, not overwhelming lists
-   - Adapt your questions based on previous responses
    - Keep your responses concise and focused
 
 4. COURSE GENERATION DECISION:
@@ -180,14 +172,60 @@ IMPORTANT: Only include the <GENERATE> tag when you're confident you have enough
         "generation_prompt": generation_prompt
     }
 
-def generate_unit_content(course_title, unit_info):
-    """Generate detailed content for a course unit."""
+def generate_unit_content(course_title, unit_info, course_summary=None, previous_units_content=None, future_units_info=None):
+    """Generate detailed content for a course unit.
+    
+    Args:
+        course_title: The title of the course
+        unit_info: Dictionary containing unit title and description
+        course_summary: Optional course summary for context
+        previous_units_content: Optional list of previous units' content
+        future_units_info: Optional list of future units' titles and descriptions
+    """
+    
+    # Build context about the course and previous units
+    course_context = f"Course Title: {course_title}\n"
+    if course_summary:
+        course_context += f"Course Summary: {course_summary}\n\n"
+    
+    previous_content_context = ""
+    if previous_units_content and len(previous_units_content) > 0:
+        previous_content_context = "Previous Units:\n"
+        for i, prev_unit in enumerate(previous_units_content):
+            # Include a summary of previous units to avoid information overlap
+            previous_content_context += f"Unit {i+1}: {prev_unit['title']}\n"
+            previous_content_context += f"Description: {prev_unit['description']}\n"
+            # Include key topics covered to avoid duplication
+            if 'content' in prev_unit and prev_unit['content']:
+                # Extract headings from markdown to get key topics
+                import re
+                headings = re.findall(r'##\s+(.*)', prev_unit['content'])
+                if headings:
+                    previous_content_context += "Key topics covered:\n"
+                    for heading in headings[:5]:  # Limit to first 5 headings to keep context manageable
+                        previous_content_context += f"- {heading}\n"
+            previous_content_context += "\n"
+    
+    future_content_context = ""
+    if future_units_info and len(future_units_info) > 0:
+        future_content_context = "Upcoming Units (DO NOT teach this content yet):\n"
+        for i, future_unit in enumerate(future_units_info):
+            future_content_context += f"Unit {unit_info.get('order', 0) + i + 1}: {future_unit['title']}\n"
+            future_content_context += f"Description: {future_unit['description']}\n\n"
     
     instructions = f"""You are an expert programming instructor at Sensei.AI. Your task is to create detailed, engaging content for a unit in the course '{course_title}'.
 
-Unit Information:
+Course Overview:
+{course_context}
+
+{previous_content_context}
+
+Current Unit Information:
 Title: {unit_info['title']}
 Description: {unit_info['description']}
+Order: {unit_info.get('order', 'N/A')}
+
+{future_content_context}
 
 Generate comprehensive content that includes:
 1. A thorough explanation of concepts with clear, accessible language
@@ -197,6 +235,14 @@ Generate comprehensive content that includes:
 5. Real-world applications and examples
 6. Visual explanations where appropriate (described in text)
 7. A small project or challenge that applies the unit's concepts
+
+Important Guidelines:
+- Ensure continuity with previous units - build upon concepts already covered
+- Avoid duplicating content from previous units
+- Fill any knowledge gaps needed to understand this unit
+- Maintain consistent terminology and coding style with previous units
+- Focus specifically on this unit's topic without straying into future units' content
+- DO NOT teach content that will be covered in upcoming units
 
 Format the content using markdown with:
 - Clear section headings (##, ###)

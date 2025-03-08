@@ -95,7 +95,7 @@ const Courses: React.FC = () => {
 
     return (
         <div className="courses-container">
-            <h1 className="courses-title">My Courses</h1>
+            <h1 className="courses-title">My Courses (BETA)</h1>
             <div className="courses-grid">
                 <div 
                     className="course-card create-card"
