@@ -1,6 +1,6 @@
 function InvalidLink() {
     return (
-        <div className="message">
+        <div className="single-message">
             <h1>Invalid Link</h1>
         </div>
     );

@@ -147,6 +147,47 @@ class CourseDetail(generics.RetrieveDestroyAPIView):
             is_active=True
         ).prefetch_related('units')
     
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        response_data = serializer.data
+        
+        # Check if the first unit exists and needs content generation
+        try:
+            first_unit = Unit.objects.filter(
+                course=instance,
+                order=1  # Assuming the first unit has order=1
+            ).first()
+            
+            if first_unit and not first_unit.content:
+                # Start a background task to generate content for the first unit
+                import threading
+                
+                def generate_first_unit_content():
+                    try:
+                        first_unit.content = generate_unit_content(
+                            first_unit.course.title,
+                            {
+                                'title': first_unit.title,
+                                'description': first_unit.description
+                            }
+                        )
+                        first_unit.save()
+                        logger.info(f"Successfully generated content for first unit {first_unit.id} in background")
+                    except Exception as e:
+                        logger.error(f"Error generating first unit content in background: {str(e)}")
+                
+                # Start the background task
+                thread = threading.Thread(target=generate_first_unit_content)
+                thread.daemon = True
+                thread.start()
+                logger.info(f"Started background task to generate content for first unit {first_unit.id}")
+        except Exception as e:
+            # Don't let background generation errors affect the current request
+            logger.error(f"Error setting up background generation for first unit: {str(e)}")
+        
+        return Response(response_data)
+    
     def perform_destroy(self, instance):
         # Soft delete by setting is_active to False
         instance.is_active = False

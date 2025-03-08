@@ -82,7 +82,7 @@
 .progress-line-filled {
     position: absolute;
     height: 100%;
-    background: var(--primary-gradient);
+    background: var(--linear-gradient);
     border-radius: 1rem;
     transition: width 0.5s ease;
 }
@@ -108,6 +108,10 @@
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     position: relative;
     max-height: fit-content;
+}
+
+.message p {
+    font-size: 1.2rem;
 }
 
 .message-timestamp {
@@ -138,17 +142,8 @@
     border-bottom-left-radius: 0.25rem;
 }
 
-.message-content {
-    line-height: 1.5;
-}
-
 .message-content p {
     margin: 0 0 0.75rem 0;
-}
-
-.message-content p:last-child {
-    margin-bottom: 0;
-    font-size: 1.2rem;
 }
 
 /* Course generation progress bar */
@@ -163,7 +158,7 @@
 
 .generation-progress-bar {
     height: 100%;
-    background: var(--primary-gradient);
+    background: var(--linear-gradient);
     border-radius: 1rem;
     transition: width 0.3s ease;
 }

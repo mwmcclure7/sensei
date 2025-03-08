@@ -166,7 +166,7 @@ a:active {
     transform: scale(0.9);
 }
 
-.message {
+.single-message {
     height: calc(100vh - var(--header-height));
     display: flex;
     justify-content: center;
@@ -174,17 +174,17 @@ a:active {
     flex-direction: column;
 }
 
-.message h1 {
+.single-message h1 {
     font-size: 5rem;
     line-height: 1.5rem;
 }
 
-.message h1 a {
+.single-message h1 a {
     font-size: 3rem;
 }
 
-.message a,
-.message p {
+.single-message a,
+.single-message p {
     font-size: 2rem;
 }
 
