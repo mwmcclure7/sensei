@@ -106,7 +106,7 @@
 }
 
 .unit-title {
-    white-space: nowrap;
+    white-space: wrap;
     overflow: hidden;
     text-overflow: ellipsis;
     flex: 1;
