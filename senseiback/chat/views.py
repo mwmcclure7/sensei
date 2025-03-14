@@ -21,7 +21,9 @@ class ChatListCreate(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         if serializer.is_valid():
-            serializer.save(author=self.request.user, title=generate_title(self.request.data.get('title')))
+            # Generate a title based on the provided content
+            title = generate_title(self.request.data.get('title', '')[:100])
+            serializer.save(author=self.request.user, title=title)
             return Response({'id': serializer.data.get('id')})
         else:
             print(serializer.errors)
@@ -43,19 +45,42 @@ class MessageListCreate(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        chat = Chat.objects.get(id=self.request.query_params.get('chat_id'))
-        if (chat.is_active and chat.author == self.request.user):
-            return chat.messages.all().order_by('created_at')
+        chat_id = self.request.query_params.get('chat_id')
+        if not chat_id or chat_id == '0':
+            return Message.objects.none()
+        
+        try:
+            chat = Chat.objects.get(id=chat_id)
+            if chat.is_active and chat.author == self.request.user:
+                return chat.messages.all().order_by('created_at')
+            return Message.objects.none()
+        except Chat.DoesNotExist:
+            return Message.objects.none()
 
     def post(self, request):
-        chat = Chat.objects.get(id=request.data.get('chat_id'))
-        if (not chat.is_active):
-            return Response({'status': 'error', 'message': 'This chat has been disabled.'})
         user = request.user
-        if (chat.author != user):
-            return Response({'status': 'error', 'message': 'You are not authorized to send messages to this chat.'})
         user_content = request.data.get('message')
         fun_mode = request.data.get('fun_mode')
+        chat_id = request.data.get('chat_id')
+        
+        # If no chat_id is provided or it's 0, create a new chat
+        if not chat_id or chat_id == 0:
+            # Create a new chat with a generated title
+            chat = Chat.objects.create(
+                author=user,
+                title=generate_title(user_content[:100])
+            )
+            chat_id = chat.id
+        else:
+            # Get existing chat
+            try:
+                chat = Chat.objects.get(id=chat_id)
+                if not chat.is_active:
+                    return Response({'status': 'error', 'message': 'This chat has been disabled.'})
+                if chat.author != user:
+                    return Response({'status': 'error', 'message': 'You are not authorized to send messages to this chat.'})
+            except Chat.DoesNotExist:
+                return Response({'status': 'error', 'message': 'Chat not found.'}, status=404)
         
         def generate_stream():
             response = ""
@@ -79,7 +104,8 @@ class MessageListCreate(generics.ListCreateAPIView):
             if '<REMEMBER>' in response:
                 response = response[:response.index('<REMEMBER>')].strip()
             Message.objects.create(chat=chat, user_content=user_content, bot_content=response)
-            yield "data: [DONE]\n\n"
+            yield f"data: [DONE]\n\n"
+            yield f'data: {{"chat_id": {chat_id}}}\n\n'
 
         return StreamingHttpResponse(
             generate_stream(),

@@ -108,15 +108,6 @@ function Chat() {
         }
 
         try {
-            if (currentTempChat === 0) {
-                const chatResponse = await api.post("/api/chats/", {
-                    title: userMessage,
-                });
-                currentTempChat = chatResponse.data.id;
-                setCurrentChat(currentTempChat);
-                getChats();
-            }
-
             // Add temporary message for streaming
             const messageIndex = messages.length;
             setMessages((prev) => [...prev, { user_message: userMessage, bot_message: "" }]);
@@ -135,6 +126,7 @@ function Chat() {
             }
 
             let accumulatedResponse = "";
+            let chatIdFromStream = null;
 
             while (true) {
                 const { value, done } = await reader.read();
@@ -147,39 +139,73 @@ function Chat() {
                     if (line.startsWith("data: ")) {
                         const content = line.slice(6);
                         if (content === "[DONE]") {
-                            break;
+                            continue;
                         }
-                        accumulatedResponse += content;
-                        // Update the message at the specific index
-                        setMessages((prev) => {
-                            const newMessages = [...prev];
-                            if (messageIndex < newMessages.length) {
-                                newMessages[messageIndex].bot_message = accumulatedResponse;
+                        
+                        // Check if this is a chat_id response
+                        if (content.includes("chat_id")) {
+                            try {
+                                const chatData = JSON.parse(content);
+                                if (chatData.chat_id) {
+                                    chatIdFromStream = chatData.chat_id;
+                                    if (currentTempChat === 0) {
+                                        setCurrentChat(chatIdFromStream);
+                                        getChats();
+                                    }
+                                }
+                            } catch (e) {
+                                // Not valid JSON, treat as regular content
+                                accumulatedResponse += content;
+                                // Update the message at the specific index
+                                setMessages((prev) => {
+                                    const newMessages = [...prev];
+                                    if (messageIndex < newMessages.length) {
+                                        newMessages[messageIndex].bot_message = accumulatedResponse;
+                                    }
+                                    return newMessages;
+                                });
                             }
-                            return newMessages;
-                        });
+                        } else {
+                            accumulatedResponse += content;
+                            // Update the message at the specific index
+                            setMessages((prev) => {
+                                const newMessages = [...prev];
+                                if (messageIndex < newMessages.length) {
+                                    newMessages[messageIndex].bot_message = accumulatedResponse;
+                                }
+                                return newMessages;
+                            });
+                        }
                     }
                 }
             }
 
-            // Fetch the final message to ensure proper formatting
-            const finalMessageResponse = await api.get("/api/messages/", {
-                params: { chat_id: currentTempChat },
-            });
+            // Only fetch messages if we have a valid chat ID
+            const finalChatId = chatIdFromStream || currentTempChat;
+            if (finalChatId && finalChatId !== 0) {
+                try {
+                    const finalMessageResponse = await api.get("/api/messages/", {
+                        params: { chat_id: finalChatId },
+                    });
 
-            const finalMessages = finalMessageResponse.data.map((msg: any) => ({
-                user_message: msg.user_content,
-                bot_message: msg.bot_content,
-            }));
+                    const finalMessages = finalMessageResponse.data.map((msg: any) => ({
+                        user_message: msg.user_content,
+                        bot_message: msg.bot_content,
+                    }));
 
-            // Update only the last message
-            setMessages((prev) => {
-                const newMessages = [...prev];
-                if (messageIndex < finalMessages.length) {
-                    newMessages[messageIndex] = finalMessages[messageIndex];
+                    // Update only the last message
+                    setMessages((prev) => {
+                        const newMessages = [...prev];
+                        if (messageIndex < finalMessages.length) {
+                            newMessages[messageIndex] = finalMessages[messageIndex];
+                        }
+                        return newMessages;
+                    });
+                } catch (err) {
+                    console.log("Error fetching final messages:", err);
+                    // Keep the streamed message if we can't fetch the final one
                 }
-                return newMessages;
-            });
+            }
         } catch (err) {
             console.error(err);
             toast.error("Failed to send message");
@@ -210,7 +236,8 @@ function Chat() {
             );
             setMessages(updatedMessages);
         } catch (err) {
-            if ((err as any).status !== 404) console.log(err);
+            console.log("Error fetching messages:", err);
+            setMessages([]);
         } finally {
             setMessagesLoading(false);
         }
