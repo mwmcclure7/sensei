@@ -229,6 +229,16 @@ const Unit: React.FC = () => {
                             {unit.content}
                         </ReactMarkdown>
                     )}
+                <button 
+                    className="complete-button"
+                    onClick={handleCompleteAndContinue}
+                    disabled={isCompletingUnit}
+                    style={{width: "100%", margin: "0 auto"}}
+                >
+                    {isCompletingUnit ? 'Processing...' : 
+                        isLastUnit ? 'Complete & Finish Course' : 
+                        unit.is_completed ? 'Continue to Next Unit' : 'Complete & Continue'}
+                </button>
                 </div>
             </main>
         </div>
